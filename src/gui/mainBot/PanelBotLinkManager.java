@@ -2,6 +2,7 @@ package gui.mainBot;
 
 import gui.viewMessage.PanelViewMessageUi;
 import java.util.LinkedList;
+import javax.swing.BoundedRangeModel;
 
 /**
  *
@@ -19,6 +20,14 @@ public class PanelBotLinkManager {
         for (PanelViewMessageUi messageUi: messageUiList) {
             if (messageUi != orig) {
                 messageUi.setPosition(n);
+            }
+        }
+    }
+
+    public void setScrollModel(BoundedRangeModel model, PanelViewMessageUi orig) {
+       for (PanelViewMessageUi messageUi: messageUiList) {
+            if (messageUi != orig) {
+                messageUi.setScrollBarModel(model);
             }
         }
     }

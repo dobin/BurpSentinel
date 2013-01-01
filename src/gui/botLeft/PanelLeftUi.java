@@ -2,6 +2,8 @@ package gui.botLeft;
 
 import gui.mainBot.PanelBotUi;
 import gui.session.SessionManager;
+import java.awt.GraphicsConfiguration;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -139,8 +141,13 @@ public class PanelLeftUi extends javax.swing.JPanel {
         LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
 
         PanelAttackProgress panelProgress = new PanelAttackProgress(attackHttpParams, origHttpMessage, this, checkboxFollowRedirect.isSelected(), (String) comboboxMainSession.getSelectedItem());
+        //GraphicsConfiguration gc = this.getGraphicsConfiguration();
+        //Rectangle bounds = gc.getBounds();
+        //panelProgress.setLocation();
+        
+        panelProgress.setLocationRelativeTo(this);
         panelProgress.setVisible(true);
-        panelParent.updateUI(); // Necessary here!
+        panelParent.updateUI(); // Necessary here, or flicker bug!
         panelProgress.start();
         
         // Remove all attack ticks

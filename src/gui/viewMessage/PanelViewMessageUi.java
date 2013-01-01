@@ -5,13 +5,13 @@ import gui.session.SessionManager;
 import gui.session.SessionUser;
 import java.awt.Color;
 import java.util.LinkedList;
+import javax.swing.BoundedRangeModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.SyntaxScheme;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -30,6 +30,14 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private boolean showResponse = true;
     private MessagePopup messagePopup;
     
+    private PanelBotLinkManager linkManager = null;
+    
+    private int selectIndex = -1;
+    private Object currentHighlight;
+    private int savedCursor = -1;
+
+    private BoundedRangeModel origScrollbarModel;
+    
     /**
      * Creates new form PanelResponseUi
      */
@@ -46,12 +54,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         textareaMessage.setAutoIndentEnabled(false);
         textareaMessage.setBracketMatchingEnabled(false);
         textareaMessage.setPopupMenu(messagePopup.getPopup());
-        
         UiUtil.getTheme().apply(textareaMessage);
-//        SyntaxScheme scheme = textareaMessage.getSyntaxScheme();
-        //scheme.getStyle(Token.VARIABLE).background = Color.pink;
         textareaMessage.revalidate();
+        
         labelPosition.setText(" ");
+        
+        origScrollbarModel = jScrollPane2.getVerticalScrollBar().getModel();
     }
         
 
@@ -275,6 +283,11 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         checkboxIsLink.setText("Link");
         checkboxIsLink.setToolTipText("Link Both Window Togeter - Scroll Together");
         checkboxIsLink.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        checkboxIsLink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxIsLinkActionPerformed(evt);
+            }
+        });
 
         checkboxIsFix.setText("Fix");
         checkboxIsFix.setToolTipText("Fix Cursor Location - keep view for all messages");
@@ -378,8 +391,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         showResponse();
     }//GEN-LAST:event_buttonShowRequestActionPerformed
 
-    private int selectIndex = -1;
-    private Object currentHighlight;
+
     
     private void moveCursorDown() {
         if (currentHighlight != null) {
@@ -431,8 +443,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         }
     }
     
-    private int savedCursor = -1;
-    
     private void viewMessagePart(int n, boolean isNew) {
         if (isNew) {
             if (checkboxIsFix.isSelected()) {
@@ -450,16 +460,34 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     }
     
     public void setPosition(int n) {
-        
         textareaMessage.setCaretPosition(n);
     }
-    
         
     private void setMessageText(String s) {
         savedCursor = textareaMessage.getCaretPosition();
         textareaMessage.setText(s);
     }
     
+    public void setLinkManager(PanelBotLinkManager linkManager) {
+        this.linkManager = linkManager;
+        linkManager.registerViewMessage(this);
+    }
+    
+    
+    
+    public void setScrollBarModel(BoundedRangeModel model) {
+        if (model == null) {
+            int pos = jScrollPane2.getVerticalScrollBar().getValue();
+            origScrollbarModel.setValue(pos);
+            jScrollPane2.getVerticalScrollBar().setModel(origScrollbarModel);
+            checkboxIsLink.setSelected(false);
+        } else {
+            // Set new model
+            //origScrollbarModel = jScrollPane2.getVerticalScrollBar().getModel();
+            jScrollPane2.getVerticalScrollBar().setModel(model);
+            checkboxIsLink.setSelected(true);
+        }
+    }
     
     private void buttonDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDownActionPerformed
         moveCursorDown();
@@ -468,6 +496,17 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private void buttonUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpActionPerformed
         moveCursorUp();
     }//GEN-LAST:event_buttonUpActionPerformed
+
+    private void checkboxIsLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxIsLinkActionPerformed
+        if (checkboxIsLink.isSelected()) {
+            // Other window should have same model
+            linkManager.setScrollModel(jScrollPane2.getVerticalScrollBar().getModel(), this);
+        } else {
+            // Restore original model on all window
+            linkManager.setScrollModel(null, this);
+            jScrollPane2.getVerticalScrollBar().setModel(origScrollbarModel);
+        }
+    }//GEN-LAST:event_checkboxIsLinkActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDown;
@@ -487,10 +526,4 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textareaMessage;
     // End of variables declaration//GEN-END:variables
 
-    private PanelBotLinkManager linkManager = null;
-    
-    public void setLinkManager(PanelBotLinkManager linkManager) {
-        this.linkManager = linkManager;
-        linkManager.registerViewMessage(this);
-    }
 }
