@@ -11,7 +11,7 @@ import util.BurpCallbacks;
  *
  * @author unreal
  */
-public class PanelAttackProgress extends javax.swing.JFrame {
+public class PanelAttackProgress extends javax.swing.JDialog {
 
     private boolean isCanceled = false;
     private PanelLeftUi panelParent = null;
@@ -26,6 +26,7 @@ public class PanelAttackProgress extends javax.swing.JFrame {
      * Creates new form PanelAttackProgress
      */
     public PanelAttackProgress() {
+        super();
         initComponents();
     }
     
@@ -43,6 +44,7 @@ public class PanelAttackProgress extends javax.swing.JFrame {
     }
 
     public void done() {
+        panelParent.myUpdateUI();
         this.dispose();
     }
     

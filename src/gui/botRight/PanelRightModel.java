@@ -8,7 +8,7 @@ import model.SentinelHttpMessage;
 
 /**
  *
- * @author unreal
+ * @author Dobin
  */
 public class PanelRightModel extends AbstractTableModel implements Observer {
 

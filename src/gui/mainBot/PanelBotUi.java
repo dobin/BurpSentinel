@@ -2,7 +2,7 @@ package gui.mainBot;
 
 import model.SentinelHttpMessage;
 import util.UiUtil;
-
+ 
 /**
  *
  * @author unreal
@@ -32,7 +32,7 @@ public class PanelBotUi extends javax.swing.JPanel {
     // Called when attacking from leftpanel
     public void addAttackMessage(SentinelHttpMessage httpMessage) {
         panelRightUi.addHttpMessage(httpMessage);
-        //this.updateUI();
+        this.updateUI();
     }
     
     public PanelBotLinkManager getLinkManager() {

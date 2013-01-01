@@ -1,6 +1,5 @@
 package gui.botLeft;
 
-import gui.botLeft.PanelAttackProgress;
 import gui.mainBot.PanelBotUi;
 import gui.session.SessionManager;
 import java.awt.event.ActionEvent;
@@ -141,6 +140,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
 
         PanelAttackProgress panelProgress = new PanelAttackProgress(attackHttpParams, origHttpMessage, this, checkboxFollowRedirect.isSelected(), (String) comboboxMainSession.getSelectedItem());
         panelProgress.setVisible(true);
+        panelParent.updateUI(); // Necessary here!
         panelProgress.start();
         
         // Remove all attack ticks
@@ -208,7 +208,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(buttonSession)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 419, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
                 .addComponent(comboboxMainSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkboxFollowRedirect)
@@ -235,7 +235,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelTopBody.setLayout(panelTopBodyLayout);
         panelTopBodyLayout.setHorizontalGroup(
             panelTopBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE)
         );
         panelTopBodyLayout.setVerticalGroup(
             panelTopBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,15 +263,15 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelBottom.setLayout(panelBottomLayout);
         panelBottomLayout.setHorizontalGroup(
             panelBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 712, Short.MAX_VALUE)
+            .addGap(0, 514, Short.MAX_VALUE)
             .addGroup(panelBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelViewMessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE))
+                .addComponent(panelViewMessage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 514, Short.MAX_VALUE))
         );
         panelBottomLayout.setVerticalGroup(
             panelBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 268, Short.MAX_VALUE)
+            .addGap(0, 160, Short.MAX_VALUE)
             .addGroup(panelBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelViewMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addComponent(panelViewMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
         );
 
         jSplitPane1.setBottomComponent(panelBottom);
@@ -319,5 +319,10 @@ public class PanelLeftUi extends javax.swing.JPanel {
     public void storeUiPrefs() {
         UiUtil.storeSplitLocation(jSplitPane1, this);
         UiUtil.storeTableDimensions(tableMessages, this);
+    }
+
+    void myUpdateUI() {
+        this.updateUI();
+        panelParent.updateUI();
     }
 }
