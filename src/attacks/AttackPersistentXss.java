@@ -19,28 +19,30 @@ import util.BurpCallbacks;
  */
 public class AttackPersistentXss extends AttackI {
     private int state = 0;
-
-    private boolean attackAsuccess = false;
-    private SentinelHttpMessage httpMessageA = null;
-    private boolean messageAisInTag = false;
+    private boolean inputReflectedInTag = false;
+    private SentinelHttpMessage lastHttpMessage = null;
     
-    private boolean attackBsuccess = false;
-    private SentinelHttpMessage httpMessageB = null;
-    private boolean attackCsuccess = false;
-    private SentinelHttpMessage httpMessageC = null;
-    private boolean attackDsuccess = false;
-    private SentinelHttpMessage httpMessageD = null;
-
+    private Color failColor = new Color(0xffcccc);
+    
+    private AttackData[] attackData = {
+        new AttackData(0, XssIndicator.getInstance().getIndicator(), XssIndicator.getInstance().getIndicator()),
+        new AttackData(1, XssIndicator.getInstance().getIndicator() + "%3Cp%3E%22", XssIndicator.getInstance().getIndicator() + "<p>\""),
+        new AttackData(2, XssIndicator.getInstance().getIndicator() + "<p>\"", XssIndicator.getInstance().getIndicator() + "<p>\""),
+        new AttackData(3, XssIndicator.getInstance().getIndicator() + "%22%3D", XssIndicator.getInstance().getIndicator() + "\"="),
+        new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"="),
+    };
+    
+    
     public AttackPersistentXss(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         super(origHttpMessage, mainSessionName, followRedirect, origParam);
     }
- 
     
     @Override
     public boolean performNextAttack() {
+        boolean doContinue = false;
+        
         if (initialMessage == null || initialMessage.getRequest() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialMessage");
-            return false;
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
         }
 /*
         if (initialMessage.getReq().getChangeParam() == null) {
@@ -48,121 +50,105 @@ public class AttackPersistentXss extends AttackI {
             return false;
         }
 */
-     
+        
+        // Send next attack
+        AttackData data = attackData[state];
+        SentinelHttpMessage httpMessage = attack(data);
+        
+ 
         switch (state) {
             case 0:
-                state++;
-                return attackA();
+                // Goon if: reflected
+                if (data.getSuccess()) {
+                    doContinue = true;
+                } else {
+                    doContinue = false;
+                }
+
+                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getIndicator())) {
+                    inputReflectedInTag = true;
+                } else {
+                    inputReflectedInTag = false;
+                }
+                break;
             case 1:
-                state++;
-                return attackB();
+                // Goon if: not successful
+                if (data.getSuccess()) {
+                    doContinue = false;
+                } else {
+                    doContinue = true;
+                }
+                break;
             case 2:
-                state++;
-                return attackC();
-//            case 3:
-//                state++;
-//                return attackD();
-            default:
-                return false;
-        }
-    }
-
-    private boolean attackA() {
-        String xssIndicatorStr = XssIndicator.getInstance().getIndicator();
-
-        httpMessageA = initAttackHttpMessage(xssIndicatorStr);
-        BurpCallbacks.getInstance().sendRessource(httpMessageA, followRedirect);
-
-        String response = httpMessageA.getRes().getResponseStr();
-        if (response == null || response.length() == 0) {
-            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "attackA: have no response");
-            return true; // TODO: reissue
+                // Goon if: not successful
+                if (data.getSuccess()) {
+                    doContinue = false;
+                } else {
+                    doContinue = true;
+                }
+                break;
+            case 3:
+                // Goon if: not successful or in tag
+                if (data.getSuccess() || inputReflectedInTag) {
+                    doContinue = false;
+                } else {
+                    doContinue = true;
+                }
+                break;
+            case 4:
+                // Finito
+                doContinue = false;
+                break;
         }
         
-        if (response.contains(xssIndicatorStr)) {
-            if (checkTag(response, xssIndicatorStr)) {
-                messageAisInTag = true;
-            } else {
-                messageAisInTag = false;
-            }
-            
-            // We found XSS - add attack result
-            AttackResult res = new AttackResult("pXSS0", "SUCCESS", httpMessageA.getReq().getChangeParam(), true);
-            httpMessageA.addAttackResult(res);
-
-            ResponseHighlight h = new ResponseHighlight(xssIndicatorStr, Color.red);
-            httpMessageA.addHighlight(h);
-
-            attackAsuccess = true;
-
-            // go on
-            return true;
-        } else {
-            AttackResult res = new AttackResult("pXSS0", "FAIL", httpMessageA.getReq().getChangeParam(), false);
-            httpMessageA.addAttackResult(res);
-
-            attackAsuccess = false;
-
-            // dont go on
-            return false;
-        }
+        state++;
+        return doContinue;
     }
-
-    private boolean attackB() {
-        String xssIndicatorStr = XssIndicator.getInstance().getIndicator();
-
-        httpMessageB = initAttackHttpMessage(xssIndicatorStr + "<p>\"");
-        BurpCallbacks.getInstance().sendRessource(httpMessageB, followRedirect);
-
-        String response = httpMessageB.getRes().getResponseStr();
-        if (response.contains(xssIndicatorStr + "<p>\"")) {
-            // We found XSS - add attack result
-            AttackResult res = new AttackResult("pXSS1", "SUCCESS", httpMessageB.getReq().getChangeParam(), true);
-            httpMessageB.addAttackResult(res);
-
-            ResponseHighlight h;
-            h = new ResponseHighlight(xssIndicatorStr, Color.yellow);
-            httpMessageB.addHighlight(h);
-            h = new ResponseHighlight(xssIndicatorStr + "<p>\"", Color.red);
-            httpMessageB.addHighlight(h);
-            h = new ResponseHighlight(xssIndicatorStr + "%3Cp%3E%22", Color.green);
-            httpMessageB.addHighlight(h);
-
-            // Dont go on
-            return false;
-        } else {
-            AttackResult res = new AttackResult("pXSS1", "FAIL", httpMessageB.getReq().getChangeParam(), false);
-            httpMessageB.addAttackResult(res);
-            
-            ResponseHighlight h;
-            h = new ResponseHighlight(xssIndicatorStr, Color.yellow);
-            httpMessageB.addHighlight(h);
-
-            if (messageAisInTag) {
-                // go on
-                return true;
-            } else {
-                return false;
-            }
+    
+    private SentinelHttpMessage attack(AttackData data) {
+        SentinelHttpMessage httpMessage = initAttackHttpMessage(data.getInput());
+        lastHttpMessage = httpMessage;
+        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        
+        String response = httpMessage.getRes().getResponseStr();
+        if (response == null || response.length() == 0) {
+            BurpCallbacks.getInstance().print("Response error");
+            return httpMessage;
         }
+        
+        if (response.contains(data.getOutput())) {
+            data.setSuccess(true);
+            
+            AttackResult res = new AttackResult(
+                    "XSS" + data.getIndex(), 
+                    "SUCCESS",
+                    httpMessage.getReq().getChangeParam(), 
+                    true);
+            httpMessage.addAttackResult(res);
+
+            ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
+            httpMessage.addHighlight(h);
+        } else {
+            data.setSuccess(false);
+            
+            AttackResult res = new AttackResult(
+                    "XSS" + data.getIndex(), 
+                    "FAIL", 
+                    httpMessage.getReq().getChangeParam(), 
+                    false);
+            httpMessage.addAttackResult(res);
+        }
+        
+        // Highlight indicator anyway
+        ResponseHighlight h = new ResponseHighlight(data.getOutput(), Color.green);
+        httpMessage.addHighlight(h);
+        
+        return httpMessage;
     }
-
-
+    
+    @Override
     public SentinelHttpMessage getLastAttackMessage() {
-        switch (state) {
-            case 1:
-                return httpMessageA;
-            case 2:
-                return httpMessageB;
-            case 3:
-                return httpMessageC;
-//            case 3:
-//                state++;
-//                return attackD();
-            default:
-                return null;
-        }
-
+        return lastHttpMessage;
     }
 
     private boolean checkTag(String str, String findStr) {
@@ -193,39 +179,5 @@ public class AttackPersistentXss extends AttackI {
         }
 
         return false;
-    }
-
-    private boolean attackC() {
-        String xssIndicatorStr = XssIndicator.getInstance().getIndicator();
-
-        httpMessageC = initAttackHttpMessage(xssIndicatorStr + "\"=");
-        BurpCallbacks.getInstance().sendRessource(httpMessageC, followRedirect);
-
-        String response = httpMessageC.getRes().getResponseStr();
-        if (response.contains(xssIndicatorStr + "\"=") && checkTag(response, xssIndicatorStr + "\"=")) {
-            // We found XSS - add attack result
-            AttackResult res = new AttackResult("pXSS2", "SUCCESS", httpMessageC.getReq().getChangeParam(), true);
-            httpMessageC.addAttackResult(res);
-
-            ResponseHighlight h;
-            h = new ResponseHighlight(xssIndicatorStr, Color.yellow);
-            httpMessageB.addHighlight(h);
-            h = new ResponseHighlight(xssIndicatorStr + "\"=", Color.red);
-            httpMessageC.addHighlight(h);
-
-            // Dont go on
-            return false;
-        } else {
-            AttackResult res = new AttackResult("pXSS2", "FAIL", httpMessageC.getReq().getChangeParam(), false);
-            httpMessageC.addAttackResult(res);
-
-            ResponseHighlight h;
-            h = new ResponseHighlight(xssIndicatorStr, Color.yellow);
-            httpMessageB.addHighlight(h);
-            
-            // go on
-            return false;
-        }
-
     }
 }

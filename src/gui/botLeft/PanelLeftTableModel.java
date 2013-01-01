@@ -84,7 +84,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 4:
                 return "XSS";
             case 5:
-                return "pXSS";
+                return "eXSS";
             case 6:
                 return "SQL";
                 
