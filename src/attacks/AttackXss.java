@@ -42,7 +42,7 @@ public class AttackXss extends AttackI {
         boolean doContinue = false;
         
         if (initialMessage == null || initialMessage.getRequest() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
+            BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
         }
 /*
         if (initialMessage.getReq().getChangeParam() == null) {

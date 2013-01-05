@@ -122,11 +122,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 7:
                 // Check if attacks are set - if not, set em all!
                 SentinelHttpParam param = myRequest.getReq().getParam(row);
-                if (param.getAttackType(AttackMain.AttackTypes.XSS).isActive()
-                   || param.getAttackType(AttackMain.AttackTypes.pXSS).isActive()
-                   || param.getAttackType(AttackMain.AttackTypes.SQL).isActive()
-                   || param.getAttackType(AttackMain.AttackTypes.AUTHORISATION).isActive()) 
+                if (  ! param.getAttackType(AttackMain.AttackTypes.XSS).isActive()
+                   || ! param.getAttackType(AttackMain.AttackTypes.pXSS).isActive()
+                   || ! param.getAttackType(AttackMain.AttackTypes.SQL).isActive()
+                   || ! param.getAttackType(AttackMain.AttackTypes.AUTHORISATION).isActive()) 
                 {
+                    param.setAttackType(AttackMain.AttackTypes.ORIGINAL, true);
                     param.setAttackType(AttackMain.AttackTypes.XSS, true);
                     param.setAttackType(AttackMain.AttackTypes.SQL, true);
                 }

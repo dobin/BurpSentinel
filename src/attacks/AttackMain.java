@@ -15,6 +15,7 @@ public class AttackMain {
         pXSS,
         SQL,
         AUTHORISATION,
+        ORIGINAL
     };
     
 }

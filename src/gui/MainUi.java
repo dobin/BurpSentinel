@@ -36,7 +36,7 @@ public class MainUi extends javax.swing.JPanel implements ITab {
         panelTopUi.setMainGui(this);
 
         UiUtil.restoreSplitLocation(jSplitPane1, this);
-        //initTestMessages();
+        initTestMessages();
     }
 
     /* Add new HttpRequestResponse

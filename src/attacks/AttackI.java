@@ -60,10 +60,14 @@ public abstract class AttackI {
 
         // Set change param
         SentinelHttpParam changeParam = new SentinelHttpParam(origParam);
-        changeParam.changeValue(attack);
+        if (attack != null) {
+            changeParam.changeValue(attack);
+        }
         newHttpMessage.getReq().setChangeParam(changeParam);
-        newHttpMessage.getReq().applyChangeParam();
-
+        if (attack != null) {
+            newHttpMessage.getReq().applyChangeParam();
+        }
+        
         // Set parent
         newHttpMessage.setParentHttpMessage(initialMessage);
         

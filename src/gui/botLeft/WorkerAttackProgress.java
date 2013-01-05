@@ -4,6 +4,7 @@ import gui.botLeft.PanelAttackProgress;
 import attacks.AttackAuthorisation;
 import attacks.AttackI;
 import attacks.AttackMain;
+import attacks.AttackOriginal;
 import attacks.AttackPersistentXss;
 import attacks.AttackSql;
 import attacks.AttackXss;
@@ -13,6 +14,7 @@ import javax.swing.SwingWorker;
 import model.AttackTypeData;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
+import util.BurpCallbacks;
 
 /**
  *
@@ -81,6 +83,13 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
             }
             
 //            origHttpMessage.getReq().setOrigParam(attackHttpParam);
+                        
+            // Original
+            AttackTypeData origAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.ORIGINAL);
+            if (origAttackData != null && origAttackData.isActive()) {
+                AttackI attack = new AttackOriginal(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
+                performAttack(attack, httpMessages);
+            }
 
             // XSS
             AttackTypeData xssAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.XSS);
@@ -109,8 +118,9 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
                 AttackI attack = new AttackAuthorisation(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, authAttackData.getData());
                 performAttack(attack, httpMessages);
             }
-        }
 
+        }
+ 
         return httpMessages;
     }
 }
