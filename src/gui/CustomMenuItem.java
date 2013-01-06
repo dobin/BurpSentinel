@@ -2,6 +2,7 @@ package gui;
 
 import burp.IHttpRequestResponse;
 import burp.IMenuItemHandler;
+import burp.MainUiInterface;
 import javax.swing.SwingUtilities;
 
 /**
@@ -12,9 +13,9 @@ import javax.swing.SwingUtilities;
 public class CustomMenuItem implements IMenuItemHandler {
 
     // Link to parent MainUi to add messages
-    private MainUi mainGui;
+    private MainUiInterface mainGui;
 
-    public CustomMenuItem(MainUi mainGui) {
+    public CustomMenuItem(MainUiInterface mainGui) {
         this.mainGui = mainGui;
     }
 

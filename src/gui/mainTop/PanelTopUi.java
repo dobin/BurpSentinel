@@ -1,6 +1,6 @@
 package gui.mainTop;
 
-import gui.MainUi;
+import gui.SentinelMainUi;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -14,7 +14,7 @@ import util.UiUtil;
  * @author Dobin
  */
 public class PanelTopUi extends javax.swing.JPanel {
-    private MainUi mainGuiFrame = null;
+    private SentinelMainUi mainGuiFrame = null;
     private PanelTopTableModel tableTopModel;
     
     private int currentSelectedRow = -1;
@@ -79,7 +79,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         //this.updateUI();
     }
 
-        
     // Used for swing
     private TableModel getMessageTableModel() {
         return tableTopModel;
@@ -88,10 +87,9 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     // set MainGui (parent)
     // So we can interact with other UI parts (especially bot panel)
-    public void setMainGui(MainUi aThis) {
+    public void setMainGui(SentinelMainUi aThis) {
         this.mainGuiFrame = aThis;
     }
-    
     
     /**
      * This method is called from within the constructor to initialize the form.

@@ -84,8 +84,6 @@ public abstract class AttackI {
         }
         
         //BurpCallbacks.getInstance().print("\n\nAfter: \n" + newHttpMessage.getReq().getRequestStr());
-        
-
         return newHttpMessage;
     }
     

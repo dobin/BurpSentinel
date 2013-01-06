@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
@@ -31,8 +30,6 @@ import org.fife.ui.rtextarea.SearchEngine;
 import org.w3c.tidy.Tidy;
 import util.BurpCallbacks;
 import util.UiUtil;
-import util.diff.DiffPrint;
-import util.diff.DiffPrint.UnifiedPrint;
 import util.diff.DiffPrint.UnifiedSmallPrint;
 import util.diff.GnuDiff;
 import util.diff.GnuDiff.change;
@@ -73,7 +70,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         messagePopup = new MessagePopup(this);
         
         textareaMessage.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
-        textareaMessage.setEditable(false);
+        textareaMessage.setEditable(true);
         textareaMessage.setLineWrap(true);
         textareaMessage.setWrapStyleWord(false);
         textareaMessage.setAnimateBracketMatching(false);
@@ -83,7 +80,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         UiUtil.getTheme().apply(textareaMessage);
         textareaMessage.revalidate();
         textareaMessage.requestFocusInWindow();
-        
+   
         labelPosition.setText(" ");
         
         origScrollbarModel = jScrollPane1.getVerticalScrollBar().getModel();
@@ -212,6 +209,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         setMessageText(viewDiffContent);
     }
     
+    public void setShowResponse(boolean b) {
+        this.showResponse = b;
+    }
     
     private void showMessage() {
         textareaMessage.getHighlighter().removeAllHighlights();
@@ -755,6 +755,22 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textareaMessage;
     private javax.swing.JTextField textfieldSearch;
     // End of variables declaration//GEN-END:variables
+
+    public String getRequestContent() {
+        if (showResponse) {
+            return null;
+        }
+        
+        String s = textareaMessage.getText();
+        return s;
+    }
+
+    private boolean isRequestEditor = false;
+    
+    public void setRequestEditor(boolean b) {
+        isRequestEditor = b;
+        textareaMessage.setEditable(b);
+    }
 
 
 }

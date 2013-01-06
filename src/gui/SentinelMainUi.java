@@ -2,6 +2,7 @@ package gui;
 
 import burp.IHttpRequestResponse;
 import burp.ITab;
+import burp.MainUiInterface;
 import gui.mainBot.PanelBotUi;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -17,7 +18,7 @@ import util.UiUtil;
  *
  * @author Dobin
  */
-public class MainUi extends javax.swing.JPanel implements ITab {
+public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiInterface {
 
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
@@ -25,7 +26,7 @@ public class MainUi extends javax.swing.JPanel implements ITab {
     /**
      * Creates new form MainGuiFrame
      */
-    public MainUi() {
+    public SentinelMainUi() {
         initComponents();
         init();
     }
@@ -295,20 +296,20 @@ public class MainUi extends javax.swing.JPanel implements ITab {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainUi().setVisible(true);
+                new SentinelMainUi().setVisible(true);
             }
         });
     }

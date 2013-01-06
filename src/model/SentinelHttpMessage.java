@@ -47,6 +47,15 @@ public class SentinelHttpMessage extends Observable implements IHttpRequestRespo
         httpRequest = new SentinelHttpRequest(s, httpService);
         
         httpResponse = new SentinelHttpResponse();
+        
+        createTime = new Date(System.currentTimeMillis());
+    }
+    
+    public SentinelHttpMessage(String s, IHttpService httpService) {
+        this.httpService = httpService;
+        httpRequest = new SentinelHttpRequest(s, httpService);
+        
+        createTime = new Date(System.currentTimeMillis());
     }
     
     public SentinelHttpRequest getReq() {
@@ -173,6 +182,9 @@ public class SentinelHttpMessage extends Observable implements IHttpRequestRespo
     }
 
     public SentinelHttpMessage getParentHttpMessage() {
+        if (parentHttpMessage == null) {
+            BurpCallbacks.getInstance().print("getParentHttpMessage: null");
+        }
         return parentHttpMessage;
     }
 

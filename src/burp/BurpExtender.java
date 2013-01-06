@@ -1,8 +1,9 @@
 package burp;
 
 import gui.CustomMenuItem;
-import gui.MainUi;
+import gui.SentinelMainUi;
 import javax.swing.SwingUtilities;
+import replayer.gui.ReplayerMain.ReplayerMainUi;
 import util.BurpCallbacks;
 
 /*
@@ -15,9 +16,11 @@ import util.BurpCallbacks;
 public class BurpExtender implements IExtensionStateListener {
 
     public IBurpExtenderCallbacks mCallbacks;
-    private CustomMenuItem customMenuItem;
+    private CustomMenuItem sentinelMenuItem;
+    private CustomMenuItem replayerMenuItem;
 
-    private MainUi main;
+    private SentinelMainUi sentinelMain;
+    private ReplayerMainUi replayerMain;
     
     public BurpExtender() {
         // Nothing - everything gets done on registerExtenderCallbacks()
@@ -38,13 +41,19 @@ public class BurpExtender implements IExtensionStateListener {
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                // Create window
-                main = new MainUi();
+                
+                sentinelMain = new SentinelMainUi();
+                replayerMain = new ReplayerMainUi();
+                
+                callbacks.addSuiteTab(sentinelMain);
+                callbacks.addSuiteTab(replayerMain);
                 
                 // Add burp connections
-                customMenuItem = new CustomMenuItem(main);
-                callbacks.addSuiteTab(main);
-                callbacks.registerMenuItem("Send to sentinel", customMenuItem);
+                sentinelMenuItem = new CustomMenuItem(sentinelMain);
+                replayerMenuItem = new CustomMenuItem(replayerMain);
+                
+                callbacks.registerMenuItem("Send to sentinel", sentinelMenuItem);
+                callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
 
                 BurpCallbacks.getInstance().print("Sentinel v0.2");
             }
@@ -54,6 +63,6 @@ public class BurpExtender implements IExtensionStateListener {
     // On exit, store UI settings
     @Override
     public void extensionUnloaded() {
-        main.storeUiPrefs();
+        sentinelMain.storeUiPrefs();
     }
 }
