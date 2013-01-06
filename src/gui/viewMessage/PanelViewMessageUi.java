@@ -6,12 +6,16 @@ import gui.session.SessionUser;
 import java.awt.Color;
 import java.util.LinkedList;
 import javax.swing.BoundedRangeModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -49,6 +53,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         textareaMessage.setEditable(false);
         textareaMessage.setLineWrap(true);
         
+        
         textareaMessage.setWrapStyleWord(false);
         textareaMessage.setAnimateBracketMatching(false);
         textareaMessage.setAutoIndentEnabled(false);
@@ -57,9 +62,31 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         UiUtil.getTheme().apply(textareaMessage);
         textareaMessage.revalidate();
         
+        textareaMessage.requestFocusInWindow();
+        
         labelPosition.setText(" ");
         
-        origScrollbarModel = jScrollPane2.getVerticalScrollBar().getModel();
+        origScrollbarModel = jScrollPane1.getVerticalScrollBar().getModel();
+        
+
+        textfieldSearch.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                initSearchContext(textfieldSearch.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                initSearchContext(textfieldSearch.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                initSearchContext(textfieldSearch.getText());
+            }
+        });
+        //Test t = new Test();
+        //t.setVisible(true);
     }
         
 
@@ -70,6 +97,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         }
         this.httpMessage = httpMessage;
         reInit();
+
     }
 
     private void reInit() {
@@ -239,8 +267,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         labelPosition = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         textareaMessage = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        buttonPrev = new javax.swing.JButton();
+        buttonNext = new javax.swing.JButton();
+        textfieldSearch = new javax.swing.JTextField();
 
         labelSize.setText("00000");
         labelSize.setToolTipText("Size of Response Body in Bytes");
@@ -345,18 +377,56 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         textareaMessage.setColumns(20);
         textareaMessage.setRows(5);
-        textareaMessage.setFocusable(false);
-        jScrollPane2.setViewportView(textareaMessage);
+        jScrollPane1.setViewportView(textareaMessage);
+
+        buttonPrev.setText("<");
+        buttonPrev.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPrevActionPerformed(evt);
+            }
+        });
+
+        buttonNext.setText(">");
+        buttonNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNextActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(buttonPrev)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonNext)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(textfieldSearch))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonPrev)
+                    .addComponent(buttonNext)
+                    .addComponent(textfieldSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -477,14 +547,14 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     
     public void setScrollBarModel(BoundedRangeModel model) {
         if (model == null) {
-            int pos = jScrollPane2.getVerticalScrollBar().getValue();
+            int pos = jScrollPane1.getVerticalScrollBar().getValue();
             origScrollbarModel.setValue(pos);
-            jScrollPane2.getVerticalScrollBar().setModel(origScrollbarModel);
+            jScrollPane1.getVerticalScrollBar().setModel(origScrollbarModel);
             checkboxIsLink.setSelected(false);
         } else {
             // Set new model
             //origScrollbarModel = jScrollPane2.getVerticalScrollBar().getModel();
-            jScrollPane2.getVerticalScrollBar().setModel(model);
+            jScrollPane1.getVerticalScrollBar().setModel(model);
             checkboxIsLink.setSelected(true);
         }
     }
@@ -500,16 +570,59 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private void checkboxIsLinkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxIsLinkActionPerformed
         if (checkboxIsLink.isSelected()) {
             // Other window should have same model
-            linkManager.setScrollModel(jScrollPane2.getVerticalScrollBar().getModel(), this);
+            linkManager.setScrollModel(jScrollPane1.getVerticalScrollBar().getModel(), this);
         } else {
             // Restore original model on all window
             linkManager.setScrollModel(null, this);
-            jScrollPane2.getVerticalScrollBar().setModel(origScrollbarModel);
+            jScrollPane1.getVerticalScrollBar().setModel(origScrollbarModel);
         }
     }//GEN-LAST:event_checkboxIsLinkActionPerformed
 
+    
+    private String lastSearch = "";
+    private SearchContext searchContext = null;
+    
+    private void initSearchContext(String newSearchString) {
+        if (lastSearch.equals(newSearchString)) {
+            return;
+        }
+        lastSearch = newSearchString;
+        if (newSearchString.equals("")) {
+            searchContext = new SearchContext();
+            textareaMessage.clearMarkAllHighlights();
+            return;
+        }
+
+        textareaMessage.setCaretPosition(0);
+        searchContext = new SearchContext();
+        searchContext.setSearchFor(newSearchString);
+        searchContext.setSearchForward(true);
+        SearchEngine.find(textareaMessage, searchContext);
+        
+        //textareaMessage.markAll(newSearchString, true, false, false);
+    }
+    
+    private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
+        //textareaMessage.markAll(TOOL_TIP_TEXT_KEY, showResponse, showResponse, showResponse);
+        //initSearchContext(textfieldSearch.getText());
+        
+        searchContext.setSearchForward(true);
+        SearchEngine.find(textareaMessage, searchContext);
+
+    }//GEN-LAST:event_buttonNextActionPerformed
+
+    private void buttonPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrevActionPerformed
+        //initSearchContext(textfieldSearch.getText());
+        searchContext.setSearchForward(false);
+
+
+        SearchEngine.find(textareaMessage, searchContext);
+    }//GEN-LAST:event_buttonPrevActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDown;
+    private javax.swing.JButton buttonNext;
+    private javax.swing.JButton buttonPrev;
     private javax.swing.JButton buttonShowRequest;
     private javax.swing.JButton buttonUp;
     private javax.swing.JCheckBox checkboxIsFix;
@@ -518,12 +631,14 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelDom;
     private javax.swing.JLabel labelHttpCode;
     private javax.swing.JLabel labelPosition;
     private javax.swing.JLabel labelSize;
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textareaMessage;
+    private javax.swing.JTextField textfieldSearch;
     // End of variables declaration//GEN-END:variables
 
 }
