@@ -2,6 +2,7 @@ package model;
 
 import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
+import java.util.Arrays;
 import util.BurpCallbacks;
 
 /**
@@ -128,5 +129,11 @@ public class SentinelHttpResponse {
         } else {
             return "";
         }
+    }
+
+    public String getBodyStr() {
+        byte[] body = Arrays.copyOfRange(response, responseInfo.getBodyOffset(), response.length);
+        String s = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(body);
+        return s;
     }
 }

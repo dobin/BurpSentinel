@@ -78,8 +78,7 @@ public abstract class AttackI {
 
             // Dont do it if we already modified the session parameter
             if (! sessionVarName.equals(changeParam.getName())) {
-                BurpCallbacks.getInstance().print("Change session: " + sessionVarName + " " + sessionVarValue);
-            
+//                BurpCallbacks.getInstance().print("Change session: " + sessionVarName + " " + sessionVarValue);
                 newHttpMessage.getReq().changeSession(sessionVarName, sessionVarValue);
             }
         }

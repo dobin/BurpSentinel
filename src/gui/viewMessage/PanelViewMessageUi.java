@@ -4,8 +4,20 @@ import gui.mainBot.PanelBotLinkManager;
 import gui.session.SessionManager;
 import gui.session.SessionUser;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoundedRangeModel;
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
@@ -16,8 +28,14 @@ import model.SentinelHttpParam;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
+import org.w3c.tidy.Tidy;
 import util.BurpCallbacks;
 import util.UiUtil;
+import util.diff.DiffPrint;
+import util.diff.DiffPrint.UnifiedPrint;
+import util.diff.DiffPrint.UnifiedSmallPrint;
+import util.diff.GnuDiff;
+import util.diff.GnuDiff.change;
 
 /**
  * Displays httpMessages
@@ -34,6 +52,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private boolean showResponse = true;
     private MessagePopup messagePopup;
     
+    private PanelViewComboboxModel panelViewComboboxModel;
+    
     private PanelBotLinkManager linkManager = null;
     
     private int selectIndex = -1;
@@ -42,18 +62,19 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
     private BoundedRangeModel origScrollbarModel;
     
+    
     /**
      * Creates new form PanelResponseUi
      */
     public PanelViewMessageUi() {
+        panelViewComboboxModel = new PanelViewComboboxModel();
+        
         initComponents();
         messagePopup = new MessagePopup(this);
         
         textareaMessage.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
         textareaMessage.setEditable(false);
         textareaMessage.setLineWrap(true);
-        
-        
         textareaMessage.setWrapStyleWord(false);
         textareaMessage.setAnimateBracketMatching(false);
         textareaMessage.setAutoIndentEnabled(false);
@@ -61,13 +82,22 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         textareaMessage.setPopupMenu(messagePopup.getPopup());
         UiUtil.getTheme().apply(textareaMessage);
         textareaMessage.revalidate();
-        
         textareaMessage.requestFocusInWindow();
         
         labelPosition.setText(" ");
         
         origScrollbarModel = jScrollPane1.getVerticalScrollBar().getModel();
-        
+
+        comboboxView.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JComboBox cb = (JComboBox)e.getSource();
+                String selected = (String) cb.getSelectedItem();
+
+                currentView = selected;
+                showMessage();
+            }
+        });
 
         textfieldSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -105,19 +135,99 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             labelSize.setText(Integer.toString(httpMessage.getRes().getSize()));
             labelHttpCode.setText(httpMessage.getRes().getHttpCode());
             labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
+            
+            if (httpMessage.getParentHttpMessage() == null) {
+                panelViewComboboxModel.hasParent(false);
+            } else {
+                panelViewComboboxModel.hasParent(true);
+            }
+            
+            viewDefaultContent = null;
+            viewBeautifyContent = null;
+            viewDiffContent = null;
         }
 
-        showResponse();
+        showMessage();
     }
 
+    
+    private String currentView = "Default";
+    private String viewDefaultContent = null;
+    private String viewBeautifyContent = null;
+    private String viewDiffContent = null;
 
-    private void showResponse() {
+    
+    private void showDefaultView() {
+        if (viewDefaultContent == null) {
+            viewDefaultContent = httpMessage.getRes().getResponseStr();
+        }
+        
+        setMessageText(viewDefaultContent);
+        highlightResponse();
+    }
+    
+    private void showBeautifyView() {
+        if (viewBeautifyContent == null) {
+            
+            String res = httpMessage.getRes().getBodyStr();
+            
+            InputStream is = new ByteArrayInputStream(res.getBytes());
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            
+            Tidy tidy = new Tidy();
+            tidy.setIndentContent(true);
+            tidy.parse(is, os);
+            try {
+                String s = new String (os.toByteArray(), "UTF-8");
+                viewBeautifyContent = s;
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        setMessageText(viewBeautifyContent);
+        highlightResponse();
+    }
+    
+    
+    private void showDiffView() {
+        if (viewDiffContent == null) {
+            String origRes = httpMessage.getParentHttpMessage().getRes().getResponseStr();
+            String newRes = httpMessage.getRes().getResponseStr();
+
+            String[] origResArr = origRes.split("\n");
+            String[] newResArr = newRes.split("\n");
+
+            GnuDiff gnuDiff = new GnuDiff(origResArr, newResArr);
+            change changes = gnuDiff.diff(GnuDiff.forwardScript);
+
+            UnifiedSmallPrint unifiedPrint = new UnifiedSmallPrint(origResArr, newResArr);
+            StringWriter a = new StringWriter();
+            unifiedPrint.setOutput(a);
+            unifiedPrint.print_script(changes);
+            
+            viewDiffContent = a.toString();
+        }
+        
+        setMessageText(viewDiffContent);
+    }
+    
+    
+    private void showMessage() {
         textareaMessage.getHighlighter().removeAllHighlights();
 
         if (showResponse) {
             buttonShowRequest.setText("Response");
-            setMessageText(httpMessage.getRes().getResponseStr());
-            highlightResponse();
+
+            if (currentView.equals("Default")) {
+                showDefaultView();
+            } else if (currentView.equals("Beautify")) {
+                showBeautifyView();
+            } else if (currentView.equals("Diff")) {
+                showDiffView();
+            }
+            
+            comboboxView.setVisible(true);
 
             //buttonShowResponse.setBackground(Color.GRAY);
             //buttonShowResponse.setSelected(true);
@@ -128,6 +238,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             setMessageText(httpMessage.getReq().getRequestStr());
             highlightRequest();
             
+            comboboxView.setVisible(false);
             //buttonShowResponse.setBackground(Color.LIGHT_GRAY);
             //buttonShowRequest.setBackground(Color.GRAY);
             //buttonShowResponse.setSelected(false);
@@ -224,7 +335,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
                 // Also add highlighter to indicate to the user where it is
                 Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(h.getColor());
-                BurpCallbacks.getInstance().print("Highlight: " + h.getStr());
                 try {
                     textareaMessage.getHighlighter().addHighlight(sh.getStart(), sh.getEnd(), painter);
                     myHighlights.add(sh);
@@ -238,12 +348,17 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     
     public void c_sendAgain() {
         BurpCallbacks.getInstance().sendRessource(httpMessage, true);
-        this.reInit();       
+        this.reInit();
     }
     
     public void c_sendToRepeater() {
         BurpCallbacks.getInstance().sendToRepeater(httpMessage);
     }
+    
+    private ComboBoxModel getPanelViewComboboxModel() {
+        return panelViewComboboxModel;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -266,6 +381,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         checkboxIsFix = new javax.swing.JCheckBox();
         labelPosition = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        comboboxView = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textareaMessage = new org.fife.ui.rsyntaxtextarea.RSyntaxTextArea();
@@ -330,6 +446,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         jLabel1.setText(";");
 
+        comboboxView.setModel(getPanelViewComboboxModel());
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -353,14 +471,16 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 .addComponent(buttonDown)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelPosition)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addComponent(comboboxView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonShowRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonShowRequest)
                     .addComponent(labelSize)
@@ -371,7 +491,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                     .addComponent(checkboxIsLink)
                     .addComponent(checkboxIsFix)
                     .addComponent(labelPosition)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(comboboxView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -424,7 +545,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -458,7 +579,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
     private void buttonShowRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonShowRequestActionPerformed
         this.showResponse = ! this.showResponse;
-        showResponse();
+        showMessage();
     }//GEN-LAST:event_buttonShowRequestActionPerformed
 
 
@@ -603,19 +724,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     }
     
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
-        //textareaMessage.markAll(TOOL_TIP_TEXT_KEY, showResponse, showResponse, showResponse);
-        //initSearchContext(textfieldSearch.getText());
-        
         searchContext.setSearchForward(true);
         SearchEngine.find(textareaMessage, searchContext);
-
     }//GEN-LAST:event_buttonNextActionPerformed
 
     private void buttonPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPrevActionPerformed
-        //initSearchContext(textfieldSearch.getText());
         searchContext.setSearchForward(false);
-
-
         SearchEngine.find(textareaMessage, searchContext);
     }//GEN-LAST:event_buttonPrevActionPerformed
 
@@ -627,6 +741,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private javax.swing.JButton buttonUp;
     private javax.swing.JCheckBox checkboxIsFix;
     private javax.swing.JCheckBox checkboxIsLink;
+    private javax.swing.JComboBox comboboxView;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -640,5 +755,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textareaMessage;
     private javax.swing.JTextField textfieldSearch;
     // End of variables declaration//GEN-END:variables
+
 
 }

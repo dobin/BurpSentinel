@@ -22,6 +22,7 @@ public class MessagePopup implements ActionListener {
     private JMenuItem menuRepeater;
     private JMenuItem menuReissue;
     private JMenuItem menuCopy;
+//    private JMenuItem menuDiff;
     
     private PanelViewMessageUi panelMessage;
     
@@ -39,14 +40,17 @@ public class MessagePopup implements ActionListener {
         menuCopy = new JMenuItem(RSyntaxTextArea.getAction(RTextArea.COPY_ACTION));
         menu.add(menuCopy);
         
-        menuRepeater = new JMenuItem("Send message to: burp reapeater");
+        menuRepeater = new JMenuItem("Send to Reapeater");
         menuRepeater.addActionListener(this);
         menu.add(menuRepeater);
         
-        menuReissue = new JMenuItem("Send message.request: again");
+        menuReissue = new JMenuItem("Send again");
         menuReissue.addActionListener(this);
         menu.add(menuReissue);
-        
+
+//        menuDiff = new JMenuItem("Diff");
+//        menuDiff.addActionListener(this);
+//        menu.add(menuDiff);
         
     }
     
@@ -64,6 +68,9 @@ public class MessagePopup implements ActionListener {
         if (o == menuReissue) {
             panelMessage.c_sendAgain();
         }
+ //       if (o == menuDiff) {
+ //           panelMessage.c_diff();
+ //       }
     }
     
 }
