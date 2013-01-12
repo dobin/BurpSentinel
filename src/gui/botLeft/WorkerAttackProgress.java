@@ -99,7 +99,7 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
             }
             
             // pXSS
-            AttackTypeData pxssAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.pXSS);
+            AttackTypeData pxssAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.OTHER);
             if (pxssAttackData != null && pxssAttackData.isActive()) {
                 AttackI attack = new AttackPersistentXss(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
                 performAttack(attack, httpMessages);

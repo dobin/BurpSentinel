@@ -12,8 +12,8 @@ public class AttackMain {
  
     public enum AttackTypes  {
         XSS,
-        pXSS,
         SQL,
+        OTHER,
         AUTHORISATION,
         ORIGINAL
     };

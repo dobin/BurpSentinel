@@ -140,11 +140,15 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private void attackRessource() {
         LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
 
-        PanelAttackProgress panelProgress = new PanelAttackProgress(attackHttpParams, origHttpMessage, this, checkboxFollowRedirect.isSelected(), (String) comboboxMainSession.getSelectedItem());
+        PanelAttackProgress panelProgress = new PanelAttackProgress(
+                attackHttpParams, 
+                origHttpMessage, 
+                this, 
+                checkboxFollowRedirect.isSelected(), 
+                (String) comboboxMainSession.getSelectedItem());
         //GraphicsConfiguration gc = this.getGraphicsConfiguration();
         //Rectangle bounds = gc.getBounds();
         //panelProgress.setLocation();
-        
         panelProgress.setLocationRelativeTo(this);
         panelProgress.setVisible(true);
         panelParent.updateUI(); // Necessary here, or flicker bug!

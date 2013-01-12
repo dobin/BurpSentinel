@@ -51,14 +51,6 @@ public class SentinelHttpParam implements IParameter {
         this.valueEnd = valueEnd;
     }
 
-    // Should this param be attacked (in the future)?
-    public boolean getPerformAttack() {
-        return performAttack;
-    }
-
-    public void setPerformAttack(boolean attack) {
-        this.performAttack = attack;
-    }
     private HashMap<AttackMain.AttackTypes, AttackTypeData> attackTypes = new HashMap<AttackMain.AttackTypes, AttackTypeData>();
 
     public void setAttackType(AttackTypes attackType, boolean enabled, String selected) {
