@@ -54,10 +54,8 @@ public abstract class AttackI {
         SentinelHttpMessage newHttpMessage = new SentinelHttpMessage(initialMessage);
 
         // BurpCallbacks.getInstance().print("Before: \n" + messageA.getReq().getRequestStr());
-
         // Set orig param
         newHttpMessage.getReq().setOrigParam(origParam);
-
         // Set change param
         SentinelHttpParam changeParam = new SentinelHttpParam(origParam);
         if (attack != null) {
@@ -72,14 +70,16 @@ public abstract class AttackI {
         newHttpMessage.setParentHttpMessage(initialMessage);
         
         // Apply new session
-        if (mainSessionName != null && !mainSessionName.equals("<default>")) {
-            String sessionVarName = SessionManager.getInstance().getSessionVarName();
-            String sessionVarValue = SessionManager.getInstance().getValueFor(mainSessionName);
+        if (mainSessionName != null) {
+            if (! mainSessionName.equals("<default>") && ! mainSessionName.startsWith("<")) {
+                String sessionVarName = SessionManager.getInstance().getSessionVarName();
+                String sessionVarValue = SessionManager.getInstance().getValueFor(mainSessionName);
 
-            // Dont do it if we already modified the session parameter
-            if (! sessionVarName.equals(changeParam.getName())) {
+                // Dont do it if we already modified the session parameter
+                if (!sessionVarName.equals(changeParam.getName())) {
 //                BurpCallbacks.getInstance().print("Change session: " + sessionVarName + " " + sessionVarValue);
-                newHttpMessage.getReq().changeSession(sessionVarName, sessionVarValue);
+                    newHttpMessage.getReq().changeSession(sessionVarName, sessionVarValue);
+                }
             }
         }
         

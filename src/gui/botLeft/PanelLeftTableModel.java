@@ -246,23 +246,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             uiEntries.add(new PanelLeftTableUIEntry());
         }
 
-        /*
-         checkBoxAttack = new JCheckBox[argc];
-         for (int n = 0; n < argc; n++) {
-         checkBoxAttack[n] = new JCheckBox("", myRequest.getReq().getParam(n).getPerformAttack());
-         }*/
-
         this.fireTableDataChanged();
     }
 
-    /*
-     void userClick(int selectedRowIndex, int selectedColumnIndex) {
-     if (selectedColumnIndex == 4) {
-     //boolean isSelected = ! checkBoxAttack[selectedRowIndex].isSelected();
-     //checkBoxAttack[selectedRowIndex].setSelected(isSelected);
-     //myRequest.getParam(selectedRowIndex).setAttack(isSelected);
-     }
-     }*/
     public LinkedList<SentinelHttpParam> createChangeParam() {
         LinkedList<SentinelHttpParam> list = new LinkedList<SentinelHttpParam>();
 
@@ -272,12 +258,13 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             boolean attackThis = false;
             SentinelHttpParam param = myRequest.getReq().getParam(n);
             
-            
             if (uiEntries.get(n).isXssEnabled) {
+                BurpCallbacks.getInstance().print("Attack XSS because: " + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
             }
             if (uiEntries.get(n).isSqlEnabled) {
+                BurpCallbacks.getInstance().print("Attack SQL because: " + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
                 attackThis = true;
             }
@@ -294,7 +281,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 attackThis = true;
             }
 
-
             // Check if we should attack this specific param
             if (attackThis) {
                 list.add(param);
@@ -310,8 +296,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     void resetAttackSelection() {
-        
-        
         for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
             uiEntries.get(n).isXssEnabled = false;
             uiEntries.get(n).isSqlEnabled = false;

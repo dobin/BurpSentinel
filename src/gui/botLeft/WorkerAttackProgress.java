@@ -40,7 +40,7 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
         this.followRedirect = followRedirect;
         this.mainSessionName = mainSessionName;
     }
-    private boolean isCanceled = false;
+
 
     @Override
     protected void process(List<SentinelHttpMessage> strings) {
@@ -70,6 +70,10 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
                 httpMessages.add(attackMessage);
                 publish(attackMessage);
             }
+            
+            if (panelProgress.isCanceled()) {
+                goon = false;
+            }
         }
     }
 
@@ -78,10 +82,6 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
         LinkedList<SentinelHttpMessage> httpMessages = new LinkedList<SentinelHttpMessage>();
 
         for (SentinelHttpParam attackHttpParam : attackHttpParams) {
-            if (isCanceled) {
-                break;
-            }
-            
 //            origHttpMessage.getReq().setOrigParam(attackHttpParam);
                         
             // Original
@@ -121,7 +121,7 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
             }
 
             
-            //attackHttpParam.resetAttackTypes();
+            attackHttpParam.resetAttackTypes();
         }
  
         return httpMessages;

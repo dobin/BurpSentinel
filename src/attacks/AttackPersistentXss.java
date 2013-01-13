@@ -25,11 +25,11 @@ public class AttackPersistentXss extends AttackI {
     private Color failColor = new Color(0xffcccc);
     
     private AttackData[] attackData = {
-        new AttackData(0, XssIndicator.getInstance().getIndicator(), XssIndicator.getInstance().getIndicator()),
-        new AttackData(1, XssIndicator.getInstance().getIndicator() + "%3Cp%3E%22", XssIndicator.getInstance().getIndicator() + "<p>\""),
-        new AttackData(2, XssIndicator.getInstance().getIndicator() + "<p>\"", XssIndicator.getInstance().getIndicator() + "<p>\""),
-        new AttackData(3, XssIndicator.getInstance().getIndicator() + "%22%3D", XssIndicator.getInstance().getIndicator() + "\"="),
-        new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"="),
+        new AttackData(0, XssIndicator.getInstance().getIndicator(), XssIndicator.getInstance().getIndicator(), AttackData.AttackType.INFO),
+        new AttackData(1, XssIndicator.getInstance().getIndicator() + "%3Cp%3E%22", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
+        new AttackData(2, XssIndicator.getInstance().getIndicator() + "<p>\"", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
+        new AttackData(3, XssIndicator.getInstance().getIndicator() + "%22%3D", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
+        new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
     };
     
     
@@ -133,7 +133,7 @@ public class AttackPersistentXss extends AttackI {
             
             AttackResult res = new AttackResult(
                     "XSS" + data.getIndex(), 
-                    "FAIL", 
+                    "-", 
                     httpMessage.getReq().getChangeParam(), 
                     false);
             httpMessage.addAttackResult(res);

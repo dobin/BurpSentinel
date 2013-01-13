@@ -140,12 +140,17 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     }
 
     private void attackRessource() {
-        // Special check if user wants to attack auth
+        // Transfer UI attack ticks to HttpMessage attacks
         if (comboBoxSession.getSelectedIndex() > 0) {
             tableModel.setSessionAttackMessage(true, (String) comboBoxSession.getSelectedItem());
         }
         LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
+        
+        // reset UI attack ticks
+        tableModel.resetAttackSelection();
+        comboBoxSession.setSelectedIndex(0);
 
+        // Perform attack
         PanelAttackProgress panelProgress = new PanelAttackProgress(
                 attackHttpParams, 
                 origHttpMessage, 
@@ -159,10 +164,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelProgress.setVisible(true);
         panelParent.updateUI(); // Necessary here, or flicker bug!
         panelProgress.start();
-        
-        // Remove all attack ticks
-        tableModel.resetAttackSelection();
-        comboBoxSession.setSelectedIndex(0);
     }
     
     /**
