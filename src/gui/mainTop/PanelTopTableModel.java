@@ -24,6 +24,8 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
     
     public PanelTopTableModel(PanelTopUi parent) {
         this.parent = parent;
+        
+        SessionManager.getInstance().addObserver(this);
     }
     
     public void reset() {

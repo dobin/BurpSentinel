@@ -1,5 +1,6 @@
 package gui.session;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
 import util.BurpCallbacks;
@@ -61,11 +62,19 @@ public class SessionTableModel extends AbstractTableModel {
         return sessionUsers.get(newIndex);
     }
 
-    void addDefaultNew() {
-        SessionUser su = new SessionUser("User A", "useraaaa");
+    
+    void addLine() {
+        SessionUser su = new SessionUser("User " + (sessionUsers.size() + 1), "");
         sessionUsers.add(su);
         
-        SessionUser suu = new SessionUser("User B", "userbbb");
+        this.fireTableDataChanged();
+    }
+    
+    void addDefaultNew() {
+        SessionUser su = new SessionUser("User 1", "useraaaa");
+        sessionUsers.add(su);
+        
+        SessionUser suu = new SessionUser("User 2", "userbbb");
         sessionUsers.add(suu);
         
         this.fireTableDataChanged();
@@ -88,8 +97,27 @@ public class SessionTableModel extends AbstractTableModel {
     }
 
     LinkedList<SessionUser> getSessionUsers() {
-        BurpCallbacks.getInstance().print("panelleftcomboboxmodel init x1");
         return sessionUsers;
+    }
+
+    boolean isSaneUserInput() {
+        LinkedList<String> usernames = new LinkedList<String>();
+        for(SessionUser u: sessionUsers) {
+            if (u.getValue().equals("")) {
+                return false;
+            }
+            
+            usernames.add(u.getName());
+        }
+        
+        Collections.sort(usernames);
+        for (int n=0; n < usernames.size() - 1; n++) {
+            if (usernames.get(n).equals(usernames.get(n+1))) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
 }

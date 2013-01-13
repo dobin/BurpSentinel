@@ -101,12 +101,14 @@ public class SessionManagerUi extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOkActionPerformed
-        this.setVisible(false);
-        SessionManager.getInstance().myNotify();
+        if (tableModel.isSaneUserInput()) {
+            this.setVisible(false);
+            SessionManager.getInstance().myNotify();
+        }
     }//GEN-LAST:event_buttonOkActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        tableModel.addDefaultNew();
+        tableModel.addLine();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

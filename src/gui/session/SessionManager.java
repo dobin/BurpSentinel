@@ -59,8 +59,6 @@ public class SessionManager extends Observable {
     }
 
     public SessionUser getUserFor(String value) {
-                BurpCallbacks.getInstance().print("y1");
-    
         for (int n = 0; n < getUserCount(); n++) {
             SessionUser u = getUserAt(n);
 
@@ -68,8 +66,6 @@ public class SessionManager extends Observable {
                 return u;
             }
         }
-        
-                        BurpCallbacks.getInstance().print("y2");
         
         return null;
     }

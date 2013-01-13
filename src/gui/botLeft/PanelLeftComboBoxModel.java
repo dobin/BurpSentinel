@@ -31,11 +31,9 @@ public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBo
     }
     
     private void init() {
-        BurpCallbacks.getInstance().print("panelleftcomboboxmodel init start");
         elements = new LinkedList<String>();
         
         if (origSessionValue == null) {
-            BurpCallbacks.getInstance().print("panelleftcomboboxmodel init null");
             elements.add("<default>");
             selected = "<default>";
             
@@ -44,9 +42,7 @@ public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBo
             }
             
         } else {
-            BurpCallbacks.getInstance().print("panelleftcomboboxmodel init not null");
             SessionUser sessionUser = SessionManager.getInstance().getUserFor(origSessionValue);
-            BurpCallbacks.getInstance().print("panelleftcomboboxmodel init not null 2");
             if (sessionUser == null) {
                 elements.add("<default>");
                 selected = "<default>";
@@ -58,7 +54,6 @@ public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBo
             } else {
                 origSessionName = sessionUser.getName();
 
-                BurpCallbacks.getInstance().print("panelleftcomboboxmodel init not null 2");
                 elements.add("<" + origSessionName + ">");
                 selected = "<" + origSessionName + ">";
 
@@ -69,8 +64,6 @@ public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBo
                 }
             }
         }
-        
-        BurpCallbacks.getInstance().print("panelleftcomboboxmodel init end");
     }
     
     
