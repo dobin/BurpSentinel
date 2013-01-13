@@ -2,6 +2,7 @@ package gui.session;
 
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
+import util.BurpCallbacks;
 
 /**
  *
@@ -78,7 +79,8 @@ public class SessionTableModel extends AbstractTableModel {
 
     String getSessionValueFor(String selectedSessionUser) {
         for (SessionUser u: sessionUsers) {
-            if (u.getName().equals(selectedSessionUser)) {
+            if (u.getName().equals(selectedSessionUser) 
+                    || u.getName().equals("<" + selectedSessionUser + ">")) {
                 return u.getValue();
             }
         }
@@ -86,6 +88,7 @@ public class SessionTableModel extends AbstractTableModel {
     }
 
     LinkedList<SessionUser> getSessionUsers() {
+        BurpCallbacks.getInstance().print("panelleftcomboboxmodel init x1");
         return sessionUsers;
     }
     

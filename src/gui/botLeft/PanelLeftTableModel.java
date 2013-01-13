@@ -285,6 +285,15 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
                 attackThis = true;
             }
+            if (uiEntries.get(n).isAuthEnabled) {
+                myRequest.getReq().getParam(n).setAttackType(
+                    AttackMain.AttackTypes.AUTHORISATION, 
+                    true, 
+                    uiEntries.get(n).authData);
+
+                attackThis = true;
+            }
+
 
             // Check if we should attack this specific param
             if (attackThis) {
@@ -301,11 +310,16 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     void resetAttackSelection() {
+        
+        
         for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
             uiEntries.get(n).isXssEnabled = false;
             uiEntries.get(n).isSqlEnabled = false;
             uiEntries.get(n).isOtherEnabled = false;
             uiEntries.get(n).isAllEnabled = false;
+            
+            uiEntries.get(n).isAuthEnabled = false;
+            uiEntries.get(n).authData = null;
         }
     }
 
@@ -322,8 +336,18 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     // Called if we want to change cookie with a specific session
-    void setSessionAttackMessage(int selectedRow, boolean enabled, String selected) {
-        myRequest.getReq().getParam(selectedRow).setAttackType(
-                AttackMain.AttackTypes.AUTHORISATION, enabled, selected);
+    void setSessionAttackMessage(boolean enabled, String selected) {
+
+        for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
+            SentinelHttpParam param = myRequest.getReq().getParam(n);
+
+            if (param.getType() == IParameter.PARAM_COOKIE
+                    && param.getName().equals(SessionManager.getInstance().getSessionVarName())) {
+
+                uiEntries.get(n).isAuthEnabled = enabled;
+                uiEntries.get(n).authData = selected;
+
+            }
+        }
     }
 }

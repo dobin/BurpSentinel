@@ -103,6 +103,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
+        a += "Cookie: jsessionid=asdfa; bbbbb=ddddd\r\n";
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
         a += "\r\n";
@@ -118,6 +119,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
+        a += "Cookie: jsessionid=useraaaa; bbbbb=ddddd\r\n";
         a += "Content-Type: application/x-www-form-urlencoded\r\n";
         a += "Content-Length: 26\r\n";
         a += "\r\n";

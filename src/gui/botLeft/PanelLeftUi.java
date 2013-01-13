@@ -13,13 +13,14 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
  *
  * @author unreal
  */
-public class PanelLeftUi extends javax.swing.JPanel {
+public class PanelLeftUi extends javax.swing.JPanel  {
     private PanelBotUi panelParent;
     private SentinelHttpMessage origHttpMessage;
     private PanelLeftTableModel tableModel;
@@ -67,27 +68,30 @@ public class PanelLeftUi extends javax.swing.JPanel {
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
         
-        comboBoxSession.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                
-                String selected = (String) cb.getSelectedItem();
-                
-                if (selected.equals("<new>")) {
-                    SessionManager.getInstance().show();
-                    sessionComboBoxModel.myupdate();
-                } else if (selected.equals("<default>")) {
-                    PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
-                    m.setSessionAttackMessage(tableMessages.getSelectedRow(), false, selected);
-                } else {
-                    // No need to check instanceof
-                    PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
-                    m.setSessionAttackMessage(tableMessages.getSelectedRow(), true, selected);
-                }
-            }
-        });
+        //comboBoxSession.addActionListener(this);
     }
+    /*
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == comboBoxSession) {
+            JComboBox cb = (JComboBox) e.getSource();
+
+            String selected = (String) cb.getSelectedItem();
+
+            if (selected.equals("<new>")) {
+                SessionManager.getInstance().show();
+                sessionComboBoxModel.myupdate();
+            } else if (selected.equals("<default>")) {
+                PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
+                m.setSessionAttackMessage(tableMessages.getSelectedRow(), false, selected);
+            } else {
+                // No need to check instanceof
+                PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
+                m.setSessionAttackMessage(tableMessages.getSelectedRow(), true, selected);
+            }
+        }
+    }*/
+    
 
     private TableModel getTableModel() {
         return tableModel;
@@ -121,8 +125,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         if (value != null) {
             sessionComboBoxModel.setOrigSession(value);
             sessionComboBoxModelMain.setOrigSession(value);
-        
-            sessionComboBoxModelMain.selectIfPossible(value);
         }
     }
 
@@ -138,6 +140,10 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }
 
     private void attackRessource() {
+        // Special check if user wants to attack auth
+        if (comboBoxSession.getSelectedIndex() > 0) {
+            tableModel.setSessionAttackMessage(true, (String) comboBoxSession.getSelectedItem());
+        }
         LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
 
         PanelAttackProgress panelProgress = new PanelAttackProgress(
@@ -156,6 +162,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         
         // Remove all attack ticks
         tableModel.resetAttackSelection();
+        comboBoxSession.setSelectedIndex(0);
     }
     
     /**

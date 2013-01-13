@@ -55,15 +55,15 @@
                       <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="205" max="32767" attributes="0"/>
+                      <EmptySpace pref="189" max="32767" attributes="0"/>
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel5" pref="0" max="32767" attributes="0"/>
-                  <Component id="jPanel6" pref="0" max="32767" attributes="0"/>
+                  <Component id="jPanel5" pref="25" max="32767" attributes="0"/>
+                  <Component id="jPanel6" pref="25" max="32767" attributes="0"/>
                   <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
@@ -210,7 +210,7 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Select previous Highlight"/>
                     <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[0, 0, 0, 0]"/>
+                      <Insets value="[2, 2, 2, 2]"/>
                     </Property>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[24, 20]"/>
@@ -219,7 +219,7 @@
                       <Dimension value="[24, 20]"/>
                     </Property>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[24, 20]"/>
+                      <Dimension value="[32, 22]"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -233,7 +233,7 @@
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Select next Highlight"/>
                     <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
-                      <Insets value="[0, 0, 0, 0]"/>
+                      <Insets value="[1, 1, 1, 1]"/>
                     </Property>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[24, 20]"/>
@@ -242,7 +242,7 @@
                       <Dimension value="[24, 20]"/>
                     </Property>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[24, 20]"/>
+                      <Dimension value="[32, 22]"/>
                     </Property>
                   </Properties>
                   <Events>

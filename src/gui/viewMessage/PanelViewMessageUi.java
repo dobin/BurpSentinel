@@ -247,6 +247,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         labelPosition.setText("/" + myHighlights.size());
         viewMessagePart(0, true);
+        this.invalidate();
+        this.updateUI();
         
         //IMessageEditor i = BurpCallbacks.getInstance().getBurp().createMessageEditor(null, false);
     }
@@ -331,6 +333,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                     BurpCallbacks.getInstance().print("highlightResponse: index=-1, string not found. catch it damned!");
                 }
                 
+                if (isDuplicateHighlight(index, index + h.getStr().length())) {
+                    continue;
+                }
+                
                 sh = new SentinelHighlight(index, index + h.getStr().length(), h.getColor());
 
                 // Also add highlighter to indicate to the user where it is
@@ -345,6 +351,15 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         }
     }
     
+    
+    private boolean isDuplicateHighlight(int start, int end) {
+        for (SentinelHighlight h: myHighlights) {
+            if (start >= h.getStart() && end <= h.getEnd()) {
+                return true;
+            }
+        }
+        return false;
+    }
     
     public void c_sendAgain() {
         BurpCallbacks.getInstance().sendRessource(httpMessage, true);
@@ -449,10 +464,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         buttonUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984817_arrow_large_up.png"))); // NOI18N
         buttonUp.setToolTipText("Select previous Highlight");
-        buttonUp.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        buttonUp.setMargin(new java.awt.Insets(2, 2, 2, 2));
         buttonUp.setMaximumSize(new java.awt.Dimension(24, 20));
         buttonUp.setMinimumSize(new java.awt.Dimension(24, 20));
-        buttonUp.setPreferredSize(new java.awt.Dimension(24, 20));
+        buttonUp.setPreferredSize(new java.awt.Dimension(32, 22));
         buttonUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonUpActionPerformed(evt);
@@ -461,10 +476,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         buttonDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984823_arrow_large_down.png"))); // NOI18N
         buttonDown.setToolTipText("Select next Highlight");
-        buttonDown.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        buttonDown.setMargin(new java.awt.Insets(1, 1, 1, 1));
         buttonDown.setMaximumSize(new java.awt.Dimension(24, 20));
         buttonDown.setMinimumSize(new java.awt.Dimension(24, 20));
-        buttonDown.setPreferredSize(new java.awt.Dimension(24, 20));
+        buttonDown.setPreferredSize(new java.awt.Dimension(32, 22));
         buttonDown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonDownActionPerformed(evt);
@@ -547,13 +562,13 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 

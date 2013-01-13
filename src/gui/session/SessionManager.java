@@ -5,12 +5,14 @@
 package gui.session;
 
 import java.util.LinkedList;
+import java.util.Observable;
+import util.BurpCallbacks;
 
 /**
  *
  * @author unreal
  */
-public class SessionManager {
+public class SessionManager extends Observable {
 
     private static SessionManager sessionManager;
     private SessionManagerUi sessionManagerUi;
@@ -57,6 +59,8 @@ public class SessionManager {
     }
 
     public SessionUser getUserFor(String value) {
+                BurpCallbacks.getInstance().print("y1");
+    
         for (int n = 0; n < getUserCount(); n++) {
             SessionUser u = getUserAt(n);
 
@@ -65,7 +69,14 @@ public class SessionManager {
             }
         }
         
+                        BurpCallbacks.getInstance().print("y2");
+        
         return null;
+    }
+
+    void myNotify() {
+        this.setChanged();
+        this.notifyObservers();
     }
     
 }

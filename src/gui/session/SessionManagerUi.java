@@ -102,6 +102,7 @@ public class SessionManagerUi extends javax.swing.JDialog {
 
     private void buttonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOkActionPerformed
         this.setVisible(false);
+        SessionManager.getInstance().myNotify();
     }//GEN-LAST:event_buttonOkActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

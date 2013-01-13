@@ -138,10 +138,13 @@ public class AttackXss extends AttackI {
                     false);
             httpMessage.addAttackResult(res);
         }
-        
+
         // Highlight indicator anyway
-        ResponseHighlight h = new ResponseHighlight(data.getOutput(), Color.green);
-        httpMessage.addHighlight(h);
+        String indicator = XssIndicator.getInstance().getIndicator();
+        if (! indicator.equals(data.getOutput())) {
+            ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
+            httpMessage.addHighlight(h);
+        }
         
         return httpMessage;
     }
