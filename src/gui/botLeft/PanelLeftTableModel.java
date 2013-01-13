@@ -49,7 +49,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     @Override
     public int getColumnCount() {
-        return 9;
+        return 8;
     }
 
     @Override

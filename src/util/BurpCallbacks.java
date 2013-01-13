@@ -3,10 +3,13 @@ package util;
 import burp.IBurpExtenderCallbacks;
 import burp.IHttpRequestResponse;
 import burp.IHttpService;
+import burp.IRequestInfo;
 import burp.IResponseInfo;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpService;
 
@@ -57,7 +60,7 @@ public class BurpCallbacks {
                 int n = 0;
                 while (isRedirect(r.getResponse()) && ++n <= 10) {
                     BurpCallbacks.getInstance().print("Is redir, following...");
-                    r = followRedirect(r.getResponse());
+                    r = followRedirect(r);
                 }
                 if (n >= 10) {
                     String s = "Redirected 10 times, aborting...";
@@ -82,7 +85,9 @@ public class BurpCallbacks {
         }
     }
 
-    private IHttpRequestResponse followRedirect(byte[] response) {
+    private IHttpRequestResponse followRedirect(IHttpRequestResponse r) {
+        byte[] response = r.getResponse();
+        
         IResponseInfo responseInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponse(response);
         String redirStr = null;
 
@@ -99,14 +104,20 @@ public class BurpCallbacks {
             BurpCallbacks.getInstance().print("302 found, but could not extract location header!");
             return null;
         }
+        
+        /* 302 has 3 possible values:
+         * 1) http://www.bla.ch/asdf/test.cgi?a=b
+         * 2) /asdf/test.cgi?a=b
+         * 3) test.cgi?a=b
+         * URL will handle all of em
+         */
+        
         URL redirUrl = null;
-        try {
-            redirUrl = new URL(redirStr);
-        } catch (MalformedURLException ex) {
-            BurpCallbacks.getInstance().print("302 found, but could not convert location header!");
+        redirUrl = followRedirectUrl(redirStr, r);
+        if (redirUrl == null) {
             return null;
         }
-
+        
         byte[] req = BurpCallbacks.getInstance().getBurp().getHelpers().buildHttpRequest(redirUrl);
         int port = redirUrl.getPort();
         if (port == -1) {
@@ -115,8 +126,25 @@ public class BurpCallbacks {
         IHttpService httpService = new SentinelHttpService(
                 redirUrl.getHost(), port, redirUrl.getProtocol());
         IHttpRequestResponse res = getBurp().makeHttpRequest(httpService, req);
-
+        
         return res;
+    }
+    
+    private URL followRedirectUrl(String redirStr, IHttpRequestResponse message) {
+        // get old url
+        IRequestInfo requestInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeRequest(message);
+        URL origUrl = requestInfo.getUrl();
+        
+        // create new url
+        URL url;
+        try {
+            url = new URL(origUrl, redirStr);
+        } catch (MalformedURLException ex) {
+            BurpCallbacks.getInstance().print("302 found, but could not convert location header!");
+            return null;
+        }
+        
+        return url;
     }
 
     public void sendToRepeater(SentinelHttpMessage httpMessage) {
