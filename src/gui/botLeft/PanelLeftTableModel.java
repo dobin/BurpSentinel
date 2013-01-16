@@ -259,12 +259,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             SentinelHttpParam param = myRequest.getReq().getParam(n);
             
             if (uiEntries.get(n).isXssEnabled) {
-                BurpCallbacks.getInstance().print("Attack XSS because: " + n);
+                BurpCallbacks.getInstance().print("Attack XSS because of param #" + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
             }
             if (uiEntries.get(n).isSqlEnabled) {
-                BurpCallbacks.getInstance().print("Attack SQL because: " + n);
+                BurpCallbacks.getInstance().print("Attack SQL because of param #" + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
                 attackThis = true;
             }

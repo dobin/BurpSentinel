@@ -70,28 +70,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         
         //comboBoxSession.addActionListener(this);
     }
-    /*
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == comboBoxSession) {
-            JComboBox cb = (JComboBox) e.getSource();
-
-            String selected = (String) cb.getSelectedItem();
-
-            if (selected.equals("<new>")) {
-                SessionManager.getInstance().show();
-                sessionComboBoxModel.myupdate();
-            } else if (selected.equals("<default>")) {
-                PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
-                m.setSessionAttackMessage(tableMessages.getSelectedRow(), false, selected);
-            } else {
-                // No need to check instanceof
-                PanelLeftTableModel m = (PanelLeftTableModel) getTableModel();
-                m.setSessionAttackMessage(tableMessages.getSelectedRow(), true, selected);
-            }
-        }
-    }*/
-    
+   
 
     private TableModel getTableModel() {
         return tableModel;
@@ -150,6 +129,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
 
+        System.out.println("Nr of attack params: " + attackHttpParams.size());
+        
         // Perform attack
         PanelAttackProgress panelProgress = new PanelAttackProgress(
                 attackHttpParams, 
@@ -307,7 +288,10 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private void buttonSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSessionActionPerformed
         SessionManager.getInstance().show();
         sessionComboBoxModel.myupdate();
+        sessionComboBoxModelMain.myupdate();
         tableModel.fireTableDataChanged();
+        comboboxMainSession.invalidate();
+        comboboxMainSession.updateUI(); // This will make combobox bigger if necessary?!
     }//GEN-LAST:event_buttonSessionActionPerformed
 
     private void comboboxMainSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxMainSessionActionPerformed

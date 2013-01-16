@@ -35,7 +35,7 @@ public class MessagePopup implements ActionListener {
         menuCopy = new JMenuItem(RSyntaxTextArea.getAction(RTextArea.COPY_ACTION));
         menu.add(menuCopy);
         
-        menuRepeater = new JMenuItem("Send to Reapeater");
+        menuRepeater = new JMenuItem("Send to Repeater");
         menuRepeater.addActionListener(this);
         menu.add(menuRepeater);
         

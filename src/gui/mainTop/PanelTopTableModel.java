@@ -141,12 +141,12 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
                 return hasVulns(httpMessage);
             case 7:
                 String s = "";
-                SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss dd.MM");
+                SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss dd.MM.YY");
                 s = ft.format(httpMessage.getCreateTime());
                 return  s;
             case 8:
                 String ss = "";
-                SimpleDateFormat fft = new SimpleDateFormat ("HH:mm:ss dd.MM");
+                SimpleDateFormat fft = new SimpleDateFormat ("HH:mm:ss dd.MM.YY");
                 Date d = httpMessage.getModifyTime();
                 if (d == null) {
                     return "-";

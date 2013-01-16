@@ -72,8 +72,8 @@ public class SentinelHttpParam implements IParameter {
     }
     
     public void resetAttackTypes() {
-        attackTypes.clear();
-        //attackTypes = new HashMap<AttackMain.AttackTypes, AttackTypeData>();
+        //attackTypes.clear();
+        attackTypes = new HashMap<AttackMain.AttackTypes, AttackTypeData>();
     }
     
 

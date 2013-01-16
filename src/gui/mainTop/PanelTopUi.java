@@ -42,12 +42,12 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.getColumnModel().getColumn(6).setMaxWidth(width);
         tableAllMessages.getColumnModel().getColumn(6).setMinWidth(width);
         
-        tableAllMessages.getColumnModel().getColumn(7).setMaxWidth(120);
-        tableAllMessages.getColumnModel().getColumn(7).setMinWidth(120);
+        tableAllMessages.getColumnModel().getColumn(7).setMaxWidth(140);
+        tableAllMessages.getColumnModel().getColumn(7).setMinWidth(140);
         
-        tableAllMessages.getColumnModel().getColumn(8).setMaxWidth(120);
-        tableAllMessages.getColumnModel().getColumn(8).setMinWidth(120);
-        
+        tableAllMessages.getColumnModel().getColumn(8).setMaxWidth(140);
+        tableAllMessages.getColumnModel().getColumn(8).setMinWidth(140);
+
         
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
@@ -77,6 +77,8 @@ public class PanelTopUi extends javax.swing.JPanel {
     public void addMessage(SentinelHttpMessage httpMessage) {
         tableTopModel.addMessage(httpMessage);
         //this.updateUI();
+        
+        tableAllMessages.scrollRectToVisible(tableAllMessages.getCellRect(tableTopModel.getRowCount() - 1, 0, true));
     }
 
     // Used for swing

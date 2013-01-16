@@ -93,6 +93,7 @@ public class PanelRightUi extends javax.swing.JPanel {
             currentSelectedRow = 0;
         }
         tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
+        tableMessages.scrollRectToVisible(tableMessages.getCellRect(panelRightModel.getRowCount() - 1, 0, true));
     }
     
     

@@ -50,7 +50,7 @@ public class AttackSql extends AttackI {
         String data = attackDataSql[state];
         SentinelHttpMessage httpMessage = attack(data);
         
-        if (state < 4) {
+        if (state < 3) {
             doContinue = true;
         } else {
             doContinue = false;

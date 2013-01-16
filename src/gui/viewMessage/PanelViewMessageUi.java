@@ -172,7 +172,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             
             Tidy tidy = new Tidy();
+            tidy.setWraplen(0);
+            tidy.setDropEmptyParas(false);
+            tidy.setDropFontTags(false);
+            tidy.setDropProprietaryAttributes(false);
             tidy.setIndentContent(true);
+            
             tidy.parse(is, os);
             try {
                 String s = new String (os.toByteArray(), "UTF-8");
@@ -207,6 +212,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         }
         
         setMessageText(viewDiffContent);
+        
+        highlightResponse();
     }
     
     public void setShowResponse(boolean b) {
@@ -355,6 +362,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private boolean isDuplicateHighlight(int start, int end) {
         for (SentinelHighlight h: myHighlights) {
             if (start >= h.getStart() && end <= h.getEnd()) {
+                BurpCallbacks.getInstance().print("Duplicate: " + start +":"+end);
                 return true;
             }
         }
@@ -524,8 +532,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         buttonShowRequest.setText("Request");
         buttonShowRequest.setFocusable(false);
         buttonShowRequest.setMargin(new java.awt.Insets(0, 2, 0, 2));
-        buttonShowRequest.setMaximumSize(new java.awt.Dimension(80, 24));
-        buttonShowRequest.setMinimumSize(new java.awt.Dimension(80, 24));
         buttonShowRequest.setPreferredSize(new java.awt.Dimension(86, 24));
         buttonShowRequest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -562,7 +568,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -599,7 +605,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonNext)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textfieldSearch))
+                .addComponent(textfieldSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -622,7 +628,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
