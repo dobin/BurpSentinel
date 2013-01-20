@@ -1,11 +1,17 @@
 package gui.mainTop;
 
 import gui.SentinelMainUi;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -19,11 +25,14 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     private int currentSelectedRow = -1;
     
+    private PanelTopPopup popup;
+    
     /**
      * Creates new form PanelTop
      */
     public PanelTopUi() {
         tableTopModel = new PanelTopTableModel(this);
+        popup = new PanelTopPopup(this);
         initComponents();
         tableAllMessages.setAutoCreateRowSorter(true);
         
@@ -66,10 +75,51 @@ public class PanelTopUi extends javax.swing.JPanel {
                         mainGuiFrame.showMessage(currentSelectedRow);
                     }
                 }});
-    }
+        
+        tableAllMessages.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (popup.getPopup().isPopupTrigger(e)) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    int column = source.columnAtPoint(e.getPoint());
 
+                    if (!source.isRowSelected(row)) {
+                        source.changeSelection(row, column, false, false);
+                    }
+
+                    popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+    }
+        
     public int getSelected() {
         return currentSelectedRow;
+    }
+    
+/*
+    
+    private void showPopup(MouseEvent me) {
+// is this event a popup trigger?
+        if (pm.isPopupTrigger(me)) {
+            Point p = me.getPoint();
+            int row = table.rowAtPoint(p);
+            int col = table.columnAtPoint(p);
+// if we've clicked on a row in the second col
+            if (row != -1 && col == 1) {
+                one.setText("Do something to row " + row + ".");
+                two.setText("Do something else to row " + row + ".");
+                pm.show(table, p.x, p.y);
+            }
+        }
+    }
+  */  
+    
+    
+    void removeMessage() {
+        tableTopModel.removeMessage(currentSelectedRow);
+        mainGuiFrame.removeMessage(currentSelectedRow);
     }
     
     // This gets called from MainGui
@@ -142,5 +192,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.getSelectionModel().setSelectionInterval(index, index);
         this.currentSelectedRow = index;
     }
+
     
 }

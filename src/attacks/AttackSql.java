@@ -22,7 +22,7 @@ public class AttackSql extends AttackI {
     private int state = 0;
     private SentinelHttpMessage lastHttpMessage = null;
 
-    private Color failColor = new Color(0xffcccc);
+    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
     private String[] attackDataSql = {
         "'",
@@ -72,16 +72,13 @@ public class AttackSql extends AttackI {
 
         String response = httpMessage.getRes().getResponseStr();
         if (response.contains("SQL")) {
-
-            // We found XSS - add attack result
-            AttackResult res = new AttackResult("SQL0", "VLUN", httpMessage.getReq().getChangeParam(), true);
+            AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL0", httpMessage.getReq().getChangeParam(), true);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight("SQL", failColor);
             httpMessage.addHighlight(h);
-
         } else {
-            AttackResult res = new AttackResult("SQL0", "-", httpMessage.getReq().getChangeParam(), false);
+            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL0", httpMessage.getReq().getChangeParam(), false);
             httpMessage.addAttackResult(res);
         }
         

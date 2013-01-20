@@ -24,6 +24,7 @@ public class SentinelHttpMessage extends Observable implements IHttpRequestRespo
     private long loadTime = 0;
     private SentinelHttpMessage parentHttpMessage = null;
     private String comment;
+    private boolean isRedirected;
 
     private IHttpService httpService;
     private Date createTime;
@@ -96,6 +97,14 @@ public class SentinelHttpMessage extends Observable implements IHttpRequestRespo
 
     public String getInterestingFact() {
         return "";
+    }
+
+    public void setRedirected(boolean b) {
+        isRedirected = b;
+    }
+    
+    public boolean isRedirected() {
+        return isRedirected;
     }
 
     public enum ObserveResult {

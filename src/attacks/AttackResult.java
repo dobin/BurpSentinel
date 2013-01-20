@@ -12,11 +12,13 @@ import model.SentinelHttpParam;
  */
 public class AttackResult {
     private String resultStr = "";
-    private String attackType = "";
+    private AttackData.AttackType attackType = null;
     private SentinelHttpParam attackParam = null;
     private boolean success;
+    
+    
 
-    AttackResult(String attackType, String resultStr, SentinelHttpParam attackParam, boolean success) {
+    AttackResult(AttackData.AttackType attackType, String resultStr, SentinelHttpParam attackParam, boolean success) {
         this.resultStr = resultStr;
         this.attackType = attackType;
         this.attackParam = attackParam;
@@ -35,7 +37,7 @@ public class AttackResult {
         return resultStr;
     }
 
-    public String getAttackType() {
+    public AttackData.AttackType getAttackType() {
         return attackType;
     }
 }

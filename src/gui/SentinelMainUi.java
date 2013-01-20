@@ -46,6 +46,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
      * this is the main entry point for new HttpMessages (IHttpRequestResponse)
      * we first translate it into a proper SentinelHttpMessdage
      */
+    @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
         SentinelHttpMessage myHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
         storeUiPrefs();
@@ -67,7 +68,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         this.setVisible(true);
     }
 
-    
+
     /*
      * Show a HttpMessage - based on it's index (derived from top overview)
      * 
@@ -77,6 +78,14 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         CardLayout cl = (CardLayout) panelCard.getLayout();
         cl.show(panelCard, Integer.toString(index));
     }
+    
+    
+    public void removeMessage(int currentSelectedRow) {
+        // TODO FIXME breaks if removed...
+        //panelBotUiList.remove(currentSelectedRow);
+        //panelCard.remove(currentSelectedRow);
+    }
+    
 
 
     /*
@@ -351,4 +360,5 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     public Component getUiComponent() {
         return this;
     }
+
 }

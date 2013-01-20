@@ -109,7 +109,7 @@ public class AttackPersistentXss extends AttackI {
         SentinelHttpMessage httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
-        
+    /*    
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {
             BurpCallbacks.getInstance().print("Response error");
@@ -142,7 +142,7 @@ public class AttackPersistentXss extends AttackI {
         // Highlight indicator anyway
         ResponseHighlight h = new ResponseHighlight(data.getOutput(), Color.green);
         httpMessage.addHighlight(h);
-        
+        */
         return httpMessage;
     }
     

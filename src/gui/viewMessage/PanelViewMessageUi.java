@@ -47,7 +47,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
     private SentinelHttpMessage httpMessage = null;
     private boolean showResponse = true;
-    private MessagePopup messagePopup;
+    private PanelViewMessagePopup messagePopup;
     
     private PanelViewComboboxModel panelViewComboboxModel;
     
@@ -67,7 +67,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         panelViewComboboxModel = new PanelViewComboboxModel();
         
         initComponents();
-        messagePopup = new MessagePopup(this);
+        messagePopup = new PanelViewMessagePopup(this);
         
         textareaMessage.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_HTML);
         textareaMessage.setEditable(true);
@@ -80,6 +80,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         UiUtil.getTheme().apply(textareaMessage);
         textareaMessage.revalidate();
         textareaMessage.requestFocusInWindow();
+        textareaMessage.setMarkAllHighlightColor(new Color(0xff, 0xea, 0x00, 100));
    
         labelPosition.setText(" ");
         
@@ -112,8 +113,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 initSearchContext(textfieldSearch.getText());
             }
         });
-        //Test t = new Test();
-        //t.setVisible(true);
     }
         
 
@@ -142,6 +141,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             viewDefaultContent = null;
             viewBeautifyContent = null;
             viewDiffContent = null;
+            
+            labelRedirected.setText(httpMessage.isRedirected() ? "(R)" : "");
         }
 
         showMessage();
@@ -321,7 +322,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         for(SessionUser sessionUser: sessionUsers) {
             String value = sessionUser.getValue();
             for (int index = response.indexOf(value); index >= 0; index = response.indexOf(value, index + 1)) {
-                sh = new SentinelHighlight(index, index+value.length(), new Color(0xf94f4f));
+                sh = new SentinelHighlight(index, index+value.length(), new Color(0xf9, 0x4f, 0x4f, 100));
 
                 Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(sh.getColor());
                 try {
@@ -348,14 +349,29 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
                 // Also add highlighter to indicate to the user where it is
                 Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(h.getColor());
+
                 try {
                     textareaMessage.getHighlighter().addHighlight(sh.getStart(), sh.getEnd(), painter);
+                    
                     myHighlights.add(sh);
                 } catch (BadLocationException ex) {
                     BurpCallbacks.getInstance().print("ARERRR");
                 }
             }
         }
+        /*
+        Highlighter.HighlightPainter painter;
+        try {
+            painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(0, 255, 0, 200));
+            textareaMessage.getHighlighter().addHighlight(0, 5, painter);
+            
+                        painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 0, 0, 250));
+            textareaMessage.getHighlighter().addHighlight(2, 3, painter);
+            
+
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
     
     
@@ -399,6 +415,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         labelSize = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         labelDom = new javax.swing.JLabel();
+        labelRedirected = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         checkboxIsFix = new javax.swing.JCheckBox();
         checkboxIsLink = new javax.swing.JCheckBox();
@@ -430,6 +447,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         labelDom.setText("000");
         labelDom.setToolTipText("Number of Tags in Response");
 
+        labelRedirected.setText(" ");
+        labelRedirected.setToolTipText("Indicate if message is result of a 302 redirect");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -442,7 +462,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelDom)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelRedirected)
+                .addContainerGap(44, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -451,7 +473,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                     .addComponent(labelHttpCode)
                     .addComponent(labelSize)
                     .addComponent(jLabel1)
-                    .addComponent(labelDom))
+                    .addComponent(labelDom)
+                    .addComponent(labelRedirected))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -565,8 +588,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -803,7 +826,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         searchContext.setSearchForward(true);
         SearchEngine.find(textareaMessage, searchContext);
         
-        //textareaMessage.markAll(newSearchString, true, false, false);
+        textareaMessage.markAll(newSearchString, true, false, false);
     }
     
     private void buttonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNextActionPerformed
@@ -837,6 +860,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private javax.swing.JLabel labelDom;
     private javax.swing.JLabel labelHttpCode;
     private javax.swing.JLabel labelPosition;
+    private javax.swing.JLabel labelRedirected;
     private javax.swing.JLabel labelSize;
     private org.fife.ui.rsyntaxtextarea.RSyntaxTextArea textareaMessage;
     private javax.swing.JTextField textfieldSearch;

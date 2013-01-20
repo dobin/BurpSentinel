@@ -6,6 +6,7 @@ package attacks;
  */
 public class AttackData {
     public enum AttackType {
+        NONE,
         INFO,
         VULN,
     };

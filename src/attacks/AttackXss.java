@@ -22,7 +22,7 @@ public class AttackXss extends AttackI {
     private boolean inputReflectedInTag = false;
     private SentinelHttpMessage lastHttpMessage = null;
     
-    private Color failColor = new Color(0xffcccc);
+    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
     private AttackData[] attackDataXss = {
         new AttackData(0, 
@@ -120,8 +120,8 @@ public class AttackXss extends AttackI {
             data.setSuccess(true);
             
             AttackResult res = new AttackResult(
+                    data.getAttackType(),
                     "XSS" + data.getIndex(), 
-                    data.getAttackType().toString(),
                     httpMessage.getReq().getChangeParam(), 
                     true);
             httpMessage.addAttackResult(res);
@@ -132,8 +132,8 @@ public class AttackXss extends AttackI {
             data.setSuccess(false);
             
             AttackResult res = new AttackResult(
+                    AttackData.AttackType.NONE,
                     "XSS" + data.getIndex(), 
-                    "-", 
                     httpMessage.getReq().getChangeParam(), 
                     false);
             httpMessage.addAttackResult(res);

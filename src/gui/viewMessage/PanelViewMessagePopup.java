@@ -11,7 +11,7 @@ import org.fife.ui.rtextarea.RTextArea;
  *
  * @author unreal
  */
-public class MessagePopup implements ActionListener {
+public class PanelViewMessagePopup implements ActionListener {
     private JPopupMenu menu;
     
     private JMenuItem menuRepeater;
@@ -21,7 +21,7 @@ public class MessagePopup implements ActionListener {
     
     private PanelViewMessageUi panelMessage;
     
-    public MessagePopup(PanelViewMessageUi panelMessage) {
+    public PanelViewMessagePopup(PanelViewMessageUi panelMessage) {
         this.panelMessage = panelMessage;
         
         menu = new JPopupMenu("Message");

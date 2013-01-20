@@ -60,6 +60,7 @@ public class BurpCallbacks {
                 int n = 0;
                 while (isRedirect(r.getResponse()) && ++n <= 10) {
                     BurpCallbacks.getInstance().print("Is redir, following...");
+                    sentinelMessage.setRedirected(true);
                     r = followRedirect(r);
                 }
                 if (n >= 10) {

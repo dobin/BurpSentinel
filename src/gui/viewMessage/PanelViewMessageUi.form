@@ -52,8 +52,8 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="jPanel5" min="-2" pref="169" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace pref="184" max="32767" attributes="0"/>
                       <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
@@ -92,7 +92,9 @@
                           <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="labelDom" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="20" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="labelRedirected" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="44" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -104,6 +106,7 @@
                               <Component id="labelSize" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="labelDom" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="labelRedirected" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -132,6 +135,12 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="000"/>
                     <Property name="toolTipText" type="java.lang.String" value="Number of Tags in Response"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="labelRedirected">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value=" "/>
+                    <Property name="toolTipText" type="java.lang.String" value="Indicate if message is result of a 302 redirect"/>
                   </Properties>
                 </Component>
               </SubComponents>

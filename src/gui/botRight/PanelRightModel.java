@@ -76,9 +76,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 6:
                 return "Length";
             case 7:
-                return "DOM";
+                return "#TAGS";
             case 8:
-                return "Load";
+                return "Time";
                 
             case 9:
                 return "Test";

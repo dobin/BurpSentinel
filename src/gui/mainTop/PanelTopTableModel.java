@@ -1,5 +1,7 @@
 package gui.mainTop;
 
+import attacks.AttackData;
+import attacks.AttackResult;
 import gui.session.SessionManager;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -50,6 +52,11 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
 
     public SentinelHttpMessage getMessage(int rowIndex) {
         return myMessages.get(rowIndex);
+    }
+    
+    public void removeMessage(int index) {
+        myMessages.remove(index);
+        this.fireTableDataChanged();
     }
 
     @Override
@@ -138,7 +145,11 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
             case 5:
                 return httpMessage.getReq().getSessionValueTranslated();
             case 6:
-                return hasVulns(httpMessage);
+                String r = hasVulns(httpMessage);
+                if (r.equals("NONE")) {
+                    r = "-";
+                }
+                return r;
             case 7:
                 String s = "";
                 SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss dd.MM.YY");
@@ -161,6 +172,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
 
     
     private String hasVulns(SentinelHttpMessage httpMessage) {
+        AttackData.AttackType attackType = AttackData.AttackType.NONE;
         
         for(SentinelHttpMessage m: httpMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
@@ -169,10 +181,15 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
             }
             
             if (m.getAttackResult().isSuccess()) {
-                return "VULN";
+                if (m.getAttackResult().getAttackType().ordinal() > attackType.ordinal()) {
+                    attackType = m.getAttackResult().getAttackType();
+                }
+                
+
             }
         }
-        return "-";
+        
+        return attackType.toString();
     }
     
     @Override
