@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
 import util.BurpCallbacks;
+import util.UiUtil;
 
 /**
  *
@@ -14,7 +15,7 @@ public class SessionTableModel extends AbstractTableModel {
     private LinkedList<SessionUser> sessionUsers = new LinkedList<SessionUser>();
 
     public SessionTableModel() {
-        addDefaultNew();
+        UiUtil.restoreSessions(sessionUsers);
     }
     
     
@@ -100,6 +101,9 @@ public class SessionTableModel extends AbstractTableModel {
         return sessionUsers;
     }
 
+    /* Check if there are multiple entries with the same username
+     * That's a no-go
+     */
     boolean isSaneUserInput() {
         LinkedList<String> usernames = new LinkedList<String>();
         for(SessionUser u: sessionUsers) {
@@ -118,6 +122,15 @@ public class SessionTableModel extends AbstractTableModel {
         }
         
         return true;
+    }
+
+    void storeUiPrefs() {
+        UiUtil.storeSessions(sessionUsers);
+    }
+
+    void deleteEntry(int selectedRow) {
+        sessionUsers.remove(selectedRow);
+        this.fireTableDataChanged();
     }
     
 }

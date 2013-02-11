@@ -29,6 +29,11 @@ public class SentinelHttpMessage extends Observable implements IHttpRequestRespo
     private IHttpService httpService;
     private Date createTime;
     
+    public SentinelHttpMessage() {
+        //httpRequest = new SentinelHttpRequest();
+        //httpResponse = new SentinelHttpResponse();
+    }
+    
     public SentinelHttpMessage(IHttpRequestResponse httpMessage) {
         httpRequest = new SentinelHttpRequest(httpMessage);
         httpService = httpMessage.getHttpService();

@@ -4,16 +4,20 @@
  */
 package util;
 
+import gui.session.SessionUser;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -160,4 +164,47 @@ public class UiUtil {
         Preferences pref = Preferences.userRoot().node(o.getClass().getName());
         jSplitPane1.setDividerLocation(pref.getInt(("location"), jSplitPane1.getDividerLocation()));
     }
+
+    public static void storeSessions(LinkedList<SessionUser> sessionUsers) {
+        Preferences pref = Preferences.userRoot().node("SessionManagerUsers");
+        try {
+            pref.clear();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(SessionUser u: sessionUsers) {
+            pref.put(u.getName(), u.getValue());
+        }
+    }
+    
+    public static void restoreSessions(LinkedList<SessionUser> sessionUsers) {
+        Preferences pref = Preferences.userRoot().node("SessionManagerUsers");
+    
+        String[] children = null;
+        try {
+            children = pref.keys();
+            for (String s : children) {
+                String value = pref.get(s, "");
+                sessionUsers.add(new SessionUser(s, value));
+            }            
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+
+    public static void storeSessionData(String text) {
+        Preferences pref = Preferences.userRoot().node("SessionManagerData");
+        pref.put("SessionVarName", text);
+    }
+
+    public static void restoreSessionData(JTextField textfieldSession) {
+        Preferences pref = Preferences.userRoot().node("SessionManagerData");
+        
+        String s = pref.get("SessionVarName", "jsessionid");
+        textfieldSession.setText(s);
+    }
+
+
 }

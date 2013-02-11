@@ -8,6 +8,7 @@ import burp.IHttpRequestResponse;
 import burp.ITab;
 import burp.MainUiInterface;
 import gui.mainBot.PanelBotLinkManager;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,9 +29,15 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     private int currentSelectedRow = 0;
     private ReplayerMainTableModel tableModel;
     private boolean virgin = true;
-    private ReplayerMainTablePopup popup;
+    private ReplayerMainPopup popup;
     private PanelBotLinkManager linkManager;
-    private SentinelHttpMessage origHttpMessage;
+    //private SentinelHttpMessage origHttpMessage;
+    
+    private MainMessageEditorController rightRequestMessageEditorController;
+    private burp.IMessageEditor rightRequestMessageEditor;
+    
+    private MainMessageEditorController leftRequestMessageEditorController;
+    private burp.IMessageEditor leftRequestMessageEditor;
     
     /**
      * Creates new form ReplayerMainUi
@@ -45,14 +52,28 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelViewMessageUiRight.setLinkManager(linkManager);
         panelViewMessageUiLeft.setRequestEditor(true);
                 
-        popup = new ReplayerMainTablePopup(this);
+        popup = new ReplayerMainPopup(this);
+        
+        rightRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessage("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
+        rightRequestMessageEditor = BurpCallbacks.getInstance().getBurp().createMessageEditor(rightRequestMessageEditorController, true);
+        panelRightRequest.add(rightRequestMessageEditor.getComponent(), BorderLayout.CENTER);
+        panelRightRequest.invalidate();
+        panelRightRequest.updateUI();
+        
+        leftRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessage("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
+        leftRequestMessageEditor = BurpCallbacks.getInstance().getBurp().createMessageEditor(leftRequestMessageEditorController, true);
+        panelLeftRequest.add(leftRequestMessageEditor.getComponent(), BorderLayout.CENTER);
+        panelLeftRequest.invalidate();
+        panelLeftRequest.updateUI();
+        
         
         jTable1.getColumnModel().getColumn(0).setMaxWidth(40);
         jTable1.getColumnModel().getColumn(0).setMinWidth(40);
         
         jTable1.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
+                if (popup.getPopup().isPopupTrigger(e)) {
                     JTable source = (JTable) e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
                     int column = source.columnAtPoint(e.getPoint());
@@ -95,32 +116,52 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     
     @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
-        origHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
-        SentinelHttpMessage newHttpMessage = new SentinelHttpMessage(origHttpMessage);
-        newHttpMessage.setParentHttpMessage(origHttpMessage);
+        SentinelHttpMessage origHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
 
         // Add to table
         tableModel.addHttpMessage(origHttpMessage);
 
-        if (virgin) {
-            // Set as main (initially)
-            panelViewMessageUiRight.setHttpMessage(origHttpMessage);
-            virgin = false;
-        }
-
-        // Add to edit window
-        //panelViewMessageUiLeft.setHttpMessage(newHttpMessage);
-        
-        //this.updateUI();
+        setOrigMessage(0);
         viewMessage(0);
     }
 
     void setSelectedMessageAsOriginal() {
-        BurpCallbacks.getInstance().print("Selected: " + jTable1.getSelectedRow());
+        int selected = jTable1.getSelectedRow();
+        
+        setOrigMessage(selected);
+        
+        //BurpCallbacks.getInstance().print("Selected: " + jTable1.getSelectedRow());
+    }
+    
+    private int messageOrigIndex = -1;
+    private int messageCurrentIndex = -1;
+    
+    private void setOrigMessage(int n) {
+        messageOrigIndex = n;
+        
+        SentinelHttpMessage m = tableModel.getHttpMessage(n);
+        
+        // Set as main (initially)
+        panelViewMessageUiRight.setHttpMessage(m);
+        rightRequestMessageEditor.setMessage(m.getRequest(), true);
+    }
+    
+    private void viewMessage(int index) {
+        messageCurrentIndex = index;
+        SentinelHttpMessage m = tableModel.getMessage(index);
+        
+        leftRequestMessageEditor.setMessage(m.getRequest(), true);
+        panelViewMessageUiLeft.setShowResponse(true);
+        panelViewMessageUiLeft.setHttpMessage(m);
+        jTable1.getSelectionModel().setSelectionInterval(index, index);
+        this.currentSelectedRow = index;
+        this.updateUI();
     }
     
     private void sendMessage() {
-        String s = panelViewMessageUiLeft.getRequestContent();
+        //String s = panelViewMessageUiLeft.getRequestContent();
+        SentinelHttpMessage origHttpMessage = tableModel.getHttpMessage(0);
+        String s = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(leftRequestMessageEditor.getMessage());
         
         if (s != null) {
             //SentinelHttpMessage newMessage = new SentinelHttpMessage(s, origHttpMessage.getHttpService());
@@ -130,21 +171,17 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
                     origHttpMessage.getHttpService().getProtocol().toLowerCase().equals("https") ? true : false);
             newMessage.setParentHttpMessage(origHttpMessage);
             
+            BurpCallbacks.getInstance().sendRessource(newMessage, true);
+            
             tableModel.addHttpMessage(newMessage);
             
             viewLastMessage();
             this.updateUI();
+        } else {
+            BurpCallbacks.getInstance().print("No request");
         }
     }
-    
-    private void viewMessage(int index) {
-        SentinelHttpMessage m = tableModel.getMessage(index);
-        panelViewMessageUiLeft.setShowResponse(true);
-        panelViewMessageUiLeft.setHttpMessage(m);
-        jTable1.getSelectionModel().setSelectionInterval(index, index);
-        this.currentSelectedRow = index;
-        this.updateUI();
-    }
+
     
     private void viewLastMessage() {
         viewMessage(tableModel.getMessageCount()-1);
@@ -165,17 +202,22 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelRight = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         panelMsgOne = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        panelViewMessageUiLeft = new gui.viewMessage.PanelViewMessageUi();
+        jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        panelViewMessageUiLeft = new gui.viewMessage.PanelViewMessageUi();
-        panelMsgTwo = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        panelLeftRequest = new javax.swing.JPanel();
+        jSplitPane3 = new javax.swing.JSplitPane();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
+        panelRightRequest = new javax.swing.JPanel();
+        panelRightResponse = new javax.swing.JPanel();
         panelViewMessageUiRight = new gui.viewMessage.PanelViewMessageUi();
 
         jTable1.setModel(getTableModel());
@@ -192,10 +234,14 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jSplitPane1.setDividerLocation(550);
+        jSplitPane1.setDividerLocation(650);
         jSplitPane1.setResizeWeight(0.5);
 
-        panelMsgOne.setLayout(new java.awt.BorderLayout());
+        jSplitPane2.setDividerLocation(200);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane2.setBottomComponent(panelViewMessageUiLeft);
+
+        jPanel3.setLayout(new java.awt.BorderLayout());
 
         jButton1.setText("Go");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -222,7 +268,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
-                .addGap(0, 339, Short.MAX_VALUE))
+                .addGap(0, 407, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,73 +279,81 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
                 .addComponent(jButton4))
         );
 
-        panelMsgOne.add(jPanel1, java.awt.BorderLayout.NORTH);
+        jPanel3.add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jPanel2.setLayout(new java.awt.BorderLayout());
-        jPanel2.add(panelViewMessageUiLeft, java.awt.BorderLayout.CENTER);
+        panelLeftRequest.setLayout(new java.awt.BorderLayout());
+        jPanel3.add(panelLeftRequest, java.awt.BorderLayout.CENTER);
 
-        panelMsgOne.add(jPanel2, java.awt.BorderLayout.CENTER);
+        jSplitPane2.setTopComponent(jPanel3);
+
+        javax.swing.GroupLayout panelMsgOneLayout = new javax.swing.GroupLayout(panelMsgOne);
+        panelMsgOne.setLayout(panelMsgOneLayout);
+        panelMsgOneLayout.setHorizontalGroup(
+            panelMsgOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane2)
+        );
+        panelMsgOneLayout.setVerticalGroup(
+            panelMsgOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+        );
 
         jSplitPane1.setLeftComponent(panelMsgOne);
 
-        jButton5.setText("jButton5");
+        jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButton5)
-                .addGap(0, 486, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButton5)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        jPanel5.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE))
-        );
+        jLabel1.setText("jLabel1");
 
-        javax.swing.GroupLayout panelMsgTwoLayout = new javax.swing.GroupLayout(panelMsgTwo);
-        panelMsgTwo.setLayout(panelMsgTwoLayout);
-        panelMsgTwoLayout.setHorizontalGroup(
-            panelMsgTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        panelMsgTwoLayout.setVerticalGroup(
-            panelMsgTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMsgTwoLayout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        jButton6.setText("jButton6");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButton6)
+                .addGap(0, 444, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1)
+            .addComponent(jButton6)
         );
 
-        jSplitPane1.setRightComponent(panelMsgTwo);
+        jPanel5.add(jPanel7, java.awt.BorderLayout.NORTH);
+
+        panelRightRequest.setLayout(new java.awt.BorderLayout());
+        jPanel5.add(panelRightRequest, java.awt.BorderLayout.CENTER);
+
+        jSplitPane3.setLeftComponent(jPanel5);
+
+        javax.swing.GroupLayout panelRightResponseLayout = new javax.swing.GroupLayout(panelRightResponse);
+        panelRightResponse.setLayout(panelRightResponseLayout);
+        panelRightResponseLayout.setHorizontalGroup(
+            panelRightResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelRightResponseLayout.setVerticalGroup(
+            panelRightResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+        );
+
+        jSplitPane3.setRightComponent(panelRightResponse);
+
+        jSplitPane1.setRightComponent(jSplitPane3);
 
         javax.swing.GroupLayout panelRightLayout = new javax.swing.GroupLayout(panelRight);
         panelRight.setLayout(panelRightLayout);
         panelRightLayout.setHorizontalGroup(
             panelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1115, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
         );
         panelRightLayout.setVerticalGroup(
             panelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -327,18 +381,23 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel panelLeft;
+    private javax.swing.JPanel panelLeftRequest;
     private javax.swing.JPanel panelMsgOne;
-    private javax.swing.JPanel panelMsgTwo;
     private javax.swing.JPanel panelRight;
+    private javax.swing.JPanel panelRightRequest;
+    private javax.swing.JPanel panelRightResponse;
     private gui.viewMessage.PanelViewMessageUi panelViewMessageUiLeft;
     private gui.viewMessage.PanelViewMessageUi panelViewMessageUiRight;
     // End of variables declaration//GEN-END:variables

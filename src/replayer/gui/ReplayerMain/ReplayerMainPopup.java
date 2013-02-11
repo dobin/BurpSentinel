@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui.mainTop;
+package replayer.gui.ReplayerMain;
 
+import gui.mainTop.PanelTopUi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
@@ -14,18 +15,18 @@ import util.BurpCallbacks;
  *
  * @author dobin
  */
-public class PanelTopPopup implements ActionListener {
+public class ReplayerMainPopup implements ActionListener {
 
     private JMenuItem menuDelete;
     private JPopupMenu menu;
-    private PanelTopUi parent;
+    private ReplayerMainUi parent;
 
-    public PanelTopPopup(PanelTopUi parent) {
+    public ReplayerMainPopup(ReplayerMainUi parent) {
         this.parent = parent;
 
         menu = new JPopupMenu("Message");
 
-        menuDelete = new JMenuItem("Delete");
+        menuDelete = new JMenuItem("Set as Original");
         menuDelete.addActionListener(this);
         
         menu.add(menuDelete);
@@ -40,7 +41,8 @@ public class PanelTopPopup implements ActionListener {
         Object o = e.getSource();
 
         if (o == menuDelete) {
-            parent.removeMessage();
+            parent.setSelectedMessageAsOriginal();
         }
     }
+    
 }

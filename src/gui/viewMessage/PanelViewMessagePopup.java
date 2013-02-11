@@ -14,9 +14,11 @@ import org.fife.ui.rtextarea.RTextArea;
 public class PanelViewMessagePopup implements ActionListener {
     private JPopupMenu menu;
     
+    
     private JMenuItem menuRepeater;
     private JMenuItem menuReissue;
     private JMenuItem menuCopy;
+    private JMenuItem menuCopySmart;
 //    private JMenuItem menuDiff;
     
     private PanelViewMessageUi panelMessage;
@@ -42,6 +44,11 @@ public class PanelViewMessagePopup implements ActionListener {
         menuReissue = new JMenuItem("Send again");
         menuReissue.addActionListener(this);
         menu.add(menuReissue);
+        
+        menuCopySmart = new JMenuItem("Copy Smart");
+        menuCopySmart.addActionListener(this);
+        menu.add(menuCopySmart);
+        
 
 //        menuDiff = new JMenuItem("Diff");
 //        menuDiff.addActionListener(this);
@@ -63,9 +70,9 @@ public class PanelViewMessagePopup implements ActionListener {
         if (o == menuReissue) {
             panelMessage.c_sendAgain();
         }
- //       if (o == menuDiff) {
- //           panelMessage.c_diff();
- //       }
+        if (o == menuCopySmart) {
+            panelMessage.c_copySmart();
+        }
     }
     
 }

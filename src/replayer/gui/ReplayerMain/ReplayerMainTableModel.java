@@ -52,7 +52,6 @@ public class ReplayerMainTableModel extends AbstractTableModel implements Observ
                 if (s == null) {
                     s = "ASDF";
                 }
-                BurpCallbacks.getInstance().print("S: " + s);
                 return s;
             default:
                 return "";

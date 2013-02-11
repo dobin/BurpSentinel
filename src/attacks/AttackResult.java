@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package attacks;
 
 import model.SentinelHttpParam;
@@ -15,8 +11,6 @@ public class AttackResult {
     private AttackData.AttackType attackType = null;
     private SentinelHttpParam attackParam = null;
     private boolean success;
-    
-    
 
     AttackResult(AttackData.AttackType attackType, String resultStr, SentinelHttpParam attackParam, boolean success) {
         this.resultStr = resultStr;

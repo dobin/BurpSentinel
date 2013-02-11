@@ -1,7 +1,6 @@
 package gui.mainTop;
 
 import attacks.AttackData;
-import attacks.AttackResult;
 import gui.session.SessionManager;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -23,10 +22,10 @@ import util.BurpCallbacks;
  */
 public class PanelTopTableModel extends AbstractTableModel implements Observer {
     private PanelTopUi parent;
+    private LinkedList<SentinelHttpMessage> myMessages = new LinkedList<SentinelHttpMessage>();
     
     public PanelTopTableModel(PanelTopUi parent) {
         this.parent = parent;
-        
         SessionManager.getInstance().addObserver(this);
     }
     
@@ -34,10 +33,6 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         myMessages = new LinkedList<SentinelHttpMessage>();
         this.fireTableDataChanged();
     }
-
-    private LinkedList<SentinelHttpMessage> myMessages = new LinkedList<SentinelHttpMessage>();
-
-
     
     public void addMessage(SentinelHttpMessage message) {
         myMessages.add(message);
@@ -115,9 +110,6 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        //if (rowIndex > myMessages.size()) {
-        //    return "asdf";
-        //}
         SentinelHttpMessage httpMessage = myMessages.get(rowIndex);
         
         switch (columnIndex) {
@@ -145,19 +137,19 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
             case 5:
                 return httpMessage.getReq().getSessionValueTranslated();
             case 6:
-                String r = hasVulns(httpMessage);
+                String r = getHighestVulnerabilityOf(httpMessage);
                 if (r.equals("NONE")) {
                     r = "-";
                 }
                 return r;
             case 7:
                 String s = "";
-                SimpleDateFormat ft = new SimpleDateFormat ("HH:mm:ss dd.MM.YY");
+                SimpleDateFormat ft = new SimpleDateFormat ("dd.MM.YY HH:mm:ss");
                 s = ft.format(httpMessage.getCreateTime());
                 return  s;
             case 8:
                 String ss = "";
-                SimpleDateFormat fft = new SimpleDateFormat ("HH:mm:ss dd.MM.YY");
+                SimpleDateFormat fft = new SimpleDateFormat ("dd.MM.YY HH:mm:ss");
                 Date d = httpMessage.getModifyTime();
                 if (d == null) {
                     return "-";
@@ -170,13 +162,11 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         }
     }
 
-    
-    private String hasVulns(SentinelHttpMessage httpMessage) {
+    private String getHighestVulnerabilityOf(SentinelHttpMessage httpMessage) {
         AttackData.AttackType attackType = AttackData.AttackType.NONE;
         
         for(SentinelHttpMessage m: httpMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
-                System.out.println("PanelTopModel: message has no attack results!");
                 continue;
             }
             
@@ -184,24 +174,26 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
                 if (m.getAttackResult().getAttackType().ordinal() > attackType.ordinal()) {
                     attackType = m.getAttackResult().getAttackType();
                 }
-                
-
             }
         }
         
         return attackType.toString();
     }
-    
+
+    /* Data the user is able to modify in this table:
+     * - comment of initial http request
+     */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (columnIndex == 3 && aValue instanceof String) {
             String s = (String) aValue;
             myMessages.get(rowIndex).setComment(s);
         }
-        
-        //System.out.println("Allmessage table SET (not supported)");
     }
 
+    /* We observe SessionManager
+     * To update Session Information of requests in table (Username of session)
+     */
     @Override
     public void update(Observable o, Object arg) {
         int selected = parent.getSelected();

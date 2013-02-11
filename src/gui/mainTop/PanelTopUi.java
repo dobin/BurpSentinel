@@ -1,17 +1,14 @@
 package gui.mainTop;
 
 import gui.SentinelMainUi;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
-import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
