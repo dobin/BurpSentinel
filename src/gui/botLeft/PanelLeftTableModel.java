@@ -17,9 +17,12 @@ import util.BurpCallbacks;
  * @author unreal
  */
 public class PanelLeftTableModel extends DefaultTableModel implements Observer {
-
+    // The Request belonging to this table
     private SentinelHttpMessage myRequest = null;
-    private JCheckBox[] checkBoxAttack;
+    
+    // the table data itself 
+    //   rows in a linked list
+    //   list entry object data are columns
     private LinkedList<PanelLeftTableUIEntry> uiEntries = new LinkedList<PanelLeftTableUIEntry>();
 
     public PanelLeftTableModel() {
@@ -243,12 +246,17 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         int argc = myRequest.getReq().getParamCount();
 
         for (int n = 0; n < argc; n++) {
-            uiEntries.add(new PanelLeftTableUIEntry());
+            PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
+            entry.isOrigEnabled = true; // Active orig attack
+            
+            uiEntries.add(entry);
         }
 
         this.fireTableDataChanged();
     }
 
+
+    
     public LinkedList<SentinelHttpParam> createChangeParam() {
         LinkedList<SentinelHttpParam> list = new LinkedList<SentinelHttpParam>();
 
@@ -258,6 +266,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             boolean attackThis = false;
             SentinelHttpParam param = myRequest.getReq().getParam(n);
             
+           
             if (uiEntries.get(n).isXssEnabled) {
                 BurpCallbacks.getInstance().print("Attack XSS because of param #" + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
@@ -269,6 +278,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 attackThis = true;
             }
             if (uiEntries.get(n).isOtherEnabled) {
+                BurpCallbacks.getInstance().print("Attack OTHER because of param #" + n);
                 myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
                 attackThis = true;
             }
@@ -279,6 +289,15 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                     uiEntries.get(n).authData);
 
                 attackThis = true;
+            }
+            
+            if (uiEntries.get(n).isOrigEnabled && attackThis) {
+                BurpCallbacks.getInstance().print("Attack FIRST because of param #" + n);
+                myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
+                attackThis = true;
+                
+                // TODO bad place here - do it it resetAttackSelection()
+                uiEntries.get(n).isOrigEnabled = false;
             }
 
             // Check if we should attack this specific param

@@ -7,7 +7,6 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import util.BurpCallbacks;
 
 /**
  *
@@ -23,7 +22,6 @@ public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBo
     
     public PanelLeftComboBoxModel() {
         super();
-
 
         sessionManager = SessionManager.getInstance();
         sessionManager.addObserver(this);

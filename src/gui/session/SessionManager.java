@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.session;
 
 import java.util.LinkedList;
 import java.util.Observable;
-import util.BurpCallbacks;
 
 /**
  *
@@ -31,10 +26,6 @@ public class SessionManager extends Observable {
     }
     
     public void show() {
-        if (sessionManagerUi == null) {
-            sessionManagerUi = new SessionManagerUi();
-            
-        }
         sessionManagerUi.setVisible(true);
     }
 

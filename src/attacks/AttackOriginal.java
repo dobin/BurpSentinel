@@ -1,6 +1,6 @@
 package attacks;
 
-import gui.session.SessionManager;
+import attacks.AttackData.AttackType;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
@@ -27,6 +27,13 @@ public class AttackOriginal extends AttackI {
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
         this.message = httpMessage;
         
+        AttackResult res = new AttackResult(
+                AttackType.INFO,
+                "ORIG",
+                httpMessage.getReq().getChangeParam(),
+                false);
+        httpMessage.addAttackResult(res);
+
         return false;
     }
 

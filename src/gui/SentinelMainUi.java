@@ -13,8 +13,9 @@ import util.UiUtil;
 /**
  * The main GUI Window
  *
- * - Displays Top and Bottom Panel - Interface between Top/Bot Panel - Interface
- * for burp to add HttpMessages to sentinel
+ * - Displays Top and Bottom Panel 
+ * - Interface between Top/Bot Panel 
+ * - Interface for burp to add HttpMessages to sentinel
  *
  * @author Dobin
  */
@@ -23,6 +24,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
 
+    
     /**
      * Creates new form MainGuiFrame
      */
@@ -31,24 +33,31 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         init();
     }
 
+    
     private void init() {
         // panelTopUi was inserted with Netbeans palette
         // Set his parent here
         panelTopUi.setMainGui(this);
-
+        
         UiUtil.restoreSplitLocation(jSplitPane1, this);
+        
         initTestMessages();
     }
 
+    
     /* Add new HttpRequestResponse
      * This gets called from Burp Menu entry
      * 
      * this is the main entry point for new HttpMessages (IHttpRequestResponse)
-     * we first translate it into a proper SentinelHttpMessdage
      */
     @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
+        // Make a sentinel http message from the burp message
         SentinelHttpMessage myHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
+        
+        // Save ui preferences
+        // For example, the row width's are not automatically stored upon change,
+        // but needed for new messages.
         storeUiPrefs();
 
         // Add request to top overview (where user can select requests)
@@ -57,15 +66,14 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         // Create a new PanelBot card and add it to the botPanel and the 
         // LinkedList of available cards
         int index = panelBotUiList.size();
-
         PanelBotUi newPanelBot = new PanelBotUi(myHttpMessage);
         panelBotUiList.add(newPanelBot);
-
         panelCard.add(newPanelBot, Integer.toString(index));
-        showMessage(index);
+        showMessage(index); // Show newly added message in ui
 
+        // Not used anymore - remove?
         //panelBot.updateUI();
-        this.setVisible(true);
+        //this.setVisible(true);
     }
 
 
@@ -85,9 +93,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         //panelBotUiList.remove(currentSelectedRow);
         //panelCard.remove(currentSelectedRow);
     }
+
     
-
-
     /*
      * Init testcase messages
      * 
@@ -204,6 +211,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         addNewMessage(httpMessage);
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -290,40 +298,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         initTestMessages();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SentinelMainUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SentinelMainUi().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -351,11 +325,13 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         }
     }
     
+    
     @Override
     public String getTabCaption() {
         return "Sentinel";
     }
 
+    
     @Override
     public Component getUiComponent() {
         return this;

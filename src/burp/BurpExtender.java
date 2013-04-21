@@ -41,7 +41,6 @@ public class BurpExtender implements IExtensionStateListener {
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                
                 sentinelMain = new SentinelMainUi();
                 replayerMain = new ReplayerMainUi();
                 

@@ -3,7 +3,6 @@ package gui.session;
 import java.util.Collections;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
-import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -18,6 +17,17 @@ public class SessionTableModel extends AbstractTableModel {
         UiUtil.restoreSessions(sessionUsers);
     }
     
+    @Override
+    public String getColumnName(int columnIndex) {
+        switch(columnIndex) {
+            case 0:
+                return "Username";
+            case 1:
+                return "Session ID";
+            default:
+                return "";
+        }
+    }
     
     @Override
     public int getRowCount() {

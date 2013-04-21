@@ -19,4 +19,5 @@ class PanelLeftTableUIEntry {
     public boolean isAuthEnabled;
     public String authData;
     
+    public boolean isOrigEnabled;
 }

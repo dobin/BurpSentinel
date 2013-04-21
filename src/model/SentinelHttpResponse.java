@@ -2,7 +2,12 @@ package model;
 
 import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
+import gui.session.categorizer.CategorizerManager;
+import gui.session.categorizer.CategoryEntry;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import util.BurpCallbacks;
 
 /**
@@ -15,6 +20,8 @@ public class SentinelHttpResponse {
     
     private int size = 0;
     private int domCount = 0;
+    
+    private LinkedList<String> categories = new LinkedList<String>();
 
     SentinelHttpResponse() {
 
@@ -47,12 +54,16 @@ public class SentinelHttpResponse {
             }
         }
         
+        // Get response length
         for(String header: responseInfo.getHeaders()) {
             String a[] = header.split(": ");
             if (a[0].toLowerCase().equals("Content-Length".toLowerCase()) && a.length == 2) {
                 this.size = Integer.parseInt(a[1]);
             }
         }
+        
+        // Categorize response
+        categorizeResponse();
         
         /*
         String res = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(response);
@@ -81,8 +92,39 @@ public class SentinelHttpResponse {
             this.domCount = n;
         }*/
     }
-    
 
+    
+    public void categorizeResponse() {
+        LinkedList<CategoryEntry> categoryEntries = CategorizerManager.getInstance().getCategories();
+
+        String s = new String(response);
+        
+        for(CategoryEntry entries: categoryEntries) {
+            Pattern pattern = Pattern.compile(entries.getRegex());
+            Matcher matcher = pattern.matcher(s);
+            
+            if (matcher.find()) {
+                categories.add(entries.getTag());
+            }
+        }
+    }
+    
+    
+    public String getCategoriesString() {
+        String res = "";
+        
+        for(String s: categories) {
+            res += s + ",";
+        }
+        
+        if (res.length() == 0) {
+            return "";
+        } else {
+            return res.substring(0, res.length() - 1);
+        }
+    }
+
+    
     public int getDom() {
         return domCount;
     }

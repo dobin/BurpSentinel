@@ -5,6 +5,7 @@
 package util;
 
 import gui.session.SessionUser;
+import gui.session.categorizer.CategoryEntry;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Rectangle;
@@ -204,6 +205,34 @@ public class UiUtil {
         
         String s = pref.get("SessionVarName", "jsessionid");
         textfieldSession.setText(s);
+    }
+
+    public static void restoreCategories(LinkedList<CategoryEntry> categoryEntries) {
+        Preferences pref = Preferences.userRoot().node("CategoryEntries");
+    
+        String[] children = null;
+        try {
+            children = pref.keys();
+            for (String s : children) {
+                String value = pref.get(s, "");
+                categoryEntries.add(new CategoryEntry(s, value));
+            }            
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void storeCategories(LinkedList<CategoryEntry> categoryEntries) {
+        Preferences pref = Preferences.userRoot().node("CategoryEntries");
+        try {
+            pref.clear();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(CategoryEntry c: categoryEntries) {
+            pref.put(c.getTag(), c.getRegex());
+        }        
     }
 
 

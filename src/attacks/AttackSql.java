@@ -27,8 +27,16 @@ public class AttackSql extends AttackI {
     private String[] attackDataSql = {
         "'",
         "''",
+        "'''",
         "%27",
-        "%27%27"
+        "%27%27",
+        "%27%27%27",
+        "\"",
+        "\"\"",
+        "\"\"\"",
+        "%22",
+        "%22%22",
+        "%22%22%22",
     };
     
      public AttackSql(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
@@ -50,7 +58,7 @@ public class AttackSql extends AttackI {
         String data = attackDataSql[state];
         SentinelHttpMessage httpMessage = attack(data);
         
-        if (state < 3) {
+        if (state < attackDataSql.length - 1) {
             doContinue = true;
         } else {
             doContinue = false;
@@ -72,13 +80,13 @@ public class AttackSql extends AttackI {
 
         String response = httpMessage.getRes().getResponseStr();
         if (response.contains("SQL")) {
-            AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL0", httpMessage.getReq().getChangeParam(), true);
+            AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL" + state, httpMessage.getReq().getChangeParam(), true);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight("SQL", failColor);
             httpMessage.addHighlight(h);
         } else {
-            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL0", httpMessage.getReq().getChangeParam(), false);
+            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL" + state, httpMessage.getReq().getChangeParam(), false);
             httpMessage.addAttackResult(res);
         }
         

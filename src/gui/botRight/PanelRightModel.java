@@ -1,5 +1,6 @@
 package gui.botRight;
 
+import gui.session.categorizer.CategorizerManager;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -18,18 +19,26 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
     public PanelRightModel(PanelRightUi parent) {
         this.parent = parent;
         messages = new LinkedList<SentinelHttpMessage>();
+        CategorizerManager.getInstance().addObserver(this);
     }
     
+    /*
+     * We observe 2 things:
+     * - httpmessages 
+     *   - currently ignored
+     * - categorizer
+     *   - used to update the httpmessages if categories change
+     */
     @Override
-    // Some data we display have been changed
-    // Most likely the httpMessage
-    // check what changed and update UI accordingly
     public void update(Observable o, Object arg) {
 //        System.out.println("--- AAA");
 //        if (o.getClass().equals(SentinelHttpMessage.ObserveResult.ATTACKRESULT)) {
 //            System.out.println("--- BBB");
 //            this.fireTableDataChanged();
 //        }
+        if (o.getClass().equals(CategorizerManager.class)) {
+            System.out.println("CATEGORIZE!");
+        }
     }
     
     @Override
@@ -108,18 +117,23 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 8: return (int) m.getLoadTime();
             case 9: 
                 if (m.getAttackResult() != null) {
-                    return m.getAttackResult().getAttackType();
+                    return m.getAttackResult().getAttackName();
                 } else {
                     return "Null";
                 }
             case 10:
                 if (m.getAttackResult() != null) {
-                    return m.getAttackResult().getResultStr();
+                    boolean successful = m.getAttackResult().getSuccess();
+                    if (successful) {
+                        return m.getAttackResult().getAttackType();
+                    } else {
+                        return "-";
+                    }
                 } else {
                     return "Null";
                 }
             case 11:
-                return "";
+                return m.getRes().getCategoriesString();
             default: return "AAA";
         }
     }

@@ -67,7 +67,12 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
             attackMessage = attack.getLastAttackMessage();
 
             if (attackMessage != null) {
+                // Add to results
                 httpMessages.add(attackMessage);
+                
+                // Categorize
+                
+                // Show progress to user
                 publish(attackMessage);
             }
             
@@ -115,7 +120,6 @@ public class WorkerAttackProgress extends SwingWorker<LinkedList<SentinelHttpMes
             // Authorisation
             AttackTypeData authAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.AUTHORISATION);
             if (authAttackData != null && authAttackData.isActive()) {
-                BurpCallbacks.getInstance().print("Auth attack: " + authAttackData.getData());
                 AttackI attack = new AttackAuthorisation(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, authAttackData.getData());
                 performAttack(attack, httpMessages);
             }

@@ -80,9 +80,9 @@ public class SentinelHttpParam implements IParameter {
     public String getTypeStr() {
         switch (type) {
             case 0:
-                return "URL";
+                return "GET";
             case 1:
-                return "BODY";
+                return "POST";
             case 2:
                 return "COOKIE";
             case 3:

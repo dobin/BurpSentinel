@@ -7,13 +7,13 @@ import model.SentinelHttpParam;
  * @author unreal
  */
 public class AttackResult {
-    private String resultStr = "";
+    private String attackName = "";
     private AttackData.AttackType attackType = null;
     private SentinelHttpParam attackParam = null;
     private boolean success;
 
-    AttackResult(AttackData.AttackType attackType, String resultStr, SentinelHttpParam attackParam, boolean success) {
-        this.resultStr = resultStr;
+    AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success) {
+        this.attackName = attackName;
         this.attackType = attackType;
         this.attackParam = attackParam;
         this.success = success;
@@ -27,11 +27,16 @@ public class AttackResult {
         return attackParam;
     }
    
-    public String getResultStr() {
-        return resultStr;
+    public String getAttackName() {
+        return attackName;
     }
 
     public AttackData.AttackType getAttackType() {
         return attackType;
     }
+    
+    public boolean getSuccess() {
+        return success;
+    }
+    
 }

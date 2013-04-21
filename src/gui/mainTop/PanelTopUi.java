@@ -32,7 +32,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         popup = new PanelTopPopup(this);
         initComponents();
         tableAllMessages.setAutoCreateRowSorter(true);
-        
+
         UiUtil.restoreTableDimensions(tableAllMessages, this);
         
         int width = 100;
@@ -54,7 +54,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.getColumnModel().getColumn(8).setMaxWidth(140);
         tableAllMessages.getColumnModel().getColumn(8).setMinWidth(140);
 
-        
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
@@ -126,6 +125,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         //this.updateUI();
         
         tableAllMessages.scrollRectToVisible(tableAllMessages.getCellRect(tableTopModel.getRowCount() - 1, 0, true));
+        //this.updateUI();
     }
 
     // Used for swing
