@@ -17,7 +17,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jScrollPane1" pref="475" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="464" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -69,11 +69,11 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="btnSessions" min="-2" max="-2" attributes="0"/>
-              <Component id="btnCategorizer" min="-2" max="-2" attributes="0"/>
-              <Component id="btnOptions" min="-2" max="-2" attributes="0"/>
-              <Component id="btnReport" min="-2" max="-2" attributes="0"/>
-              <Component id="btnNetworking" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Component id="btnSessions" max="32767" attributes="0"/>
+              <Component id="btnCategorizer" alignment="0" max="32767" attributes="0"/>
+              <Component id="btnOptions" alignment="0" max="32767" attributes="0"/>
+              <Component id="btnReport" max="32767" attributes="0"/>
+              <Component id="btnNetworking" alignment="0" pref="56" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -88,7 +88,7 @@
                   <Component id="btnReport" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnNetworking" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -97,6 +97,7 @@
         <Component class="javax.swing.JButton" name="btnSessions">
           <Properties>
             <Property name="text" type="java.lang.String" value="S"/>
+            <Property name="toolTipText" type="java.lang.String" value="Show Sessions Window"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSessionsActionPerformed"/>
@@ -104,7 +105,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnCategorizer">
           <Properties>
-            <Property name="text" type="java.lang.String" value="C"/>
+            <Property name="text" type="java.lang.String" value="T"/>
+            <Property name="toolTipText" type="java.lang.String" value="Show Translation Window"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCategorizerActionPerformed"/>
@@ -112,7 +114,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnOptions">
           <Properties>
-            <Property name="text" type="java.lang.String" value="O"/>
+            <Property name="text" type="java.lang.String" value="C"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOptionsActionPerformed"/>
@@ -129,6 +131,7 @@
         <Component class="javax.swing.JButton" name="btnNetworking">
           <Properties>
             <Property name="text" type="java.lang.String" value="N"/>
+            <Property name="toolTipText" type="java.lang.String" value="Show Network Logging Window"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNetworkingActionPerformed"/>

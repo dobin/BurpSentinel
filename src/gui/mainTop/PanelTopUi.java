@@ -175,20 +175,22 @@ public class PanelTopUi extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tableAllMessages);
 
         btnSessions.setText("S");
+        btnSessions.setToolTipText("Show Sessions Window");
         btnSessions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSessionsActionPerformed(evt);
             }
         });
 
-        btnCategorizer.setText("C");
+        btnCategorizer.setText("T");
+        btnCategorizer.setToolTipText("Show Translation Window");
         btnCategorizer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCategorizerActionPerformed(evt);
             }
         });
 
-        btnOptions.setText("O");
+        btnOptions.setText("C");
         btnOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOptionsActionPerformed(evt);
@@ -203,6 +205,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         });
 
         btnNetworking.setText("N");
+        btnNetworking.setToolTipText("Show Network Logging Window");
         btnNetworking.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNetworkingActionPerformed(evt);
@@ -213,11 +216,11 @@ public class PanelTopUi extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnSessions)
-            .addComponent(btnCategorizer)
-            .addComponent(btnOptions)
-            .addComponent(btnReport)
-            .addComponent(btnNetworking)
+            .addComponent(btnSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCategorizer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnNetworking, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,7 +234,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                 .addComponent(btnReport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnNetworking)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -239,7 +242,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -271,6 +274,8 @@ public class PanelTopUi extends javax.swing.JPanel {
 
     private void btnNetworkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetworkingActionPerformed
         NetworkerInfo info = new NetworkerInfo();
+        info.start();
+        info.setLocationRelativeTo(btnNetworking);
         
         info.setVisible(true);
     }//GEN-LAST:event_btnNetworkingActionPerformed

@@ -9,6 +9,7 @@ import attacks.AttackSql;
 import attacks.AttackXss;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
@@ -23,11 +24,11 @@ import util.BurpCallbacks;
  */
 public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
 
-    private final Queue queue;
-    private String log;
+    private final Queue queue = new LinkedBlockingQueue();
+    private NetworkerLogger log = new NetworkerLogger();
+    private boolean cancel = false;
 
-    public NetworkerWorker(Queue queue) {
-        this.queue = queue;
+    public NetworkerWorker() {
     }
 
     @Override
@@ -44,31 +45,39 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
                     }
                 }
 
+                log.append("New requests\n");
                 work = (WorkEntry) queue.remove();
             }
-            
-            BurpCallbacks.getInstance().print("QQQ: " + queue.size());
-            doWork(work);
 
+            doWork(work);
+        }
+    }
+
+    void addAttack(WorkEntry entry) {
+        synchronized (queue) {
+            queue.add(entry);
+            queue.notify();
         }
     }
 
     @Override
     protected void process(List<WorkEntry> pairs) {
-        for(WorkEntry work: pairs) {
+        for (WorkEntry work : pairs) {
             work.panelParent.addAttackMessage(work.result);
         }
     }
-    
-    private void performAttack(AttackI attack, WorkEntry work) {
+
+    private void performAttack(AttackI attack, WorkEntry work, SentinelHttpParam attackHttpParam) {
         SentinelHttpMessage attackMessage = null;
         boolean goon = true;
 
         while (goon) {
-            log += work.origHttpMessage.getReq().getUrl() + " - " + work.attackHttpParam.getName() + "\n";
+            log.append(work.origHttpMessage.getReq().getUrl() + " (" + attackHttpParam.getName() + "=" + attackHttpParam.getValue() + ") ...");
             goon = attack.performNextAttack();
-            attackMessage = attack.getLastAttackMessage();
+            log.append(" ok\n");
             
+            attackMessage = attack.getLastAttackMessage();
+
             if (attackMessage != null) {
                 work.result = attackMessage;
                 publish(work);
@@ -76,25 +85,37 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
                 //BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
             }
 
-            //if (panelProgress.isCanceled()) {
-            //    goon = false;
-            //}
+            if (cancel) {
+                goon = false;
+            }
         }
     }
-    
-    public String getLog() {
+
+    public NetworkerLogger getLogger() {
         return log;
     }
-    
+
     void cancelAll() {
-         synchronized (queue) {
-             queue.clear();
-         }
+        cancel = true;
+        log.append("\n\nCanceling, please wait... ");
     }
 
     private void doWork(WorkEntry work) {
-        log = "Startingz";
-        SentinelHttpParam attackHttpParam = work.attackHttpParam;
+        log.newWork();
+        //log.append("Start...\n");
+
+        for (SentinelHttpParam attackHttpParam : work.attackHttpParams) {
+            doAttack(work, attackHttpParam);
+            
+            if (cancel) {
+                log.append("ok\n");
+                cancel = false;
+                break;
+            }
+        }
+    }
+
+    private void doAttack(WorkEntry work, SentinelHttpParam attackHttpParam) {
         SentinelHttpMessage origHttpMessage = work.origHttpMessage;
         boolean followRedirect = work.followRedirect;
         String mainSessionName = work.mainSessionName;
@@ -104,7 +125,11 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         if (origAttackData != null && origAttackData.isActive()) {
             AttackI attack = new AttackOriginal(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
             //performAttack(attack, httpMessages);
-            performAttack(attack, work);
+            performAttack(attack, work, attackHttpParam);
+        }
+
+        if (cancel) {
+            return;
         }
 
         // XSS
@@ -112,7 +137,11 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         if (xssAttackData != null && xssAttackData.isActive()) {
             AttackI attack = new AttackXss(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
             //performAttack(attack, httpMessages);
-            performAttack(attack, work);
+            performAttack(attack, work, attackHttpParam);
+        }
+
+        if (cancel) {
+            return;
         }
 
         // pXSS
@@ -120,7 +149,11 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         if (pxssAttackData != null && pxssAttackData.isActive()) {
             AttackI attack = new AttackPersistentXss(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
             //performAttack(attack, httpMessages);
-            performAttack(attack, work);
+            performAttack(attack, work, attackHttpParam);
+        }
+
+        if (cancel) {
+            return;
         }
 
         // SQL
@@ -128,18 +161,22 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         if (sqlAttackData != null && sqlAttackData.isActive()) {
             AttackI attack = new AttackSql(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
             //performAttack(attack, httpMessages);
-            performAttack(attack, work);
+            performAttack(attack, work, attackHttpParam);
         }
+
+        if (cancel) {
+            return;
+        }
+
 
         // Authorisation
         AttackTypeData authAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.AUTHORISATION);
         if (authAttackData != null && authAttackData.isActive()) {
             AttackI attack = new AttackAuthorisation(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, authAttackData.getData());
             //performAttack(attack, httpMessages);
-            performAttack(attack, work);
+            performAttack(attack, work, attackHttpParam);
         }
 
         attackHttpParam.resetAttackTypes();
     }
-
 }

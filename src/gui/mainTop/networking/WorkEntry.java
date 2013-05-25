@@ -14,7 +14,7 @@ import model.SentinelHttpParam;
  * @author dobin
  */
 public class WorkEntry {
-    SentinelHttpParam attackHttpParam;
+    LinkedList<SentinelHttpParam> attackHttpParams;
     SentinelHttpMessage origHttpMessage;
     PanelLeftUi panelParent;
     boolean followRedirect;
@@ -22,13 +22,13 @@ public class WorkEntry {
     
     SentinelHttpMessage result;
     
-    public WorkEntry(SentinelHttpParam attackHttpParam, 
+    public WorkEntry(LinkedList<SentinelHttpParam> attackHttpParams, 
             SentinelHttpMessage origHttpMessage, 
             PanelLeftUi panelParent, 
             boolean followRedirect, 
             String mainSessionName) {
      
-        this.attackHttpParam = attackHttpParam;
+        this.attackHttpParams = attackHttpParams;
         this.origHttpMessage = origHttpMessage;
         this.panelParent = panelParent;
         this.followRedirect = followRedirect;

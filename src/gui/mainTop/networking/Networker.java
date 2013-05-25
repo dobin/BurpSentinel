@@ -17,8 +17,9 @@ import util.BurpCallbacks;
  * @author dobin
  */
 public class Networker {
+
     private static Networker myself;
-    
+
     public static Networker getInstance() {
         if (myself == null) {
             myself = new Networker();
@@ -26,63 +27,43 @@ public class Networker {
         }
         return myself;
     }
-    
-    private final Queue<WorkEntry> queue = new LinkedBlockingQueue();
     private NetworkerWorker worker = null;
-    
+
     public Networker() {
-        
     }
-    
+
+    public NetworkerWorker getWorker() {
+        return worker;
+    }
+
     public void init() {
-        worker = new NetworkerWorker(queue);
+        worker = new NetworkerWorker();
+        //worker = new NetworkerWorker(queue);
         worker.execute();
     }
-    
-    public int getQueueLen() {
-        int a = 0;
-        
-        synchronized(queue) {
-            a = queue.size();
-        }
-        
-        
-        BurpCallbacks.getInstance().print("Q: " + a);
-        return a;
+
+    public NetworkerLogger getLogger() {
+        return worker.getLogger();
     }
-    
-    public String getLog() {
-        return worker.getLog();
-    }
-    
-    
+
     public void addNewMessages(
-            LinkedList<SentinelHttpParam> attackHttpParams, 
-            SentinelHttpMessage origHttpMessage, 
-            PanelLeftUi panelParent, 
-            boolean followRedirect, 
-            String mainSessionName) 
-    {
-        
-        synchronized(queue) {
-            for(SentinelHttpParam attackHttpParam: attackHttpParams) {
-                WorkEntry entry = new WorkEntry(
-                        attackHttpParam,
-                        origHttpMessage,
-                        panelParent, 
-                        followRedirect, 
-                        mainSessionName);
-                
-                queue.add(entry);
-            }
-            
-            BurpCallbacks.getInstance().print("QQ: " + queue.size());
-            queue.notify();
-        }
+            LinkedList<SentinelHttpParam> attackHttpParams,
+            SentinelHttpMessage origHttpMessage,
+            PanelLeftUi panelParent,
+            boolean followRedirect,
+            String mainSessionName) {
+
+        WorkEntry entry = new WorkEntry(
+                attackHttpParams,
+                origHttpMessage,
+                panelParent,
+                followRedirect,
+                mainSessionName);
+
+        worker.addAttack(entry);
     }
 
     void cancelAll() {
         worker.cancelAll();
     }
-    
 }
