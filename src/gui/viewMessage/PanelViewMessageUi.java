@@ -35,6 +35,7 @@ import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.w3c.tidy.Tidy;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 import util.UiUtil;
 import util.diff.DiffPrint.UnifiedSmallPrint;
 import util.diff.GnuDiff;
@@ -418,8 +419,13 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     /*** Functions for children ***/
     
     public void c_sendAgain() {
-        BurpCallbacks.getInstance().sendRessource(httpMessage, true);
-        this.reInit();
+        try {
+            BurpCallbacks.getInstance().sendRessource(httpMessage, true);
+            this.reInit();
+        } catch (ConnectionTimeoutException ex) {
+            BurpCallbacks.getInstance().print("Error sendingz");
+        }
+        
     }
     
     public void c_sendToRepeater() {

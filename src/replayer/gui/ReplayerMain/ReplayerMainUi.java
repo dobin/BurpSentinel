@@ -48,9 +48,9 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         initComponents();
         jSplitPane1.setDividerLocation(0.5f);
         
-        panelViewMessageUiLeft.setLinkManager(linkManager);
-        panelViewMessageUiRight.setLinkManager(linkManager);
-        panelViewMessageUiLeft.setRequestEditor(true);
+//        panelViewMessageUiLeft.setLinkManager(linkManager);
+//        panelViewMessageUiRight.setLinkManager(linkManager);
+//        panelViewMessageUiLeft.setRequestEditor(true);
                 
         popup = new ReplayerMainPopup(this);
         
@@ -142,7 +142,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         SentinelHttpMessage m = tableModel.getHttpMessage(n);
         
         // Set as main (initially)
-        panelViewMessageUiRight.setHttpMessage(m);
+//        panelViewMessageUiRight.setHttpMessage(m);
         rightRequestMessageEditor.setMessage(m.getRequest(), true);
     }
     
@@ -151,8 +151,8 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         SentinelHttpMessage m = tableModel.getMessage(index);
         
         leftRequestMessageEditor.setMessage(m.getRequest(), true);
-        panelViewMessageUiLeft.setShowResponse(true);
-        panelViewMessageUiLeft.setHttpMessage(m);
+//        panelViewMessageUiLeft.setShowResponse(true);
+//        panelViewMessageUiLeft.setHttpMessage(m);
         jTable1.getSelectionModel().setSelectionInterval(index, index);
         this.currentSelectedRow = index;
         this.updateUI();
@@ -171,7 +171,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
                     origHttpMessage.getHttpService().getProtocol().toLowerCase().equals("https") ? true : false);
             newMessage.setParentHttpMessage(origHttpMessage);
             
-            BurpCallbacks.getInstance().sendRessource(newMessage, true);
+ //           BurpCallbacks.getInstance().sendRessource(newMessage, true);
             
             tableModel.addHttpMessage(newMessage);
             
@@ -203,7 +203,6 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         jSplitPane1 = new javax.swing.JSplitPane();
         panelMsgOne = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
-        panelViewMessageUiLeft = new gui.viewMessage.PanelViewMessageUi();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -218,7 +217,6 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         jButton6 = new javax.swing.JButton();
         panelRightRequest = new javax.swing.JPanel();
         panelRightResponse = new javax.swing.JPanel();
-        panelViewMessageUiRight = new gui.viewMessage.PanelViewMessageUi();
 
         jTable1.setModel(getTableModel());
         jScrollPane1.setViewportView(jTable1);
@@ -239,7 +237,6 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
         jSplitPane2.setDividerLocation(200);
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane2.setBottomComponent(panelViewMessageUiLeft);
 
         jPanel3.setLayout(new java.awt.BorderLayout());
 
@@ -334,11 +331,11 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelRightResponse.setLayout(panelRightResponseLayout);
         panelRightResponseLayout.setHorizontalGroup(
             panelRightResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 601, Short.MAX_VALUE)
         );
         panelRightResponseLayout.setVerticalGroup(
             panelRightResponseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelViewMessageUiRight, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+            .addGap(0, 364, Short.MAX_VALUE)
         );
 
         jSplitPane3.setRightComponent(panelRightResponse);
@@ -349,7 +346,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelRight.setLayout(panelRightLayout);
         panelRightLayout.setHorizontalGroup(
             panelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1264, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         panelRightLayout.setVerticalGroup(
             panelRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -398,8 +395,6 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     private javax.swing.JPanel panelRight;
     private javax.swing.JPanel panelRightRequest;
     private javax.swing.JPanel panelRightResponse;
-    private gui.viewMessage.PanelViewMessageUi panelViewMessageUiLeft;
-    private gui.viewMessage.PanelViewMessageUi panelViewMessageUiRight;
     // End of variables declaration//GEN-END:variables
 
     @Override

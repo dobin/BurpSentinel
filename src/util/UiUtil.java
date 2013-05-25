@@ -66,7 +66,8 @@ public class UiUtil {
         for (int i = columns.getColumnCount() - 1; i >= 0; --i) {
             TableColumn column = columns.getColumn(i);
             int w = pref.getInt(Integer.toString(i), 10);
-            
+    
+
             column.setPreferredWidth(w);
         }
     }

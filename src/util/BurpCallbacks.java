@@ -43,19 +43,24 @@ public class BurpCallbacks {
         return burpCallbacks;
     }
 
-    public void sendRessource(SentinelHttpMessage sentinelMessage, boolean followRedirect) {
+    public void sendRessource(SentinelHttpMessage sentinelMessage, boolean followRedirect) throws ConnectionTimeoutException {
         if (getBurp() == null) {
             BurpCallbacks.getInstance().print("sendRessource: No burp available");
             return;
         }
 
-        try {
+//        try {
             IHttpRequestResponse r = null;
             long timeStart = System.currentTimeMillis();
             r = getBurp().makeHttpRequest(sentinelMessage.getHttpService(), sentinelMessage.getRequest());
             long time = System.currentTimeMillis() - timeStart;
             sentinelMessage.setLoadTime(time);
 
+            
+            if (r.getResponse() == null) {
+                throw new ConnectionTimeoutException();
+            }
+            
             if (followRedirect) {
                 int n = 0;
                 while (isRedirect(r.getResponse()) && ++n <= 10) {
@@ -72,9 +77,9 @@ public class BurpCallbacks {
             } else {
                 sentinelMessage.setResponse(r.getResponse());
             }
-        } catch (Exception ex) {
-            BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());
-        }
+  //      } catch (Exception ex) {
+   //         BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());
+    //    }
     }
 
     private boolean isRedirect(byte[] response) {

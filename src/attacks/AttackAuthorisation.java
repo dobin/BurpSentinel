@@ -5,9 +5,12 @@
 package attacks;
 
 import gui.session.SessionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  *
@@ -41,7 +44,11 @@ public class AttackAuthorisation extends AttackI {
         String sessionId = SessionManager.getInstance().getValueFor(attackData);
 
         httpMessageA = initAttackHttpMessage(sessionId);
-        BurpCallbacks.getInstance().sendRessource(httpMessageA, followRedirect);
+        try {
+            BurpCallbacks.getInstance().sendRessource(httpMessageA, followRedirect);
+        } catch (ConnectionTimeoutException ex) {
+            Logger.getLogger(AttackAuthorisation.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         return false;
     }

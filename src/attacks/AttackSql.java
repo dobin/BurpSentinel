@@ -12,6 +12,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  *
@@ -51,12 +52,17 @@ public class AttackSql extends AttackI {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
         }
         if (initialMessage.getReq().getChangeParam() == null) {
-            BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
+            //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
             //return false;
         }
         
         String data = attackDataSql[state];
-        SentinelHttpMessage httpMessage = attack(data);
+        try {
+            SentinelHttpMessage httpMessage = attack(data);
+        } catch (ConnectionTimeoutException ex) {
+            state++;
+            return false;
+        }
         
         if (state < attackDataSql.length - 1) {
             doContinue = true;
@@ -73,17 +79,17 @@ public class AttackSql extends AttackI {
         return lastHttpMessage;
     }
 
-    private SentinelHttpMessage attack(String data) {
+    private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessage httpMessage = initAttackHttpMessage(data);
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
 
         String response = httpMessage.getRes().getResponseStr();
-        if (response.contains("SQL")) {
+        if (response.contains("MySQL")) {
             AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL" + state, httpMessage.getReq().getChangeParam(), true);
             httpMessage.addAttackResult(res);
 
-            ResponseHighlight h = new ResponseHighlight("SQL", failColor);
+            ResponseHighlight h = new ResponseHighlight("MySQL", failColor);
             httpMessage.addHighlight(h);
         } else {
             AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL" + state, httpMessage.getReq().getChangeParam(), false);

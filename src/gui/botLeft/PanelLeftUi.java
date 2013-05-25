@@ -1,6 +1,7 @@
 package gui.botLeft;
 
 import gui.mainBot.PanelBotUi;
+import gui.mainTop.networking.Networker;
 import gui.session.SessionManager;
 import gui.session.categorizer.CategorizerManager;
 import java.util.LinkedList;
@@ -10,6 +11,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -125,7 +127,16 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         // reset UI attack ticks
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
-
+        
+        // add httpmessage attacks to send queue
+        Networker.getInstance().addNewMessages(
+                attackHttpParams, 
+                origHttpMessage, 
+                this, 
+                checkboxFollowRedirect.isSelected(), 
+                (String) comboboxMainSession.getSelectedItem());
+       
+        /*
         // Perform attack
         PanelAttackProgress panelProgress = new PanelAttackProgress(
                 attackHttpParams, 
@@ -136,7 +147,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelProgress.setLocationRelativeTo(this);
         panelProgress.setVisible(true);
         panelParent.updateUI(); // Necessary here, or flicker bug!
-        panelProgress.start();
+        panelProgress.start();*/
     }
     
     /**
@@ -153,10 +164,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelTop = new javax.swing.JPanel();
         panelTopHeader = new javax.swing.JPanel();
         buttonAttack = new javax.swing.JButton();
-        buttonSession = new javax.swing.JButton();
         checkboxFollowRedirect = new javax.swing.JCheckBox();
         comboboxMainSession = new javax.swing.JComboBox();
-        buttonCategorizer = new javax.swing.JButton();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -177,13 +186,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             }
         });
 
-        buttonSession.setText("Sessions");
-        buttonSession.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonSessionActionPerformed(evt);
-            }
-        });
-
         checkboxFollowRedirect.setSelected(true);
         checkboxFollowRedirect.setText("Follow Redirects");
 
@@ -194,37 +196,24 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             }
         });
 
-        buttonCategorizer.setText("Categorizer");
-        buttonCategorizer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCategorizerActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
         panelTopHeaderLayout.setHorizontalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonSession)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonCategorizer)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(comboboxMainSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(checkboxFollowRedirect)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelTopHeaderLayout.setVerticalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(buttonAttack)
-                .addComponent(buttonSession)
                 .addComponent(checkboxFollowRedirect)
-                .addComponent(comboboxMainSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(buttonCategorizer))
+                .addComponent(comboboxMainSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         tableMessages.setModel(getTableModel());
@@ -288,27 +277,12 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         attackRessource();
     }//GEN-LAST:event_buttonAttackActionPerformed
 
-    private void buttonSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSessionActionPerformed
-        SessionManager.getInstance().show();
-        sessionComboBoxModel.myupdate();
-        sessionComboBoxModelMain.myupdate();
-        tableModel.fireTableDataChanged();
-        comboboxMainSession.invalidate();
-        comboboxMainSession.updateUI(); // This will make combobox bigger if necessary?!
-    }//GEN-LAST:event_buttonSessionActionPerformed
-
     private void comboboxMainSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxMainSessionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboboxMainSessionActionPerformed
 
-    private void buttonCategorizerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCategorizerActionPerformed
-        CategorizerManager.getInstance().show();
-    }//GEN-LAST:event_buttonCategorizerActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
-    private javax.swing.JButton buttonCategorizer;
-    private javax.swing.JButton buttonSession;
     private javax.swing.JCheckBox checkboxFollowRedirect;
     private javax.swing.JComboBox comboboxMainSession;
     private javax.swing.JPanel jPanel2;
@@ -330,6 +304,14 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     public void storeUiPrefs() {
         UiUtil.storeSplitLocation(jSplitPane1, this);
         UiUtil.storeTableDimensions(tableMessages, this);
+    }
+    
+    public void externalUpdateUi() {
+        sessionComboBoxModel.myupdate();
+        sessionComboBoxModelMain.myupdate();
+        tableModel.fireTableDataChanged();
+        comboboxMainSession.invalidate();
+        comboboxMainSession.updateUI(); // This will make combobox bigger if necessary?!
     }
 
     void myUpdateUI() {

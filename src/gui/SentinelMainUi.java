@@ -8,6 +8,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -35,13 +36,16 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
     
     private void init() {
-        // panelTopUi was inserted with Netbeans palette
-        // Set his parent here
-        panelTopUi.setMainGui(this);
-        
+        // Has to be on top-top, or will not restore split location correclty
         UiUtil.restoreSplitLocation(jSplitPane1, this);
         
+        // Has to be on top, or it breaks panelTopUi init stuff
         initTestMessages();
+        
+        // panelTopUi was inserted with Netbeans palette
+        // Set his parent here
+        panelTopUi.init();
+        panelTopUi.setMainGui(this);
     }
 
     
@@ -77,6 +81,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     }
 
 
+    private PanelBotUi currentPanelBot;
+    
     /*
      * Show a HttpMessage - based on it's index (derived from top overview)
      * 
@@ -85,13 +91,25 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelTopUi.setSelected(index);
         CardLayout cl = (CardLayout) panelCard.getLayout();
         cl.show(panelCard, Integer.toString(index));
+        
+        if (index >= panelBotUiList.size()) {
+            BurpCallbacks.getInstance().print("Error: SIze: " + panelBotUiList.size() + "  I: " + index);
+        } else {
+            currentPanelBot = panelBotUiList.get(index);
+        }
     }
-    
     
     public void removeMessage(int currentSelectedRow) {
         // TODO FIXME breaks if removed...
         //panelBotUiList.remove(currentSelectedRow);
         //panelCard.remove(currentSelectedRow);
+    }
+    
+    public void updateBottomPanel() {
+        if (currentPanelBot == null) {
+            return;
+        }
+        currentPanelBot.externalUpdate();
     }
 
     
@@ -330,7 +348,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     public String getTabCaption() {
         return "Sentinel";
     }
-
     
     @Override
     public Component getUiComponent() {

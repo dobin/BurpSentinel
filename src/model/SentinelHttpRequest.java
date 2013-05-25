@@ -174,7 +174,6 @@ public class SentinelHttpRequest {
     
     public void setChangeParam(SentinelHttpParam changeParam) {
         this.changeParam = changeParam;
-
         // TODO: Set orig param
     }
 

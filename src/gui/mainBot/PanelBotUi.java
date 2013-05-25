@@ -39,6 +39,10 @@ public class PanelBotUi extends javax.swing.JPanel {
         return linkManager;
     }
     
+    public void externalUpdate() {
+        panelLeftUi.externalUpdateUi();
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -1,9 +1,12 @@
 package attacks;
 
 import attacks.AttackData.AttackType;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  *
@@ -19,21 +22,26 @@ public class AttackOriginal extends AttackI {
     
     @Override
     public boolean performNextAttack() {
-        if (initialMessage == null || initialMessage.getRequest() == null) {
-            BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
+        try {
+            if (initialMessage == null || initialMessage.getRequest() == null) {
+                BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
+            }
+
+            SentinelHttpMessage httpMessage = initAttackHttpMessage(null);
+            BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+            this.message = httpMessage;
+            
+            AttackResult res = new AttackResult(
+                    AttackType.INFO,
+                    "ORIG",
+                    httpMessage.getReq().getChangeParam(),
+                    false);
+            httpMessage.addAttackResult(res);
+
+        } catch (ConnectionTimeoutException ex) {
+            Logger.getLogger(AttackOriginal.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        SentinelHttpMessage httpMessage = initAttackHttpMessage(null);
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
-        this.message = httpMessage;
         
-        AttackResult res = new AttackResult(
-                AttackType.INFO,
-                "ORIG",
-                httpMessage.getReq().getChangeParam(),
-                false);
-        httpMessage.addAttackResult(res);
-
         return false;
     }
 

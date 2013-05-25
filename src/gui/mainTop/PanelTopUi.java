@@ -1,6 +1,9 @@
 package gui.mainTop;
 
 import gui.SentinelMainUi;
+import gui.mainTop.networking.NetworkerInfo;
+import gui.session.SessionManager;
+import gui.session.categorizer.CategorizerManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
@@ -9,6 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -32,8 +36,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         popup = new PanelTopPopup(this);
         initComponents();
         tableAllMessages.setAutoCreateRowSorter(true);
-
-        UiUtil.restoreTableDimensions(tableAllMessages, this);
         
         int width = 100;
         tableAllMessages.getColumnModel().getColumn(0).setMaxWidth(40);
@@ -53,10 +55,15 @@ public class PanelTopUi extends javax.swing.JPanel {
         
         tableAllMessages.getColumnModel().getColumn(8).setMaxWidth(140);
         tableAllMessages.getColumnModel().getColumn(8).setMinWidth(140);
-
+        
+        UiUtil.restoreTableDimensions(tableAllMessages, this);
+    }
+    
+    public void init() {
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
+            @Override
                 public void valueChanged(ListSelectionEvent e) {
                     //Ignore extra messages.
                     if (e.getValueIsAdjusting()) return;
@@ -87,8 +94,9 @@ public class PanelTopUi extends javax.swing.JPanel {
                     popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
                 }
             }
-        });
+        });    
     }
+    
         
     public int getSelected() {
         return currentSelectedRow;
@@ -151,6 +159,12 @@ public class PanelTopUi extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAllMessages = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        btnSessions = new javax.swing.JButton();
+        btnCategorizer = new javax.swing.JButton();
+        btnOptions = new javax.swing.JButton();
+        btnReport = new javax.swing.JButton();
+        btnNetworking = new javax.swing.JButton();
 
         tableAllMessages.setModel(getMessageTableModel());
         tableAllMessages.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
@@ -160,18 +174,114 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tableAllMessages);
 
+        btnSessions.setText("S");
+        btnSessions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSessionsActionPerformed(evt);
+            }
+        });
+
+        btnCategorizer.setText("C");
+        btnCategorizer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCategorizerActionPerformed(evt);
+            }
+        });
+
+        btnOptions.setText("O");
+        btnOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOptionsActionPerformed(evt);
+            }
+        });
+
+        btnReport.setText("R");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
+
+        btnNetworking.setText("N");
+        btnNetworking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNetworkingActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnSessions)
+            .addComponent(btnCategorizer)
+            .addComponent(btnOptions)
+            .addComponent(btnReport)
+            .addComponent(btnNetworking)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(btnSessions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCategorizer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnOptions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnReport)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNetworking)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSessionsActionPerformed
+        SessionManager.getInstance().show();
+        
+        // Notify everyone that stuff has changed
+        //mainGuiFrame.updateBottomPanel();
+    }//GEN-LAST:event_btnSessionsActionPerformed
+
+    private void btnCategorizerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategorizerActionPerformed
+        CategorizerManager.getInstance().show();
+    }//GEN-LAST:event_btnCategorizerActionPerformed
+
+    private void btnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnOptionsActionPerformed
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportActionPerformed
+
+    private void btnNetworkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetworkingActionPerformed
+        NetworkerInfo info = new NetworkerInfo();
+        
+        info.setVisible(true);
+    }//GEN-LAST:event_btnNetworkingActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCategorizer;
+    private javax.swing.JButton btnNetworking;
+    private javax.swing.JButton btnOptions;
+    private javax.swing.JButton btnReport;
+    private javax.swing.JButton btnSessions;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableAllMessages;
     // End of variables declaration//GEN-END:variables

@@ -12,6 +12,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  *
@@ -108,7 +109,11 @@ public class AttackPersistentXss extends AttackI {
     private SentinelHttpMessage attack(AttackData data) {
         SentinelHttpMessage httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        try {
+            BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        } catch (ConnectionTimeoutException ex) {
+            Logger.getLogger(AttackPersistentXss.class.getName()).log(Level.SEVERE, null, ex);
+        }
     /*    
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {

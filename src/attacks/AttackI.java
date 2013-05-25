@@ -53,17 +53,21 @@ public abstract class AttackI {
         // Copy httpmessage
         SentinelHttpMessage newHttpMessage = new SentinelHttpMessage(initialMessage);
 
-        // BurpCallbacks.getInstance().print("Before: \n" + messageA.getReq().getRequestStr());
         // Set orig param
         newHttpMessage.getReq().setOrigParam(origParam);
+        
         // Set change param
         SentinelHttpParam changeParam = new SentinelHttpParam(origParam);
         if (attack != null) {
             changeParam.changeValue(attack);
+        } else {
+            //BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
         }
         newHttpMessage.getReq().setChangeParam(changeParam);
         if (attack != null) {
             newHttpMessage.getReq().applyChangeParam();
+        } else {
+            //BurpCallbacks.getInstance().print("initAttackHttpMessage: ApplyChange: attack is null");
         }
         
         // Set parent

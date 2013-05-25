@@ -12,6 +12,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  *
@@ -48,13 +49,19 @@ public class AttackXss extends AttackI {
             BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
         }
         if (initialMessage.getReq().getChangeParam() == null) {
-            BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
+            //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
             //return false;
         }
 
         
         AttackData data = attackDataXss[state];
-        SentinelHttpMessage httpMessage = attack(data);
+        SentinelHttpMessage httpMessage;
+        try {
+            httpMessage = attack(data);
+        } catch (ConnectionTimeoutException ex) {
+            state++;
+            return false;
+        }
  
         switch (state) {
             case 0:
@@ -105,7 +112,7 @@ public class AttackXss extends AttackI {
         return doContinue;
     }
     
-    private SentinelHttpMessage attack(AttackData data) {
+    private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
         SentinelHttpMessage httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);

@@ -70,14 +70,10 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="buttonSession" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="buttonCategorizer" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="comboboxMainSession" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="checkboxFollowRedirect" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Component id="buttonAttack" min="-2" pref="67" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -86,10 +82,8 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="buttonAttack" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="buttonSession" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="checkboxFollowRedirect" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboboxMainSession" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="buttonCategorizer" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -101,14 +95,6 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAttackActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="buttonSession">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Sessions"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonSessionActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JCheckBox" name="checkboxFollowRedirect">
@@ -125,14 +111,6 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboboxMainSessionActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="buttonCategorizer">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Categorizer"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCategorizerActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>
