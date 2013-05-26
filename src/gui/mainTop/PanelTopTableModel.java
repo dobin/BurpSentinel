@@ -10,6 +10,8 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 
 /**
@@ -22,7 +24,7 @@ import util.BurpCallbacks;
  */
 public class PanelTopTableModel extends AbstractTableModel implements Observer {
     private PanelTopUi parent;
-    private LinkedList<SentinelHttpMessage> myMessages = new LinkedList<SentinelHttpMessage>();
+    private LinkedList<SentinelHttpMessageOrig> myMessages = new LinkedList<SentinelHttpMessageOrig>();
     
     public PanelTopTableModel(PanelTopUi parent) {
         this.parent = parent;
@@ -30,11 +32,11 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
     }
     
     public void reset() {
-        myMessages = new LinkedList<SentinelHttpMessage>();
+        myMessages = new LinkedList<SentinelHttpMessageOrig>();
         this.fireTableDataChanged();
     }
     
-    public void addMessage(SentinelHttpMessage message) {
+    public void addMessage(SentinelHttpMessageOrig message) {
         myMessages.add(message);
         message.addObserver(this);
         message.setTableIndexMain(myMessages.size() - 1);
@@ -110,7 +112,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SentinelHttpMessage httpMessage = myMessages.get(rowIndex);
+        SentinelHttpMessageOrig httpMessage = myMessages.get(rowIndex);
         
         switch (columnIndex) {
             case 0:
@@ -133,7 +135,8 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
                     return httpMessage.getComment();
                 }
             case 4:
-                return httpMessage.getInterestingFact();
+                //return httpMessage.getInterestingFact();
+                return "";
             case 5:
                 return httpMessage.getReq().getSessionValueTranslated();
             case 6:
@@ -162,10 +165,10 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         }
     }
 
-    private String getHighestVulnerabilityOf(SentinelHttpMessage httpMessage) {
+    private String getHighestVulnerabilityOf(SentinelHttpMessageOrig httpMessage) {
         AttackData.AttackType attackType = AttackData.AttackType.NONE;
         
-        for(SentinelHttpMessage m: httpMessage.getHttpMessageChildren()) {
+        for(SentinelHttpMessageAtk m: httpMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
                 continue;
             }

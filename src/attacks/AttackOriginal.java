@@ -4,6 +4,8 @@ import attacks.AttackData.AttackType;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
@@ -14,9 +16,9 @@ import util.ConnectionTimeoutException;
  */
 public class AttackOriginal extends AttackI {
 
-    private SentinelHttpMessage message;
+    private SentinelHttpMessageAtk message;
     
-    public AttackOriginal(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
+    public AttackOriginal(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         super(origHttpMessage, mainSessionName, followRedirect, origParam);
     }
     
@@ -27,7 +29,7 @@ public class AttackOriginal extends AttackI {
                 BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
             }
 
-            SentinelHttpMessage httpMessage = initAttackHttpMessage(null);
+            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(null);
             BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
             this.message = httpMessage;
             
@@ -46,7 +48,7 @@ public class AttackOriginal extends AttackI {
     }
 
     @Override
-    public SentinelHttpMessage getLastAttackMessage() {
+    public SentinelHttpMessageAtk getLastAttackMessage() {
         return message;
     }
     

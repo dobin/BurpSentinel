@@ -9,6 +9,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.UiUtil;
 
 /**
@@ -17,7 +19,7 @@ import util.UiUtil;
  */
 public class PanelLeftUi extends javax.swing.JPanel  {
     private PanelBotUi panelParent;
-    private SentinelHttpMessage origHttpMessage;
+    private SentinelHttpMessageOrig origHttpMessage;
     private PanelLeftTableModel tableModel;
     private PanelLeftComboBoxModel sessionComboBoxModel;
     private PanelLeftComboBoxModel sessionComboBoxModelMain;
@@ -80,7 +82,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     }
     
 
-    public void setMessage(SentinelHttpMessage message) {
+    public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
@@ -109,7 +111,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
      * An attack thread did generate (and send/receive) a new message
      * add to right panel (call our parent, botpanelui, to do this)
      */
-    public void addAttackMessage(SentinelHttpMessage attackMessage) {
+    public void addAttackMessage(SentinelHttpMessageAtk attackMessage) {
         panelParent.addAttackMessage(attackMessage);
     }
 

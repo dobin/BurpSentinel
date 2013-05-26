@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import model.AttackTypeData;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
 
@@ -68,7 +70,7 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
     }
 
     private void performAttack(AttackI attack, WorkEntry work, SentinelHttpParam attackHttpParam) {
-        SentinelHttpMessage attackMessage = null;
+        SentinelHttpMessageAtk attackMessage = null;
         boolean goon = true;
 
         while (goon) {
@@ -116,7 +118,7 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
     }
 
     private void doAttack(WorkEntry work, SentinelHttpParam attackHttpParam) {
-        SentinelHttpMessage origHttpMessage = work.origHttpMessage;
+        SentinelHttpMessageOrig origHttpMessage = work.origHttpMessage;
         boolean followRedirect = work.followRedirect;
         String mainSessionName = work.mainSessionName;
 

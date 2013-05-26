@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 
 /**
@@ -33,14 +34,14 @@ public class ReporterUi extends javax.swing.JFrame {
     private void generateReport() {
         StringBuilder out = new StringBuilder();
 
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> map = mainUi.getAllMessageList();
+        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = mainUi.getAllMessageList();
 
         out.append("<html><body>\n");
         out.append("<table>\n");
         
-        for (Map.Entry<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> entry : map.entrySet()) {
+        for (Map.Entry<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> entry : map.entrySet()) {
             SentinelHttpMessage key = entry.getKey();
-            LinkedList<SentinelHttpMessage> value = entry.getValue();
+            LinkedList<SentinelHttpMessageAtk> value = entry.getValue();
             
             out.append("<tr>\n");
             
@@ -49,7 +50,7 @@ public class ReporterUi extends javax.swing.JFrame {
             BurpCallbacks.getInstance().print(key.getReq().getUrl().toString());
             out.append("</td>\n");
 
-            for(SentinelHttpMessage m: value) {
+            for(SentinelHttpMessageAtk m: value) {
                 out.append("<td>\n");
                 BurpCallbacks.getInstance().print(m.getAttackResult().getAttackName());
                 out.append(m.getAttackResult().getAttackName());

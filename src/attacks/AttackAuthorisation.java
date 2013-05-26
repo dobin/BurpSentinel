@@ -8,6 +8,8 @@ import gui.session.SessionManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
@@ -18,9 +20,9 @@ import util.ConnectionTimeoutException;
  */
 public class AttackAuthorisation extends AttackI {
     private boolean attackAsuccess = false;
-    private SentinelHttpMessage httpMessageA;
+    private SentinelHttpMessageAtk httpMessageA;
 
-    public AttackAuthorisation(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
+    public AttackAuthorisation(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
         super(origHttpMessage, mainSessionName, followRedirect, origParam, data);
     }
 
@@ -54,7 +56,7 @@ public class AttackAuthorisation extends AttackI {
     }
 
     @Override
-    public SentinelHttpMessage getLastAttackMessage() {
+    public SentinelHttpMessageAtk getLastAttackMessage() {
         return httpMessageA;
     }
 }

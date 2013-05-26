@@ -27,6 +27,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -166,17 +168,22 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             labelHttpCode.setText(httpMessage.getRes().getHttpCode());
             labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
             
-            if (httpMessage.getParentHttpMessage() == null) {
+            if (httpMessage instanceof SentinelHttpMessageOrig) {
+            //if (httpMessage.getParentHttpMessage() == null) {
                 panelViewComboboxModel.hasParent(false);
             } else {
                 panelViewComboboxModel.hasParent(true);
+                SentinelHttpMessageAtk atk = (SentinelHttpMessageAtk) httpMessage;
+                
+                labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
             }
+            
             
             viewDefaultContent = null;
             viewBeautifyContent = null;
             viewDiffContent = null;
             
-            labelRedirected.setText(httpMessage.isRedirected() ? "(R)" : "");
+            
         }
 
         showMessage();
@@ -224,8 +231,13 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     
     
     private void showDiffView() {
+        if (httpMessage instanceof SentinelHttpMessageOrig) {
+            return;
+        }
+        SentinelHttpMessageAtk messageAtk = (SentinelHttpMessageAtk) httpMessage;
+        
         if (viewDiffContent == null) {
-            String origRes = httpMessage.getParentHttpMessage().getRes().getResponseStr();
+            String origRes = messageAtk.getParentHttpMessage().getRes().getResponseStr();
             String newRes = httpMessage.getRes().getResponseStr();
 
             String[] origResArr = origRes.split("\n");

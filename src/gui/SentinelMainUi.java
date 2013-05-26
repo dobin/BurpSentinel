@@ -9,6 +9,8 @@ import java.awt.Component;
 import java.util.HashMap;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -62,7 +64,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
         // Make a sentinel http message from the burp message
-        SentinelHttpMessage myHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
+        SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
         
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
@@ -97,13 +99,13 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         }
     }
     
-    public HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> getAllMessageList() {
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> map;
-        map = new HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>>();
+    public HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> getAllMessageList() {
+        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map;
+        map = new HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>>();
         
         for(PanelBotUi panelBot: panelBotUiList) {
             SentinelHttpMessage origHttpMessage = panelBot.getOrigMessage();
-            LinkedList<SentinelHttpMessage> atkHttpMessages = panelBot.getAttackMessages();
+            LinkedList<SentinelHttpMessageAtk> atkHttpMessages = panelBot.getAttackMessages();
             
             map.put(origHttpMessage, atkHttpMessages);
         }
@@ -141,7 +143,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
         a += "\r\n";
-        SentinelHttpMessage httpMessage = new SentinelHttpMessage(a, "www.dobin.ch", 80, false);
+        SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
         addNewMessage(httpMessage);
 
 
@@ -155,7 +157,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
         a += "\r\n";
-        httpMessage = new SentinelHttpMessage(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
         addNewMessage(httpMessage);
 
 
@@ -172,7 +174,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Content-Length: 26\r\n";
         a += "\r\n";
         a += "bla=blaaa&testparam=teeest";
-        httpMessage = new SentinelHttpMessage(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
         addNewMessage(httpMessage);
 
 
@@ -186,7 +188,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Proxy-Connection: keep-alive\r\n";
         a += "Cookie: jsessionid=useraaaa; bbbbb=ddddd\r\n";
         a += "\r\n";
-        httpMessage = new SentinelHttpMessage(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
         addNewMessage(httpMessage);
 
 
@@ -202,7 +204,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "\r\n";
         a += "lll1=aaa1\r\n";
         a += "lll2=aaa2\r\n";
-        httpMessage = new SentinelHttpMessage(a, "192.168.140.134", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
         addNewMessage(httpMessage);
 
 
@@ -239,7 +241,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         a += "Snb5\r\n";
         a += "-----------------------------1645864822313206347576655232\r\n";
 
-        httpMessage = new SentinelHttpMessage(a, "192.168.140.134", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
         addNewMessage(httpMessage);
     }
 

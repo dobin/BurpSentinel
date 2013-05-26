@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 
 /**
@@ -54,13 +55,13 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
                 
         popup = new ReplayerMainPopup(this);
         
-        rightRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessage("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
+        rightRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessageOrig("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
         rightRequestMessageEditor = BurpCallbacks.getInstance().getBurp().createMessageEditor(rightRequestMessageEditorController, true);
         panelRightRequest.add(rightRequestMessageEditor.getComponent(), BorderLayout.CENTER);
         panelRightRequest.invalidate();
         panelRightRequest.updateUI();
         
-        leftRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessage("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
+        leftRequestMessageEditorController = new MainMessageEditorController(new SentinelHttpMessageOrig("GET / HTTP/1.1\r\nHost: www.dobin.ch\r\n\r\n", "www.dobin.ch", 80, false));
         leftRequestMessageEditor = BurpCallbacks.getInstance().getBurp().createMessageEditor(leftRequestMessageEditorController, true);
         panelLeftRequest.add(leftRequestMessageEditor.getComponent(), BorderLayout.CENTER);
         panelLeftRequest.invalidate();
@@ -116,7 +117,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     
     @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
-        SentinelHttpMessage origHttpMessage = new SentinelHttpMessage(iHttpRequestResponse);
+        SentinelHttpMessage origHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
 
         // Add to table
         tableModel.addHttpMessage(origHttpMessage);
@@ -165,15 +166,15 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         
         if (s != null) {
             //SentinelHttpMessage newMessage = new SentinelHttpMessage(s, origHttpMessage.getHttpService());
-            SentinelHttpMessage newMessage = new SentinelHttpMessage(s,
-                    origHttpMessage.getHttpService().getHost(),
-                    origHttpMessage.getHttpService().getPort(),
-                    origHttpMessage.getHttpService().getProtocol().toLowerCase().equals("https") ? true : false);
-            newMessage.setParentHttpMessage(origHttpMessage);
+//            SentinelHttpMessage newMessage = new SentinelHttpMessageAtk(s,
+//                    origHttpMessage.getHttpService().getHost(),
+//                    origHttpMessage.getHttpService().getPort(),
+//                    origHttpMessage.getHttpService().getProtocol().toLowerCase().equals("https") ? true : false);
+            //newMessage.setParentHttpMessage(origHttpMessage);
             
  //           BurpCallbacks.getInstance().sendRessource(newMessage, true);
             
-            tableModel.addHttpMessage(newMessage);
+ //           tableModel.addHttpMessage(newMessage);
             
             viewLastMessage();
             this.updateUI();

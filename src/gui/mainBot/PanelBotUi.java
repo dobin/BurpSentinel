@@ -2,6 +2,8 @@ package gui.mainBot;
 
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.UiUtil;
  
 /**
@@ -20,7 +22,7 @@ public class PanelBotUi extends javax.swing.JPanel {
         initComponents();
     }
     
-    public PanelBotUi(SentinelHttpMessage iHttpRequestResponse) {
+    public PanelBotUi(SentinelHttpMessageOrig iHttpRequestResponse) {
         this();
                 
         UiUtil.restoreSplitLocation(jSplitPane1, this);
@@ -31,7 +33,7 @@ public class PanelBotUi extends javax.swing.JPanel {
     }
     
     // Called when attacking from leftpanel
-    public void addAttackMessage(SentinelHttpMessage httpMessage) {
+    public void addAttackMessage(SentinelHttpMessageAtk httpMessage) {
         panelRightUi.addHttpMessage(httpMessage);
         this.updateUI();
     }
@@ -50,7 +52,7 @@ public class PanelBotUi extends javax.swing.JPanel {
         return orig;
     }
     
-    public LinkedList<SentinelHttpMessage> getAttackMessages() {
+    public LinkedList<SentinelHttpMessageAtk> getAttackMessages() {
         return panelRightUi.getAttackMessage();
     }
     

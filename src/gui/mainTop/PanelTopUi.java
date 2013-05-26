@@ -13,6 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -129,7 +130,7 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     // This gets called from MainGui
     // If the user sends a new HttpMessage from Burp to Sentinel
-    public void addMessage(SentinelHttpMessage httpMessage) {
+    public void addMessage(SentinelHttpMessageOrig httpMessage) {
         tableTopModel.addMessage(httpMessage);
         //this.updateUI();
         

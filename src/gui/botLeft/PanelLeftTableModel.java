@@ -10,6 +10,8 @@ import javax.swing.JCheckBox;
 import javax.swing.table.DefaultTableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 
 /**
@@ -18,7 +20,7 @@ import util.BurpCallbacks;
  */
 public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     // The Request belonging to this table
-    private SentinelHttpMessage myRequest = null;
+    private SentinelHttpMessageOrig myMessage = null;
     
     // the table data itself 
     //   rows in a linked list
@@ -43,11 +45,11 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     @Override
     public int getRowCount() {
         // For UI init
-        if (myRequest == null) {
+        if (myMessage == null) {
             return 0;
         }
 
-        return myRequest.getReq().getParamCount();
+        return myMessage.getReq().getParamCount();
     }
 
     @Override
@@ -189,11 +191,11 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 0:
                 return rowIndex;
             case 1:
-                return myRequest.getReq().getParam(rowIndex).getTypeStr();
+                return myMessage.getReq().getParam(rowIndex).getTypeStr();
             case 2:
-                return myRequest.getReq().getParam(rowIndex).getName();
+                return myMessage.getReq().getParam(rowIndex).getName();
             case 3:
-                return myRequest.getReq().getParam(rowIndex).getValue();
+                return myMessage.getReq().getParam(rowIndex).getValue();
             case 4:
                 return uiEntries.get(rowIndex).isXssEnabled;
             //return myRequest.getReq().getParam(rowIndex).getAttackType(AttackMain.AttackTypes.XSS).isActive();
@@ -210,7 +212,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return "Go";
             case 9:
                 //return myRequest.getReq().getParam(rowIndex).hasVulns();
-                return hasVulns(myRequest.getReq().getParam(rowIndex));
+                return hasVulns(myMessage.getReq().getParam(rowIndex));
 
             default:
                 return "bbb";
@@ -218,7 +220,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     private String hasVulns(SentinelHttpParam param) {
-        for (SentinelHttpMessage m : myRequest.getHttpMessageChildren()) {
+        for (SentinelHttpMessageAtk m : myMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
                 continue;
             }
@@ -234,16 +236,16 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         return "-";
     }
 
-    void setMessage(SentinelHttpMessage message) {
+    void setMessage(SentinelHttpMessageOrig message) {
         try {
             //this.myRequest = new SentinelHttpMessage(message);
-            this.myRequest = message;
-            this.myRequest.addObserver(this);
+            this.myMessage = message;
+            this.myMessage.addObserver(this);
         } catch (Exception ex) {
             BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
         }
 
-        int argc = myRequest.getReq().getParamCount();
+        int argc = myMessage.getReq().getParamCount();
 
         for (int n = 0; n < argc; n++) {
             PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
@@ -262,28 +264,28 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
         // Check all params of httpmessage if they should be attacked
         // This has been set by the UI
-        for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
+        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
             boolean attackThis = false;
-            SentinelHttpParam param = myRequest.getReq().getParam(n);
+            SentinelHttpParam param = myMessage.getReq().getParam(n);
             
            
             if (uiEntries.get(n).isXssEnabled) {
                 BurpCallbacks.getInstance().print("Attack XSS because of param #" + n);
-                myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
+                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
             }
             if (uiEntries.get(n).isSqlEnabled) {
                 BurpCallbacks.getInstance().print("Attack SQL because of param #" + n);
-                myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
+                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
                 attackThis = true;
             }
             if (uiEntries.get(n).isOtherEnabled) {
                 BurpCallbacks.getInstance().print("Attack OTHER because of param #" + n);
-                myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
+                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
                 attackThis = true;
             }
             if (uiEntries.get(n).isAuthEnabled) {
-                myRequest.getReq().getParam(n).setAttackType(
+                myMessage.getReq().getParam(n).setAttackType(
                     AttackMain.AttackTypes.AUTHORISATION, 
                     true, 
                     uiEntries.get(n).authData);
@@ -293,7 +295,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             
             if (uiEntries.get(n).isOrigEnabled && attackThis) {
                 BurpCallbacks.getInstance().print("Attack FIRST because of param #" + n);
-                myRequest.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
+                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
                 attackThis = true;
                 
                 // TODO bad place here - do it it resetAttackSelection()
@@ -315,7 +317,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     void resetAttackSelection() {
-        for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
+        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
             uiEntries.get(n).isXssEnabled = false;
             uiEntries.get(n).isSqlEnabled = false;
             uiEntries.get(n).isOtherEnabled = false;
@@ -328,7 +330,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     // Check if a specific row (param) is the session id
     boolean isCookieRow(int row) {
-        SentinelHttpParam param = myRequest.getReq().getParam(row);
+        SentinelHttpParam param = myMessage.getReq().getParam(row);
 
         if (param.getType() == IParameter.PARAM_COOKIE
                 && param.getName().equals(SessionManager.getInstance().getSessionVarName())) {
@@ -341,8 +343,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     // Called if we want to change cookie with a specific session
     void setSessionAttackMessage(boolean enabled, String selected) {
 
-        for (int n = 0; n < myRequest.getReq().getParamCount(); n++) {
-            SentinelHttpParam param = myRequest.getReq().getParam(n);
+        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
+            SentinelHttpParam param = myMessage.getReq().getParam(n);
 
             if (param.getType() == IParameter.PARAM_COOKIE
                     && param.getName().equals(SessionManager.getInstance().getSessionVarName())) {

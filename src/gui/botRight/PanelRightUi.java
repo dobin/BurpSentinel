@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -84,7 +85,7 @@ public class PanelRightUi extends javax.swing.JPanel {
       return panelRightModel;
     }
     
-    public void addHttpMessage(SentinelHttpMessage httpMessage) {
+    public void addHttpMessage(SentinelHttpMessageAtk httpMessage) {
         panelRightModel.addMessage(httpMessage);
         //viewHttpMessage(panelRightModel.getRowCount() - 1);
         //viewHttpMessage(currentSelectedRow);
@@ -193,7 +194,7 @@ public class PanelRightUi extends javax.swing.JPanel {
         UiUtil.storeTableDimensions(tableMessages, this);
     }
     
-    public LinkedList<SentinelHttpMessage> getAttackMessage() {
+    public LinkedList<SentinelHttpMessageAtk> getAttackMessage() {
         return panelRightModel.getAllAttackMessages();
     }
 

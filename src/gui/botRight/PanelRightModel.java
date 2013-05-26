@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
 
 /**
  *
@@ -13,12 +14,12 @@ import model.SentinelHttpMessage;
  */
 public class PanelRightModel extends AbstractTableModel implements Observer {
 
-    private LinkedList<SentinelHttpMessage> messages;
+    private LinkedList<SentinelHttpMessageAtk> messages;
     private PanelRightUi parent;
     
     public PanelRightModel(PanelRightUi parent) {
         this.parent = parent;
-        messages = new LinkedList<SentinelHttpMessage>();
+        messages = new LinkedList<SentinelHttpMessageAtk>();
         CategorizerManager.getInstance().addObserver(this);
     }
     
@@ -103,7 +104,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SentinelHttpMessage m = messages.get(rowIndex);
+        SentinelHttpMessageAtk m = messages.get(rowIndex);
         
         switch(columnIndex) {
             case 0: return rowIndex;
@@ -138,7 +139,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
     }
 
-    void addMessage(SentinelHttpMessage httpMessage) {
+    void addMessage(SentinelHttpMessageAtk httpMessage) {
         messages.add(httpMessage);
         httpMessage.setTableIndexAttack(messages.size() - 1);
         httpMessage.addObserver(this);
@@ -153,8 +154,8 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         return messages.get(n);
     }
     
-    public LinkedList<SentinelHttpMessage> getAllAttackMessages() {
-        return (LinkedList<SentinelHttpMessage>) messages.clone();
+    public LinkedList<SentinelHttpMessageAtk> getAllAttackMessages() {
+        return (LinkedList<SentinelHttpMessageAtk>) messages.clone();
     }
     
 }

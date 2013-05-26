@@ -2,6 +2,8 @@ package attacks;
 
 import gui.session.SessionManager;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
 
@@ -15,20 +17,20 @@ import util.BurpCallbacks;
  * @author Dobin
  */
 public abstract class AttackI {
-    protected SentinelHttpMessage initialMessage;
+    protected SentinelHttpMessageOrig initialMessage;
     protected SentinelHttpParam origParam;
     protected String attackData;
     protected String mainSessionName;
     protected boolean followRedirect = false;
     
-    public AttackI(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
+    public AttackI(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         this.initialMessage = origHttpMessage;
         this.mainSessionName = mainSessionName;
         this.followRedirect = followRedirect;
         this.origParam = origParam;
     }
     
-    public AttackI(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
+    public AttackI(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
         this.initialMessage = origHttpMessage;
         this.mainSessionName = mainSessionName;
         this.followRedirect = followRedirect;
@@ -44,14 +46,14 @@ public abstract class AttackI {
     
     /* Get the last http message sent by performNextAttack()
      */
-    abstract public SentinelHttpMessage getLastAttackMessage();
+    abstract public SentinelHttpMessageAtk getLastAttackMessage();
 
     /*
      * 
      */
-    protected SentinelHttpMessage initAttackHttpMessage(String attack) {
+    protected SentinelHttpMessageAtk initAttackHttpMessage(String attack) {
         // Copy httpmessage
-        SentinelHttpMessage newHttpMessage = new SentinelHttpMessage(initialMessage);
+        SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(initialMessage);
 
         // Set orig param
         newHttpMessage.getReq().setOrigParam(origParam);

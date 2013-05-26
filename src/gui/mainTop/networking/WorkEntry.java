@@ -7,6 +7,8 @@ package gui.mainTop.networking;
 import gui.botLeft.PanelLeftUi;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 
 /**
@@ -15,15 +17,15 @@ import model.SentinelHttpParam;
  */
 public class WorkEntry {
     LinkedList<SentinelHttpParam> attackHttpParams;
-    SentinelHttpMessage origHttpMessage;
+    SentinelHttpMessageOrig origHttpMessage;
     PanelLeftUi panelParent;
     boolean followRedirect;
     String mainSessionName;
     
-    SentinelHttpMessage result;
+    SentinelHttpMessageAtk result;
     
     public WorkEntry(LinkedList<SentinelHttpParam> attackHttpParams, 
-            SentinelHttpMessage origHttpMessage, 
+            SentinelHttpMessageOrig origHttpMessage, 
             PanelLeftUi panelParent, 
             boolean followRedirect, 
             String mainSessionName) {

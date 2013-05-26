@@ -9,6 +9,8 @@ import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
@@ -21,7 +23,7 @@ import util.ConnectionTimeoutException;
 public class AttackXss extends AttackI {
     private int state = 0;
     private boolean inputReflectedInTag = false;
-    private SentinelHttpMessage lastHttpMessage = null;
+    private SentinelHttpMessageAtk lastHttpMessage = null;
     
     private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
@@ -37,7 +39,7 @@ public class AttackXss extends AttackI {
     };
     
     
-    public AttackXss(SentinelHttpMessage origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
+    public AttackXss(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         super(origHttpMessage, mainSessionName, followRedirect, origParam);
     }
     
@@ -113,7 +115,7 @@ public class AttackXss extends AttackI {
     }
     
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
-        SentinelHttpMessage httpMessage = initAttackHttpMessage(data.getInput());
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
         
@@ -157,7 +159,7 @@ public class AttackXss extends AttackI {
     }
     
     @Override
-    public SentinelHttpMessage getLastAttackMessage() {
+    public SentinelHttpMessageAtk getLastAttackMessage() {
         return lastHttpMessage;
     }
 
