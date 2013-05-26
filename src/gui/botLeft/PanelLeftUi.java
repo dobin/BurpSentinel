@@ -2,8 +2,6 @@ package gui.botLeft;
 
 import gui.mainBot.PanelBotUi;
 import gui.mainTop.networking.Networker;
-import gui.session.SessionManager;
-import gui.session.categorizer.CategorizerManager;
 import java.util.LinkedList;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -11,7 +9,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
-import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -317,5 +314,9 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     void myUpdateUI() {
         this.updateUI();
         panelParent.updateUI();
+    }
+    
+    public SentinelHttpMessage getOrigHttpMessage() {
+        return origHttpMessage;
     }
 }

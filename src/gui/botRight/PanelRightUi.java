@@ -1,6 +1,7 @@
 package gui.botRight;
 
 import gui.mainBot.PanelBotUi;
+import java.util.LinkedList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -190,6 +191,10 @@ public class PanelRightUi extends javax.swing.JPanel {
     public void storeUiPrefs() {
         UiUtil.storeSplitLocation(jSplitPane1, this);
         UiUtil.storeTableDimensions(tableMessages, this);
+    }
+    
+    public LinkedList<SentinelHttpMessage> getAttackMessage() {
+        return panelRightModel.getAllAttackMessages();
     }
 
 }

@@ -4,6 +4,7 @@ import gui.SentinelMainUi;
 import gui.mainTop.networking.NetworkerInfo;
 import gui.session.SessionManager;
 import gui.session.categorizer.CategorizerManager;
+import gui.viewMessage.reporter.ReporterUi;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
@@ -269,7 +270,8 @@ public class PanelTopUi extends javax.swing.JPanel {
     }//GEN-LAST:event_btnOptionsActionPerformed
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
-        // TODO add your handling code here:
+        ReporterUi reporter = new ReporterUi(mainGuiFrame);
+        reporter.setVisible(true);
     }//GEN-LAST:event_btnReportActionPerformed
 
     private void btnNetworkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetworkingActionPerformed

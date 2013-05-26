@@ -153,4 +153,8 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         return messages.get(n);
     }
     
+    public LinkedList<SentinelHttpMessage> getAllAttackMessages() {
+        return (LinkedList<SentinelHttpMessage>) messages.clone();
+    }
+    
 }

@@ -1,5 +1,6 @@
 package gui.mainBot;
 
+import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import util.UiUtil;
  
@@ -41,6 +42,16 @@ public class PanelBotUi extends javax.swing.JPanel {
     
     public void externalUpdate() {
         panelLeftUi.externalUpdateUi();
+    }
+    
+    
+    public SentinelHttpMessage getOrigMessage() {
+        SentinelHttpMessage orig = panelLeftUi.getOrigHttpMessage();
+        return orig;
+    }
+    
+    public LinkedList<SentinelHttpMessage> getAttackMessages() {
+        return panelRightUi.getAttackMessage();
     }
     
 

@@ -6,6 +6,7 @@ import burp.MainUiInterface;
 import gui.mainBot.PanelBotUi;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.util.HashMap;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import util.BurpCallbacks;
@@ -24,6 +25,10 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
+    
+    // Current selected panel
+    private PanelBotUi currentPanelBot = null;
+    
 
     
     /**
@@ -50,7 +55,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
     
     /* Add new HttpRequestResponse
-     * This gets called from Burp Menu entry
+     * This gets called from (external) Burp Menu entry
      * 
      * this is the main entry point for new HttpMessages (IHttpRequestResponse)
      */
@@ -74,15 +79,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelBotUiList.add(newPanelBot);
         panelCard.add(newPanelBot, Integer.toString(index));
         showMessage(index); // Show newly added message in ui
-
-        // Not used anymore - remove?
-        //panelBot.updateUI();
-        //this.setVisible(true);
     }
 
-
-    private PanelBotUi currentPanelBot;
-    
     /*
      * Show a HttpMessage - based on it's index (derived from top overview)
      * 
@@ -99,12 +97,28 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         }
     }
     
+    public HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> getAllMessageList() {
+        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>> map;
+        map = new HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessage>>();
+        
+        for(PanelBotUi panelBot: panelBotUiList) {
+            SentinelHttpMessage origHttpMessage = panelBot.getOrigMessage();
+            LinkedList<SentinelHttpMessage> atkHttpMessages = panelBot.getAttackMessages();
+            
+            map.put(origHttpMessage, atkHttpMessages);
+        }
+        
+        return map;
+    }
+    
+    
     public void removeMessage(int currentSelectedRow) {
         // TODO FIXME breaks if removed...
         //panelBotUiList.remove(currentSelectedRow);
         //panelCard.remove(currentSelectedRow);
     }
     
+    // TODO
     public void updateBottomPanel() {
         if (currentPanelBot == null) {
             return;
