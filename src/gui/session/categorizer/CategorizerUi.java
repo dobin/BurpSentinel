@@ -38,6 +38,9 @@ public class CategorizerUi extends JFrame {
         jButton5 = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setAlwaysOnTop(true);
+
         jTable1.setModel(getTableModel());
         jScrollPane1.setViewportView(jTable1);
 
