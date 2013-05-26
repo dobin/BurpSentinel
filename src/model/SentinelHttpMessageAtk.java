@@ -27,8 +27,7 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage {
     public void addAttackResult(AttackResult res) {
         // Add result
         this.attackResult = res;
-        //attackResults.add(res);
-
+ 
         // Fire update event
         this.setChanged();
         this.notifyObservers(ObserveResult.ATTACKRESULT);
@@ -57,5 +56,5 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage {
         }
         return parentHttpMessage;
     }
- ////////////////////////////////////////////////
+ 
 }

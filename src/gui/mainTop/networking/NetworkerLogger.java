@@ -9,6 +9,19 @@ import java.util.Observable;
 public class NetworkerLogger extends Observable {
     private StringBuffer log = new StringBuffer();
 
+    public enum Signal {
+        START,
+        SEND,
+        RECV,
+        FINISHED,
+        CANCEL
+    };
+    
+    void giveSignal(Signal signal) {
+        this.setChanged();
+        this.notifyObservers(signal);
+    }
+    
     void append(String start) {
         log.append(start);
 

@@ -17,7 +17,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jScrollPane1" pref="464" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="418" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
           </Group>
@@ -25,7 +25,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jScrollPane1" pref="188" max="32767" attributes="0"/>
+          <Component id="jScrollPane1" pref="192" max="32767" attributes="0"/>
           <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
@@ -73,7 +73,7 @@
               <Component id="btnCategorizer" alignment="0" max="32767" attributes="0"/>
               <Component id="btnOptions" alignment="0" max="32767" attributes="0"/>
               <Component id="btnReport" max="32767" attributes="0"/>
-              <Component id="btnNetworking" alignment="0" pref="56" max="32767" attributes="0"/>
+              <Component id="btnNetworking" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -88,7 +88,7 @@
                   <Component id="btnReport" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnNetworking" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -96,7 +96,7 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnSessions">
           <Properties>
-            <Property name="text" type="java.lang.String" value="S"/>
+            <Property name="text" type="java.lang.String" value="Sessions"/>
             <Property name="toolTipText" type="java.lang.String" value="Show Sessions Window"/>
           </Properties>
           <Events>
@@ -105,7 +105,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnCategorizer">
           <Properties>
-            <Property name="text" type="java.lang.String" value="T"/>
+            <Property name="text" type="java.lang.String" value="Translate"/>
             <Property name="toolTipText" type="java.lang.String" value="Show Translation Window"/>
           </Properties>
           <Events>
@@ -114,7 +114,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnOptions">
           <Properties>
-            <Property name="text" type="java.lang.String" value="C"/>
+            <Property name="text" type="java.lang.String" value="Storage"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOptionsActionPerformed"/>
@@ -122,20 +122,22 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnReport">
           <Properties>
-            <Property name="text" type="java.lang.String" value="R"/>
+            <Property name="text" type="java.lang.String" value="Report"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReportActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnNetworking">
+        <Component class="javax.swing.JToggleButton" name="btnNetworking">
           <Properties>
-            <Property name="text" type="java.lang.String" value="N"/>
-            <Property name="toolTipText" type="java.lang.String" value="Show Network Logging Window"/>
+            <Property name="text" type="java.lang.String" value="Network"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNetworkingActionPerformed"/>
           </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PanelTopNetworkBtn()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

@@ -1,14 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.mainTop.networking;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import util.BurpCallbacks;
+import javax.swing.text.DefaultCaret;
 
 /**
  *
@@ -21,6 +15,9 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
      */
     public NetworkerInfo() {
         initComponents();
+        
+        DefaultCaret caret = (DefaultCaret)jTextArea1.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
     
     public void start() {
@@ -34,9 +31,13 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
     
     @Override
     public void update(Observable o, Object arg) {
-        String log = (String) arg;
-        this.jTextArea1.setText(log);
-        jTextArea1.updateUI();
+        // is it for me?
+        if (arg instanceof String) {
+            String log = (String) arg;
+            this.jTextArea1.setText(log);
+            this.jTextArea1.setCaretPosition(log.length());
+            jTextArea1.updateUI();
+        }
     }
 
     /**
@@ -52,7 +53,6 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        btnOk = new javax.swing.JButton();
         btnCancelAll = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -61,6 +61,7 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -75,13 +76,6 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
         );
 
-        btnOk.setText("Ok");
-        btnOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOkActionPerformed(evt);
-            }
-        });
-
         btnCancelAll.setText("Cancel All Pending");
         btnCancelAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,17 +88,14 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(btnOk)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(376, Short.MAX_VALUE)
                 .addComponent(btnCancelAll))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk)
-                    .addComponent(btnCancelAll)))
+                .addComponent(btnCancelAll))
         );
 
         jLabel1.setText("#: ");
@@ -153,11 +144,6 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
         Networker.getInstance().cancelAll();
     }//GEN-LAST:event_btnCancelAllActionPerformed
 
-    private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        stop();
-        this.dispose();
-    }//GEN-LAST:event_btnOkActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -194,7 +180,6 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelAll;
-    private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

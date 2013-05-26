@@ -269,7 +269,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         jSplitPane1.setDividerLocation(100);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        panelTop.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         panelTop.setLayout(new java.awt.BorderLayout());
         panelTop.add(panelTopUi, java.awt.BorderLayout.CENTER);
 

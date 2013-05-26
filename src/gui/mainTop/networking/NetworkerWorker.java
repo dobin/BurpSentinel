@@ -75,7 +75,9 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
 
         while (goon) {
             log.append(work.origHttpMessage.getReq().getUrl() + " (" + attackHttpParam.getName() + "=" + attackHttpParam.getValue() + ") ...");
+            log.giveSignal(NetworkerLogger.Signal.SEND);
             goon = attack.performNextAttack();
+            log.giveSignal(NetworkerLogger.Signal.RECV);
             log.append(" ok\n");
             
             attackMessage = attack.getLastAttackMessage();
@@ -99,11 +101,14 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
 
     void cancelAll() {
         cancel = true;
+        log.giveSignal(NetworkerLogger.Signal.CANCEL);
         log.append("\n\nCanceling, please wait... ");
     }
 
     private void doWork(WorkEntry work) {
         log.newWork();
+        log.giveSignal(NetworkerLogger.Signal.START);
+
         //log.append("Start...\n");
 
         for (SentinelHttpParam attackHttpParam : work.attackHttpParams) {
@@ -115,6 +120,8 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
                 break;
             }
         }
+        
+        log.giveSignal(NetworkerLogger.Signal.FINISHED);
     }
 
     private void doAttack(WorkEntry work, SentinelHttpParam attackHttpParam) {
