@@ -1,31 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui.session.categorizer;
 
-import gui.session.SessionTableModel;
 import java.util.LinkedList;
+import javax.swing.JFrame;
 import javax.swing.table.TableModel;
 
 /**
  *
  * @author dobin
  */
-public class CategorizerUi extends javax.swing.JDialog {
+public class CategorizerUi extends JFrame {
 
     private CategorizerTableModel tableModel;
-    
-    /**
-     * Creates new form CategorizerManagerUi
-     */
-    public CategorizerUi(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-
-        tableModel = new CategorizerTableModel();
-        initComponents();
-    }
-    
     
     public CategorizerUi() {
         tableModel = new CategorizerTableModel();
@@ -50,7 +35,6 @@ public class CategorizerUi extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
-        buttonOk = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
 
@@ -70,13 +54,6 @@ public class CategorizerUi extends javax.swing.JDialog {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        buttonOk.setText("Ok");
-        buttonOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonOkActionPerformed(evt);
-            }
-        });
-
         jButton5.setText("Apply");
 
         buttonAddLine.setText("+");
@@ -93,16 +70,13 @@ public class CategorizerUi extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(buttonAddLine)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5)
-                .addGap(18, 18, 18)
-                .addComponent(buttonOk))
+                .addComponent(jButton5))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonOk)
                     .addComponent(jButton5)
                     .addComponent(buttonAddLine)))
         );
@@ -125,18 +99,12 @@ public class CategorizerUi extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOkActionPerformed
-        tableModel.storeUiPrefs();
-        this.setVisible(false);
-    }//GEN-LAST:event_buttonOkActionPerformed
-
     private void buttonAddLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddLineActionPerformed
         tableModel.addEmptyLine();
     }//GEN-LAST:event_buttonAddLineActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddLine;
-    private javax.swing.JButton buttonOk;
     private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
