@@ -1,6 +1,5 @@
 package gui.session;
 
-import java.awt.Dialog;
 import java.util.LinkedList;
 import javax.swing.table.TableModel;
 import util.UiUtil;
@@ -9,7 +8,7 @@ import util.UiUtil;
  *
  * @author unreal
  */
-public class SessionManagerUi extends javax.swing.JDialog {
+public class SessionManagerUi extends javax.swing.JFrame {
     private SessionTableModel tableModel;
     
     /**
@@ -17,7 +16,6 @@ public class SessionManagerUi extends javax.swing.JDialog {
      */
     public SessionManagerUi() {
         tableModel = new SessionTableModel();
-        this.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         initComponents();
         UiUtil.restoreSessionData(textfieldSessionVarName);
     }
@@ -44,6 +42,7 @@ public class SessionManagerUi extends javax.swing.JDialog {
         btnDelete = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setAlwaysOnTop(true);
 
         jLabel1.setText("Session Cookie Name:");
 
@@ -125,40 +124,6 @@ public class SessionManagerUi extends javax.swing.JDialog {
         tableModel.deleteEntry(jTable1.getSelectedRow());
     }//GEN-LAST:event_btnDeleteActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SessionManagerUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SessionManagerUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SessionManagerUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SessionManagerUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SessionManagerUi().setVisible(true);
-            }
-        });
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton buttonOk;

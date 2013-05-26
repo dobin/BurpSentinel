@@ -14,11 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import model.AttackTypeData;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
-import util.BurpCallbacks;
 
 /**
  *
@@ -108,8 +106,6 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
     private void doWork(WorkEntry work) {
         log.newWork();
         log.giveSignal(NetworkerLogger.Signal.START);
-
-        //log.append("Start...\n");
 
         for (SentinelHttpParam attackHttpParam : work.attackHttpParams) {
             doAttack(work, attackHttpParam);

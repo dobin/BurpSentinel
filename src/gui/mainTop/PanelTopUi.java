@@ -3,12 +3,15 @@ package gui.mainTop;
 import gui.SentinelMainUi;
 import gui.mainTop.networking.NetworkerInfo;
 import gui.session.SessionManager;
+import gui.session.SessionManagerUi;
 import gui.session.categorizer.CategorizerManager;
 import gui.viewMessage.reporter.ReporterUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JFrame;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -166,11 +169,11 @@ public class PanelTopUi extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAllMessages = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
-        btnSessions = new javax.swing.JButton();
         btnCategorizer = new javax.swing.JButton();
         btnOptions = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
         btnNetworking = new PanelTopNetworkBtn();
+        btnSessions = new javax.swing.JToggleButton();
 
         tableAllMessages.setModel(getMessageTableModel());
         tableAllMessages.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
@@ -179,14 +182,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.setSelectionForeground(new java.awt.Color(0, 0, 0));
         tableAllMessages.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tableAllMessages);
-
-        btnSessions.setText("Sessions");
-        btnSessions.setToolTipText("Show Sessions Window");
-        btnSessions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSessionsActionPerformed(evt);
-            }
-        });
 
         btnCategorizer.setText("Translate");
         btnCategorizer.setToolTipText("Show Translation Window");
@@ -217,15 +212,24 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
+        btnSessions.setText("Sessions");
+        btnSessions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSessionsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnCategorizer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnNetworking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(btnSessions)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,13 +262,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSessionsActionPerformed
-        SessionManager.getInstance().show();
-        
-        // Notify everyone that stuff has changed
-        //mainGuiFrame.updateBottomPanel();
-    }//GEN-LAST:event_btnSessionsActionPerformed
-
     private void btnCategorizerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategorizerActionPerformed
         CategorizerManager.getInstance().show();
     }//GEN-LAST:event_btnCategorizerActionPerformed
@@ -277,30 +274,22 @@ public class PanelTopUi extends javax.swing.JPanel {
         ReporterUi reporter = new ReporterUi(mainGuiFrame);
         reporter.setVisible(true);
     }//GEN-LAST:event_btnReportActionPerformed
-
-    private boolean showNetworking = false;
+   
+    private void setRelativePos(JToggleButton btn, JFrame frame) {
+        frame.setAlwaysOnTop(true);
+        frame.setLocationRelativeTo(btn);
+        Point winPos = frame.getLocation();
+        
+        winPos.x -= (frame.getWidth() / 2);
+        winPos.y += (frame.getHeight() / 2);
+        frame.setLocation(winPos);     
+    }
     
     private void btnNetworkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetworkingActionPerformed
-
-        info.setAlwaysOnTop(true);
-        info.setLocationRelativeTo(btnNetworking);
-        Point winPos = info.getLocation();
-        
-        winPos.x -= (info.getWidth() / 2);
-        //winPos.y += (info.getHeight() / 2);
-        info.setLocation(winPos);
-        BurpCallbacks.getInstance().print("W X: " + winPos.x + " Y: " + winPos.y);
-
-        
-        Point btnPos = btnNetworking.getLocation();
-        BurpCallbacks.getInstance().print("B X: " + btnPos.x + " Y: " + btnPos.y);
-        
-        //btnPos.x -= info.getHeight();
-        //btnPos.y -= info.getWidth();
-        //info.setLocation(btnPos);
-        
         if (btnNetworking.isSelected()) {
             info.start();
+            info.pack();
+            setRelativePos(btnNetworking, info);
             info.setVisible(true);
         } else {
             info.stop();
@@ -308,12 +297,26 @@ public class PanelTopUi extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnNetworkingActionPerformed
 
+    private void btnSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSessionsActionPerformed
+
+        SessionManagerUi sessionUi = SessionManager.getInstance().getSessionManagerUi();
+        
+        if (btnSessions.isSelected()) {
+            sessionUi.pack();
+            setRelativePos(btnSessions, (JFrame) sessionUi);
+            sessionUi.setVisible(true);
+        } else {
+            sessionUi.setVisible(false);
+        }
+        
+    }//GEN-LAST:event_btnSessionsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCategorizer;
     private javax.swing.JToggleButton btnNetworking;
     private javax.swing.JButton btnOptions;
     private javax.swing.JButton btnReport;
-    private javax.swing.JButton btnSessions;
+    private javax.swing.JToggleButton btnSessions;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableAllMessages;

@@ -25,8 +25,8 @@ public class SessionManager extends Observable {
         return sessionManager;
     }
     
-    public void show() {
-        sessionManagerUi.setVisible(true);
+    public SessionManagerUi getSessionManagerUi() {
+        return sessionManagerUi;
     }
 
     public int getUserCount() {

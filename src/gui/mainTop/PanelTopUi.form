@@ -69,11 +69,14 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="btnSessions" max="32767" attributes="0"/>
               <Component id="btnCategorizer" alignment="0" max="32767" attributes="0"/>
               <Component id="btnOptions" alignment="0" max="32767" attributes="0"/>
               <Component id="btnReport" max="32767" attributes="0"/>
               <Component id="btnNetworking" alignment="0" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Component id="btnSessions" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -94,15 +97,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btnSessions">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Sessions"/>
-            <Property name="toolTipText" type="java.lang.String" value="Show Sessions Window"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSessionsActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btnCategorizer">
           <Properties>
             <Property name="text" type="java.lang.String" value="Translate"/>
@@ -138,6 +132,14 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PanelTopNetworkBtn()"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JToggleButton" name="btnSessions">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sessions"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSessionsActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
