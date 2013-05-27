@@ -2,7 +2,6 @@ package gui.viewMessage.reporter;
 
 import gui.SentinelMainUi;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JFileChooser;
