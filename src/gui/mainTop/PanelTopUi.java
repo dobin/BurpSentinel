@@ -1,6 +1,7 @@
 package gui.mainTop;
 
 import gui.SentinelMainUi;
+import gui.botLeft.PanelLeftComboBoxModel;
 import gui.mainTop.networking.NetworkerInfo;
 import gui.session.SessionManager;
 import gui.session.SessionManagerUi;
@@ -10,6 +11,7 @@ import gui.viewMessage.reporter.ReporterUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -26,7 +28,6 @@ import util.UiUtil;
  * @author Dobin
  */
 public class PanelTopUi extends javax.swing.JPanel {
-    private SentinelMainUi mainGuiFrame = null;
     private PanelTopTableModel tableTopModel;
     
     private int currentSelectedRow = -1;
@@ -35,14 +36,16 @@ public class PanelTopUi extends javax.swing.JPanel {
     private NetworkerInfo info;
     private ReporterUi reporterUi;
     
+    private PanelLeftComboBoxModel sessionComboBoxModelMain;
+    
     /**
      * Creates new form PanelTop
      */
     public PanelTopUi() {
+        sessionComboBoxModelMain = new PanelLeftComboBoxModel();
         tableTopModel = new PanelTopTableModel(this);
         popup = new PanelTopPopup(this);
         initComponents();
-        ((PanelTopNetworkBtn)btnNetworking).init();
         
         // TODO not necessary if in restoreTableDimensions default?
         tableAllMessages.setAutoCreateRowSorter(true);
@@ -68,9 +71,18 @@ public class PanelTopUi extends javax.swing.JPanel {
         UiUtil.restoreTableDimensions(tableAllMessages, this);
     }
     
+    private ComboBoxModel getComboBoxModelMain() {
+        return sessionComboBoxModelMain;
+    }
+    
+    public String getSelectedSession() {
+        return (String) sessionComboBoxModelMain.getSelectedItem();
+    }
+    
     public void init() {
+        ((PanelTopNetworkBtn)btnNetworking).init();
         info = new NetworkerInfo();
-        reporterUi = new ReporterUi(mainGuiFrame);
+        reporterUi = new ReporterUi();
         
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
@@ -87,7 +99,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                         // Get selected row and tell the main frame to show it 
                         // in the bottom frame
                         currentSelectedRow = lsm.getMinSelectionIndex();
-                        mainGuiFrame.showMessage(currentSelectedRow);
+                        SentinelMainUi.getMainUi().showMessage(currentSelectedRow);
                     }
                 }});
         
@@ -135,7 +147,8 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     void removeMessage() {
         tableTopModel.removeMessage(currentSelectedRow);
-        mainGuiFrame.removeMessage(currentSelectedRow);
+        
+        SentinelMainUi.getMainUi().removeMessage(currentSelectedRow);
     }
     
     // This gets called from MainGui
@@ -153,13 +166,6 @@ public class PanelTopUi extends javax.swing.JPanel {
         return tableTopModel;
     }
     
-    
-    // set MainGui (parent)
-    // So we can interact with other UI parts (especially bot panel)
-    public void setMainGui(SentinelMainUi aThis) {
-        this.mainGuiFrame = aThis;
-    }
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -171,12 +177,18 @@ public class PanelTopUi extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tableAllMessages = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        btnOptions = new javax.swing.JButton();
-        btnNetworking = new PanelTopNetworkBtn();
-        btnSessions = new javax.swing.JToggleButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
         btnCategorizer = new javax.swing.JToggleButton();
+        btnSessions = new javax.swing.JToggleButton();
+        btnNetworking = new PanelTopNetworkBtn();
+        jPanel6 = new javax.swing.JPanel();
+        btnOptions = new javax.swing.JButton();
         btnReporter = new javax.swing.JToggleButton();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         tableAllMessages.setModel(getMessageTableModel());
         tableAllMessages.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
@@ -186,17 +198,35 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tableAllMessages);
 
-        btnOptions.setText("Storage");
-        btnOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOptionsActionPerformed(evt);
-            }
-        });
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnNetworking.setText("Network");
-        btnNetworking.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("Session:");
+
+        jComboBox1.setModel(getComboBoxModelMain());
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1))
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnCategorizer.setText("Categorize");
+        btnCategorizer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNetworkingActionPerformed(evt);
+                btnCategorizerActionPerformed(evt);
             }
         });
 
@@ -207,10 +237,35 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
-        btnCategorizer.setText("Categorize");
-        btnCategorizer.addActionListener(new java.awt.event.ActionListener() {
+        btnNetworking.setText("Network");
+        btnNetworking.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCategorizerActionPerformed(evt);
+                btnNetworkingActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnNetworking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnCategorizer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(btnSessions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnNetworking)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCategorizer))
+        );
+
+        btnOptions.setText("Storage");
+        btnOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOptionsActionPerformed(evt);
             }
         });
 
@@ -221,31 +276,40 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnNetworking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(btnCategorizer)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(btnSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        jToggleButton1.setText("Lists");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnReporter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(btnSessions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCategorizer)
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jToggleButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReporter)
+                .addContainerGap(90, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNetworking)
-                .addGap(0, 43, Short.MAX_VALUE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -253,14 +317,19 @@ public class PanelTopUi extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -326,8 +395,14 @@ public class PanelTopUi extends javax.swing.JPanel {
     private javax.swing.JButton btnOptions;
     private javax.swing.JToggleButton btnReporter;
     private javax.swing.JToggleButton btnSessions;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTable tableAllMessages;
     // End of variables declaration//GEN-END:variables
 

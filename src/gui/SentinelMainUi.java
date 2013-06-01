@@ -4,6 +4,7 @@ import burp.IHttpRequestResponse;
 import burp.ITab;
 import burp.MainUiInterface;
 import gui.mainBot.PanelBotUi;
+import gui.mainTop.PanelTopUi;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.util.HashMap;
@@ -31,18 +32,28 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     // Current selected panel
     private PanelBotUi currentPanelBot = null;
     
-
+    
+    static void setMainUi(SentinelMainUi ui) {
+        mainUi = ui;
+    }
+    static SentinelMainUi mainUi;
+    public static SentinelMainUi getMainUi() {
+        return mainUi;
+    }
+    
     
     /**
      * Creates new form MainGuiFrame
      */
     public SentinelMainUi() {
         initComponents();
-        init();
+        //init();
     }
 
     
-    private void init() {
+    public void init() {
+        SentinelMainUi.setMainUi(this);
+        
         // Has to be on top-top, or will not restore split location correclty
         UiUtil.restoreSplitLocation(jSplitPane1, this);
         
@@ -52,7 +63,10 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         // panelTopUi was inserted with Netbeans palette
         // Set his parent here
         panelTopUi.init();
-        panelTopUi.setMainGui(this);
+    }
+    
+    public PanelTopUi getPanelTop() {
+        return panelTopUi;
     }
 
     

@@ -14,8 +14,6 @@ import util.BurpCallbacks;
  * @author dobin
  */
 public class ReporterUi extends javax.swing.JFrame {
-
-    private SentinelMainUi mainUi;
     
     /**
      * Creates new form ReporterUi
@@ -24,16 +22,10 @@ public class ReporterUi extends javax.swing.JFrame {
         initComponents();
     }
 
-    public ReporterUi(SentinelMainUi mainGuiFrame) {
-        this();
-        
-        this.mainUi = mainGuiFrame;
-    }
-
     private void generateReport() {
         StringBuilder out = new StringBuilder();
 
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = mainUi.getAllMessageList();
+        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = SentinelMainUi.getMainUi().getAllMessageList();
 
         out.append("<html><body>\n");
         out.append("<table>\n");

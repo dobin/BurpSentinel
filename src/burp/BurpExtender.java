@@ -42,17 +42,18 @@ public class BurpExtender implements IExtensionStateListener {
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
                 sentinelMain = new SentinelMainUi();
-                replayerMain = new ReplayerMainUi();
+                sentinelMain.init();
+                //replayerMain = new ReplayerMainUi();
                 
                 callbacks.addSuiteTab(sentinelMain);
-                callbacks.addSuiteTab(replayerMain);
+                //callbacks.addSuiteTab(replayerMain);
                 
                 // Add burp connections
                 sentinelMenuItem = new CustomMenuItem(sentinelMain);
-                replayerMenuItem = new CustomMenuItem(replayerMain);
+                //replayerMenuItem = new CustomMenuItem(replayerMain);
                 
                 callbacks.registerMenuItem("Send to sentinel", sentinelMenuItem);
-                callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
+                //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
 
                 BurpCallbacks.getInstance().print("Sentinel v0.2");
             }
