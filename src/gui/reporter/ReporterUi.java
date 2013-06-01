@@ -1,4 +1,4 @@
-package gui.viewMessage.reporter;
+package gui.reporter;
 
 import gui.SentinelMainUi;
 import java.util.HashMap;

@@ -5,7 +5,7 @@
 package util;
 
 import gui.session.SessionUser;
-import gui.session.categorizer.CategoryEntry;
+import gui.categorizer.CategoryEntry;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Rectangle;

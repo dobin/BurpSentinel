@@ -1,4 +1,4 @@
-package gui.mainTop.networking;
+package gui.networking;
 
 import attacks.AttackAuthorisation;
 import attacks.AttackI;

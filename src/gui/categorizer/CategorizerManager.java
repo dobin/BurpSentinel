@@ -1,4 +1,4 @@
-package gui.session.categorizer;
+package gui.categorizer;
 
 import java.util.LinkedList;
 import java.util.Observable;

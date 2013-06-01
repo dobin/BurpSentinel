@@ -4,9 +4,9 @@
  */
 package gui.mainTop;
 
-import gui.mainTop.networking.Networker;
-import gui.mainTop.networking.NetworkerLogger;
-import gui.mainTop.networking.NetworkerLogger.Signal;
+import gui.networking.Networker;
+import gui.networking.NetworkerLogger;
+import gui.networking.NetworkerLogger.Signal;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JButton;

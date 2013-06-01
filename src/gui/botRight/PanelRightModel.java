@@ -1,6 +1,6 @@
 package gui.botRight;
 
-import gui.session.categorizer.CategorizerManager;
+import gui.categorizer.CategorizerManager;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;

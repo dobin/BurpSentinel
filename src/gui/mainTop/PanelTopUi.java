@@ -2,12 +2,12 @@ package gui.mainTop;
 
 import gui.SentinelMainUi;
 import gui.botLeft.PanelLeftComboBoxModel;
-import gui.mainTop.networking.NetworkerInfo;
+import gui.networking.NetworkerInfo;
 import gui.session.SessionManager;
 import gui.session.SessionManagerUi;
-import gui.session.categorizer.CategorizerManager;
-import gui.session.categorizer.CategorizerUi;
-import gui.viewMessage.reporter.ReporterUi;
+import gui.categorizer.CategorizerManager;
+import gui.categorizer.CategorizerUi;
+import gui.reporter.ReporterUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -188,7 +188,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         btnOptions = new javax.swing.JButton();
         btnReporter = new javax.swing.JToggleButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        btnLists = new javax.swing.JToggleButton();
 
         tableAllMessages.setModel(getMessageTableModel());
         tableAllMessages.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
@@ -276,20 +276,25 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
-        jToggleButton1.setText("Lists");
+        btnLists.setText("Lists");
+        btnLists.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(btnReporter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnLists, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jToggleButton1)
+                .addComponent(btnLists)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -389,8 +394,18 @@ public class PanelTopUi extends javax.swing.JPanel {
         }    
     }//GEN-LAST:event_btnReporterActionPerformed
 
+    private void btnListsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListsActionPerformed
+     /*   if (btnLists.isSelected()) {
+            setRelativePos(btnLists, (JFrame) listsUi);
+            listsUi.setVisible(true);
+        } else {
+            listsUi.setVisible(false);
+        }*/    
+    }//GEN-LAST:event_btnListsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnCategorizer;
+    private javax.swing.JToggleButton btnLists;
     private javax.swing.JToggleButton btnNetworking;
     private javax.swing.JButton btnOptions;
     private javax.swing.JToggleButton btnReporter;
@@ -402,7 +417,6 @@ public class PanelTopUi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JTable tableAllMessages;
     // End of variables declaration//GEN-END:variables
 

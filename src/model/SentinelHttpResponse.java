@@ -2,8 +2,8 @@ package model;
 
 import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
-import gui.session.categorizer.CategorizerManager;
-import gui.session.categorizer.CategoryEntry;
+import gui.categorizer.CategorizerManager;
+import gui.categorizer.CategoryEntry;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.Matcher;

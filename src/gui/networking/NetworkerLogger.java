@@ -1,4 +1,4 @@
-package gui.mainTop.networking;
+package gui.networking;
 
 import java.util.Observable;
 

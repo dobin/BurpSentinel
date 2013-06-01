@@ -1,4 +1,4 @@
-package gui.mainTop.networking;
+package gui.networking;
 
 import gui.botLeft.PanelLeftUi;
 import java.util.LinkedList;
