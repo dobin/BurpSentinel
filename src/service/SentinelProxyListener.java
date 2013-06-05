@@ -45,7 +45,7 @@ public class SentinelProxyListener implements IProxyListener {
                     httpMessage.getHttpService().getPort(),
                     (httpMessage.getHttpService().getProtocol().equals("http") ? false : true),
                     httpMessage.getRequest(),
-                    "Intercepted");
+                    "");
             next2Repeater = false;
         }
         if (next2Sentinel) {
