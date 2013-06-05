@@ -23,6 +23,7 @@ import gui.session.SessionManager;
 import gui.session.SessionManagerUi;
 import gui.categorizer.CategorizerManager;
 import gui.categorizer.CategorizerUi;
+import gui.lists.ListManagerUi;
 import gui.reporter.ReporterUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -51,6 +52,7 @@ public class PanelTopUi extends javax.swing.JPanel {
     private PanelTopPopup popup;
     private NetworkerInfo info;
     private ReporterUi reporterUi;
+    private ListManagerUi listsUi;
     
     private PanelLeftComboBoxModel sessionComboBoxModelMain;
     
@@ -99,6 +101,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         ((PanelTopNetworkBtn)btnNetworking).init();
         info = new NetworkerInfo();
         reporterUi = new ReporterUi();
+        listsUi = new ListManagerUi();
         
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
@@ -411,12 +414,12 @@ public class PanelTopUi extends javax.swing.JPanel {
     }//GEN-LAST:event_btnReporterActionPerformed
 
     private void btnListsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListsActionPerformed
-     /*   if (btnLists.isSelected()) {
+        if (btnLists.isSelected()) {
             setRelativePos(btnLists, (JFrame) listsUi);
             listsUi.setVisible(true);
         } else {
             listsUi.setVisible(false);
-        }*/    
+        }
     }//GEN-LAST:event_btnListsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

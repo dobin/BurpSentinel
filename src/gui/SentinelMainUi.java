@@ -17,6 +17,7 @@
 package gui;
 
 import burp.IHttpRequestResponse;
+import burp.IProxyListener;
 import burp.ITab;
 import burp.MainUiInterface;
 import gui.mainBot.PanelBotUi;
@@ -28,6 +29,7 @@ import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import service.SentinelProxyListener;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -68,6 +70,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
     
     public void init() {
+        proxyListener = new SentinelProxyListener();
+        
         SentinelMainUi.setMainUi(this);
         
         // Has to be on top-top, or will not restore split location correclty
@@ -85,17 +89,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         return panelTopUi;
     }
 
-    
-    /* Add new HttpRequestResponse
-     * This gets called from (external) Burp Menu entry
-     * 
-     * this is the main entry point for new HttpMessages (IHttpRequestResponse)
-     */
-    @Override
-    public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
-        // Make a sentinel http message from the burp message
-        SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
-        
+    public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
+                
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
         // but needed for new messages.
@@ -111,6 +106,20 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         panelBotUiList.add(newPanelBot);
         panelCard.add(newPanelBot, Integer.toString(index));
         showMessage(index); // Show newly added message in ui
+    }
+    
+    /* Add new HttpRequestResponse
+     * This gets called from (external) Burp Menu entry
+     * 
+     * this is the main entry point for new HttpMessages (IHttpRequestResponse)
+     */
+    @Override
+    public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
+        // Make a sentinel http message from the burp message
+        SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
+        
+        this.addNewMessage(myHttpMessage);
+
     }
 
     /*
@@ -397,6 +406,12 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     @Override
     public Component getUiComponent() {
         return this;
+    }
+    
+    private SentinelProxyListener proxyListener;
+
+    public IProxyListener getProxyListener() {
+        return proxyListener;
     }
 
 }
