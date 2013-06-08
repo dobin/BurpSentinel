@@ -45,7 +45,6 @@ public class Networker {
 
     public void init() {
         worker = new NetworkerWorker();
-        BurpCallbacks.getInstance().print("ATTACK! PPRE");
         worker.execute();
     }
 

@@ -78,8 +78,12 @@ public class PanelRightUi extends javax.swing.JPanel {
                     if (lsm.isSelectionEmpty()) {
                        //
                     } else {
-                        currentSelectedRow = lsm.getMinSelectionIndex();
-                        viewHttpMessage(currentSelectedRow);
+                        int newSelectedRow = lsm.getMinSelectionIndex();
+                        // Only update if differ
+                        if (newSelectedRow != currentSelectedRow) {
+                            viewHttpMessage(currentSelectedRow);
+                        }
+                        currentSelectedRow = newSelectedRow;
                         tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
                     }
                 }});
@@ -102,16 +106,18 @@ public class PanelRightUi extends javax.swing.JPanel {
     
     public void addHttpMessage(SentinelHttpMessageAtk httpMessage) {
         panelRightModel.addMessage(httpMessage);
-        //viewHttpMessage(panelRightModel.getRowCount() - 1);
-        //viewHttpMessage(currentSelectedRow);
-        
+
+        // Show very first message upon adding
+        // But not every new message following after that
         if (currentSelectedRow == -1) {
             currentSelectedRow = 0;
+            viewHttpMessage(currentSelectedRow);
         }
+        
+        // When adding to tableMessage, currently selected message will be
+        // deselected. aquire it and select it again.
         tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
         tableMessages.scrollRectToVisible(tableMessages.getCellRect(panelRightModel.getRowCount() - 1, 0, true));
-        
-        this.updateUI();
     }
     
     

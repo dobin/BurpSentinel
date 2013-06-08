@@ -89,8 +89,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         return panelTopUi;
     }
 
+    
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
-                
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
         // but needed for new messages.
