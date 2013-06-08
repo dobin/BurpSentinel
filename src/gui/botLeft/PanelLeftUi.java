@@ -19,9 +19,13 @@ package gui.botLeft;
 import gui.SentinelMainUi;
 import gui.mainBot.PanelBotUi;
 import gui.networking.Networker;
+import java.awt.Color;
 import java.util.LinkedList;
+import java.util.Locale;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
@@ -87,15 +91,15 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     }
     
     
-    private ComboBoxModel getComboBoxModel() {
-        return sessionComboBoxModel;
-    }
-
-    
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
+        //labelIndex.setText(message.get);
+        textfieldUrl.setText(message.getReq().getUrl().toString());
+        textfieldUrl.setToolTipText(message.getReq().getUrl().toString());
+        textfieldUrl.setBackground( Color.lightGray);
+        textfieldUrl.setCaretPosition(0);
     }
     
   
@@ -151,6 +155,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelTopHeader = new javax.swing.JPanel();
         buttonAttack = new javax.swing.JButton();
         checkboxFollowRedirect = new javax.swing.JCheckBox();
+        jPanel1 = new javax.swing.JPanel();
+        textfieldUrl = new javax.swing.JTextField();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -174,12 +180,19 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         checkboxFollowRedirect.setSelected(true);
         checkboxFollowRedirect.setText("Follow Redirects");
 
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        textfieldUrl.setEditable(false);
+        textfieldUrl.setText("jTextField1");
+        jPanel1.add(textfieldUrl, java.awt.BorderLayout.CENTER);
+
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
         panelTopHeaderLayout.setHorizontalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkboxFollowRedirect)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -187,9 +200,12 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         );
         panelTopHeaderLayout.setVerticalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(buttonAttack)
-                .addComponent(checkboxFollowRedirect))
+            .addGroup(panelTopHeaderLayout.createSequentialGroup()
+                .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonAttack)
+                    .addComponent(checkboxFollowRedirect))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         tableMessages.setModel(getTableModel());
@@ -256,6 +272,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JCheckBox checkboxFollowRedirect;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -265,6 +282,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private javax.swing.JPanel panelTopHeader;
     private gui.viewMessage.PanelViewMessageUi panelViewMessage;
     private javax.swing.JTable tableMessages;
+    private javax.swing.JTextField textfieldUrl;
     // End of variables declaration//GEN-END:variables
     
     public void setPanelParent(PanelBotUi aThis) {

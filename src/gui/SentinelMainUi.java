@@ -65,7 +65,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
      */
     public SentinelMainUi() {
         initComponents();
-        //init();
     }
 
     
