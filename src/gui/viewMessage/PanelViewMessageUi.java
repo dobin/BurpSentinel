@@ -185,7 +185,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
             
             if (httpMessage instanceof SentinelHttpMessageOrig) {
-            //if (httpMessage.getParentHttpMessage() == null) {
                 panelViewComboboxModel.hasParent(false);
             } else {
                 panelViewComboboxModel.hasParent(true);
@@ -194,12 +193,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
             }
             
-            
             viewDefaultContent = null;
             viewBeautifyContent = null;
             viewDiffContent = null;
-            
-            
         }
 
         showMessage();

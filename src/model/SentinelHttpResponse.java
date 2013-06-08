@@ -164,7 +164,7 @@ public class SentinelHttpResponse {
         if (response != null) {
             s = new String(response);
         } else {
-            s = "<void>";
+            s = "Sentinel: Response does not exist";
         }
         return s;
     }
