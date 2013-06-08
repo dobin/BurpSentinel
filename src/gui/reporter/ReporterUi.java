@@ -86,7 +86,6 @@ public class ReporterUi extends javax.swing.JFrame {
         textfieldPath = new javax.swing.JTextField();
         btnSelectFile = new javax.swing.JButton();
         btnGenerate = new javax.swing.JButton();
-        btnClose = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -110,13 +109,6 @@ public class ReporterUi extends javax.swing.JFrame {
             }
         });
 
-        btnClose.setText("Close");
-        btnClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCloseActionPerformed(evt);
-            }
-        });
-
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel2.setText("Report Generator");
 
@@ -129,8 +121,7 @@ public class ReporterUi extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(btnClose)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnGenerate))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -159,9 +150,7 @@ public class ReporterUi extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGenerate)
-                    .addComponent(btnClose)))
+                .addComponent(btnGenerate))
         );
 
         pack();
@@ -182,12 +171,7 @@ public class ReporterUi extends javax.swing.JFrame {
         generateReport();
     }//GEN-LAST:event_btnGenerateActionPerformed
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnCloseActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnClose;
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnSelectFile;
     private javax.swing.JLabel jLabel1;

@@ -18,16 +18,19 @@ package gui.mainTop;
 
 import gui.SentinelMainUi;
 import gui.botLeft.PanelLeftComboBoxModel;
-import gui.networking.NetworkerInfo;
-import gui.session.SessionManager;
-import gui.session.SessionManagerUi;
 import gui.categorizer.CategorizerManager;
 import gui.categorizer.CategorizerUi;
 import gui.lists.ListManagerUi;
+import gui.networking.NetworkerInfoUi;
 import gui.reporter.ReporterUi;
+import gui.session.SessionManager;
+import gui.session.SessionManagerUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -50,9 +53,14 @@ public class PanelTopUi extends javax.swing.JPanel {
     private int currentSelectedRow = -1;
     
     private PanelTopPopup popup;
-    private NetworkerInfo info;
+    
+    private NetworkerInfoUi networkerInfoUi;
     private ReporterUi reporterUi;
-    private ListManagerUi listsUi;
+    private ListManagerUi listManagerUi;
+    private CategorizerUi categorizerUi;
+    private SessionManagerUi sessionUi;
+
+    
     
     private PanelLeftComboBoxModel sessionComboBoxModelMain;
     
@@ -99,9 +107,61 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     public void init() {
         ((PanelTopNetworkBtn)btnNetworking).init();
-        info = new NetworkerInfo();
+
+        // Categorizer
+        categorizerUi = CategorizerManager.getInstance().getCategorizerUi();
+        WindowListener categorizerWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnCategorizer.setSelected(false);
+                categorizerUi.setVisible(false);
+            }
+        };
+        categorizerUi.addWindowListener(categorizerWindowListener);
+        
+        // Sessuin
+        sessionUi = SessionManager.getInstance().getSessionManagerUi();
+        WindowListener sessionUiWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnSessions.setSelected(false);
+                sessionUi.setVisible(false);
+            }
+        };
+        sessionUi.addWindowListener(sessionUiWindowListener);
+        
+        // networker
+        networkerInfoUi = new NetworkerInfoUi();
+        WindowListener networkerInfoWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnNetworking.setSelected(false);
+                networkerInfoUi.setVisible(false);
+            }
+        };
+        networkerInfoUi.addWindowListener(networkerInfoWindowListener);
+        
+        // Reporter
         reporterUi = new ReporterUi();
-        listsUi = new ListManagerUi();
+        WindowListener reporterUiWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnReporter.setSelected(false);
+                reporterUi.setVisible(false);
+            }
+        };
+        reporterUi.addWindowListener(reporterUiWindowListener);
+        
+        // Listmanager
+        listManagerUi = new ListManagerUi();
+        WindowListener listUiWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnLists.setSelected(false);
+                listManagerUi.setVisible(false);
+            }
+        };
+        listManagerUi.addWindowListener(listUiWindowListener);
         
         // Add selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
@@ -174,10 +234,7 @@ public class PanelTopUi extends javax.swing.JPanel {
     // If the user sends a new HttpMessage from Burp to Sentinel
     public void addMessage(SentinelHttpMessageOrig httpMessage) {
         tableTopModel.addMessage(httpMessage);
-        //this.updateUI();
-        
         tableAllMessages.scrollRectToVisible(tableAllMessages.getCellRect(tableTopModel.getRowCount() - 1, 0, true));
-        //this.updateUI();
     }
 
     // Used for swing
@@ -281,7 +338,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                 .addComponent(btnCategorizer))
         );
 
-        btnOptions.setText("Storage");
+        btnOptions.setText("Options");
         btnOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOptionsActionPerformed(evt);
@@ -373,18 +430,16 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     private void btnNetworkingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNetworkingActionPerformed
         if (btnNetworking.isSelected()) {
-            info.start();
-            setRelativePos(btnNetworking, info);
-            info.setVisible(true);
+            networkerInfoUi.start();
+            setRelativePos(btnNetworking, networkerInfoUi);
+            networkerInfoUi.setVisible(true);
         } else {
-            info.stop();
-            info.setVisible(false);
+            networkerInfoUi.stop();
+            networkerInfoUi.setVisible(false);
         }
     }//GEN-LAST:event_btnNetworkingActionPerformed
 
     private void btnSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSessionsActionPerformed
-        SessionManagerUi sessionUi = SessionManager.getInstance().getSessionManagerUi();
-        
         if (btnSessions.isSelected()) {
             setRelativePos(btnSessions, (JFrame) sessionUi);
             sessionUi.setVisible(true);
@@ -394,8 +449,6 @@ public class PanelTopUi extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSessionsActionPerformed
 
     private void btnCategorizerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategorizerActionPerformed
-        CategorizerUi categorizerUi = CategorizerManager.getInstance().getCategorizerUi();
-
         if (btnCategorizer.isSelected()) {
             setRelativePos(btnSessions, (JFrame) categorizerUi);
             categorizerUi.setVisible(true);
@@ -415,10 +468,10 @@ public class PanelTopUi extends javax.swing.JPanel {
 
     private void btnListsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListsActionPerformed
         if (btnLists.isSelected()) {
-            setRelativePos(btnLists, (JFrame) listsUi);
-            listsUi.setVisible(true);
+            setRelativePos(btnLists, (JFrame) listManagerUi);
+            listManagerUi.setVisible(true);
         } else {
-            listsUi.setVisible(false);
+            listManagerUi.setVisible(false);
         }
     }//GEN-LAST:event_btnListsActionPerformed
 

@@ -24,12 +24,12 @@ import javax.swing.text.DefaultCaret;
  *
  * @author dobin
  */
-public class NetworkerInfo extends javax.swing.JFrame implements Observer {
+public class NetworkerInfoUi extends javax.swing.JFrame implements Observer {
 
     /**
      * Creates new form NetworkerInfo
      */
-    public NetworkerInfo() {
+    public NetworkerInfoUi() {
         initComponents();
         
         DefaultCaret caret = (DefaultCaret)jTextArea1.getCaret();
@@ -177,20 +177,20 @@ public class NetworkerInfo extends javax.swing.JFrame implements Observer {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NetworkerInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NetworkerInfoUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NetworkerInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NetworkerInfoUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NetworkerInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NetworkerInfoUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NetworkerInfo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NetworkerInfoUi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NetworkerInfo().setVisible(true);
+                new NetworkerInfoUi().setVisible(true);
             }
         });
     }

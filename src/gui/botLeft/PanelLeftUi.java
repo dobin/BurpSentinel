@@ -24,10 +24,10 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import model.SentinelHttpParam;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import model.SentinelHttpParam;
 import util.UiUtil;
 
 /**
@@ -79,8 +79,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
-        
-        //comboBoxSession.addActionListener(this);
     }
    
 
@@ -88,33 +86,19 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         return tableModel;
     }
     
+    
     private ComboBoxModel getComboBoxModel() {
         return sessionComboBoxModel;
     }
 
+    
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
-
-        //this.labelHttpType.setText(origHttpMessage.getReq().getMethod());
-        //textFieldUrl.setText(origHttpMessage.getReq().getUrl().toString());
-        
-        //setSessionComboBoxes();
     }
     
-    // Select correct session combobox item
-/*    private void setSessionComboBoxes() {
-        String value = origHttpMessage.getReq().getSessionValue();
-        //sessionComboBoxModel.selectIfPossible(value);
-        
-        if (value != null) {
-            sessionComboBoxModel.setOrigSession(value);
-            sessionComboBoxModelMain.setOrigSession(value);
-        }
-    }
-*/
-    
+  
     /*
      * Add Attack Message
      * 
@@ -295,10 +279,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     
     public void externalUpdateUi() {
         sessionComboBoxModel.myupdate();
-        //sessionComboBoxModelMain.myupdate();
         tableModel.fireTableDataChanged();
-        //comboboxMainSession.invalidate();
-        //comboboxMainSession.updateUI(); // This will make combobox bigger if necessary?!
     }
 
     void myUpdateUI() {
