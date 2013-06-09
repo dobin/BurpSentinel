@@ -18,6 +18,7 @@ package gui.networking;
 
 import attacks.AttackAuthorisation;
 import attacks.AttackI;
+import attacks.AttackList;
 import attacks.AttackMain;
 import attacks.AttackOriginal;
 import attacks.AttackPersistentXss;
@@ -190,7 +191,6 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
             return;
         }
 
-
         // Authorisation
         AttackTypeData authAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.AUTHORISATION);
         if (authAttackData != null && authAttackData.isActive()) {
@@ -198,6 +198,19 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
             //performAttack(attack, httpMessages);
             performAttack(attack, work, attackHttpParam);
         }
+        
+        // LIST
+        AttackTypeData listAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.LIST);
+        if (listAttackData != null && listAttackData.isActive()) {
+            AttackI attack = new AttackList(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, listAttackData.getData());
+            //performAttack(attack, httpMessages);
+            performAttack(attack, work, attackHttpParam);
+        }
+        
+        if (cancel) {
+            return;
+        }
+        
 
         attackHttpParam.resetAttackTypes();
     }

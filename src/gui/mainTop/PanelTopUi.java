@@ -119,7 +119,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         };
         categorizerUi.addWindowListener(categorizerWindowListener);
         
-        // Sessuin
+        // SessionUi
         sessionUi = SessionManager.getInstance().getSessionManagerUi();
         WindowListener sessionUiWindowListener = new WindowAdapter() {
             @Override
@@ -157,13 +157,14 @@ public class PanelTopUi extends javax.swing.JPanel {
         WindowListener listUiWindowListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                listManagerUi.save();
                 btnLists.setSelected(false);
                 listManagerUi.setVisible(false);
             }
         };
         listManagerUi.addWindowListener(listUiWindowListener);
         
-        // Add selection listener
+        // Add row selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -182,6 +183,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                     }
                 }});
         
+        // Add mouse listener for on-row popup menu
         tableAllMessages.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -198,8 +200,6 @@ public class PanelTopUi extends javax.swing.JPanel {
                 }
             }
         });    
-        
-        
     }
     
         

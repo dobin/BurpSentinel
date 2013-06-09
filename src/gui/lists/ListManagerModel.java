@@ -17,6 +17,7 @@
 package gui.lists;
 
 import java.util.LinkedList;
+import util.UiUtil;
 
 /**
  *
@@ -35,7 +36,11 @@ public class ListManagerModel {
         myLists.add(list);
     }
     
-    ListManagerList getList(int index) {
+    public LinkedList<ListManagerList> getList() {
+        return (LinkedList<ListManagerList>) myLists.clone();
+    }
+    
+    public ListManagerList getList(int index) {
         return myLists.get(index);
     }
     
@@ -43,9 +48,16 @@ public class ListManagerModel {
         return myLists.size();
     }
     
+    void readConfig() {
+        UiUtil.restoreAttackLists(myLists);
+    }
 
-    void delList(String aaA) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    void writeConfig() {
+        UiUtil.storeAttackLists(myLists);
+    }
+
+    void delList(int currentSelectedRow) {
+        myLists.remove(currentSelectedRow);
     }
     
 }

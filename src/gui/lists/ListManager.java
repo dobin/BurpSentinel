@@ -35,9 +35,10 @@ public class ListManager {
     
     public ListManager() {
         listModel = new ListManagerModel();
+        listModel.readConfig();
     }
 
-    ListManagerModel getModel() {
+    public ListManagerModel getModel() {
         return listModel;
     }
     

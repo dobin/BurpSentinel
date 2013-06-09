@@ -27,7 +27,8 @@ public class AttackMain {
         SQL,
         OTHER,
         AUTHORISATION,
-        ORIGINAL
+        ORIGINAL,
+        LIST
     };
     
 }

@@ -43,6 +43,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     public PanelLeftTableModel() {
     }
+    
 
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -55,6 +56,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             return false;
         }
     }
+    
 
     @Override
     public int getRowCount() {
@@ -66,10 +68,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         return myMessage.getReq().getParamCount();
     }
 
+    
     @Override
     public int getColumnCount() {
         return 8;
     }
+    
 
     @Override
     public Class getColumnClass(int columnIndex) {
@@ -101,6 +105,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return String.class;
         }
     }
+    
 
     @Override
     public String getColumnName(int columnIndex) {
@@ -133,6 +138,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return "hmm";
         }
     }
+    
 
     @Override
     public void setValueAt(Object value, int row, int column) {
@@ -199,6 +205,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         this.fireTableDataChanged();
     }
 
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -233,6 +240,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         }
     }
 
+    
     private String hasVulns(SentinelHttpParam param) {
         for (SentinelHttpMessageAtk m : myMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
@@ -250,6 +258,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         return "-";
     }
 
+    
     void setMessage(SentinelHttpMessageOrig message) {
         try {
             //this.myRequest = new SentinelHttpMessage(message);
@@ -271,7 +280,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         this.fireTableDataChanged();
     }
 
-
     
     public LinkedList<SentinelHttpParam> createChangeParam() {
         LinkedList<SentinelHttpParam> list = new LinkedList<SentinelHttpParam>();
@@ -282,22 +290,21 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             boolean attackThis = false;
             SentinelHttpParam param = myMessage.getReq().getParam(n);
             
-           
             if (uiEntries.get(n).isXssEnabled) {
-                BurpCallbacks.getInstance().print("Attack XSS because of param #" + n);
                 myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
             }
+            
             if (uiEntries.get(n).isSqlEnabled) {
-                BurpCallbacks.getInstance().print("Attack SQL because of param #" + n);
                 myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
                 attackThis = true;
             }
+            
             if (uiEntries.get(n).isOtherEnabled) {
-                BurpCallbacks.getInstance().print("Attack OTHER because of param #" + n);
                 myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
                 attackThis = true;
             }
+            
             if (uiEntries.get(n).isAuthEnabled) {
                 myMessage.getReq().getParam(n).setAttackType(
                     AttackMain.AttackTypes.AUTHORISATION, 
@@ -308,7 +315,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             }
             
             if (uiEntries.get(n).isOrigEnabled && attackThis) {
-                BurpCallbacks.getInstance().print("Attack FIRST because of param #" + n);
                 myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
                 attackThis = true;
                 
@@ -325,10 +331,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         return list;
     }
 
+    
     @Override
     public void update(Observable o, Object arg) {
         this.fireTableDataChanged();
     }
+    
 
     void resetAttackSelection() {
         for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
@@ -342,6 +350,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         }
     }
 
+    
     // Check if a specific row (param) is the session id
     boolean isCookieRow(int row) {
         SentinelHttpParam param = myMessage.getReq().getParam(row);

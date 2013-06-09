@@ -16,12 +16,10 @@
  */
 package gui.lists;
 
-import gui.SentinelMainUi;
 import java.util.LinkedList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import util.BurpCallbacks;
 
 /**
  *
@@ -33,6 +31,7 @@ public class ListManagerUi extends javax.swing.JFrame {
     private ListManagerModel managerModel;
     private int currentSelectedRow = -1;
     
+    
     /**
      * Creates new form ListManagerUi
      */
@@ -41,10 +40,17 @@ public class ListManagerUi extends javax.swing.JFrame {
         init();
     }
     
+    
     public void init() {
         managerModel = ListManager.getInstance().getModel();
         tableModel = new ListManagerTableModel(managerModel);
         tableIndex.setModel(tableModel);
+        
+        if (tableModel.getRowCount() > 0) {
+            currentSelectedRow = 0;
+            showList(currentSelectedRow);
+            tableIndex.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
+        }
                 
         // Add selection listener
         ListSelectionModel lsm = tableIndex.getSelectionModel();
@@ -67,31 +73,31 @@ public class ListManagerUi extends javax.swing.JFrame {
                 }});
     }
     
+    
+    public void save() {
+        managerModel.writeConfig();
+    }
+    
+    
     private void saveCurrent() {
         if (currentSelectedRow >= 0) {
             // Save current one
             LinkedList<String> l = new LinkedList<String>();
             String content = jTextArea1.getText();
             String s[] = content.split("\n");
-            BurpCallbacks.getInstance().print("SAVE: " + currentSelectedRow + ": " + jTextArea1.getText());
             for (int n = 0; n < s.length; n++) {
                 l.add(s[n]);
             }
             managerModel.getList(currentSelectedRow).setContent(l);
         }
-        
+        managerModel.writeConfig();
     }
     
+    
     private void showList(int index) {
-        BurpCallbacks.getInstance().print("SHOW!: " + index);
-        
         // Show new one
         String content = "";
-        LinkedList<String> l = managerModel.getList(index).getContent();
-        for(String s: l) {
-            content += s + "\n";
-        }
-        BurpCallbacks.getInstance().print("SHOW: " + index + " " + content);
+        content = managerModel.getList(index).getContentAsString();
         jTextArea1.setText(content);
     }
     
@@ -275,13 +281,13 @@ public class ListManagerUi extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
-        BurpCallbacks.getInstance().print("NEW: " + currentSelectedRow);
         managerModel.addNewList();
         tableModel.refresh();
     }//GEN-LAST:event_btnNewActionPerformed
 
     private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
-        managerModel.delList("AAA");
+        managerModel.delList(currentSelectedRow);
+        tableModel.refresh();
     }//GEN-LAST:event_btnDelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

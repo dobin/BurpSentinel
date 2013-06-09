@@ -17,21 +17,23 @@
 package gui.botLeft;
 
 import gui.SentinelMainUi;
+import gui.lists.ListManagerList;
 import gui.mainBot.PanelBotUi;
+import gui.mainTop.PanelTopPopup;
 import gui.networking.Networker;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.Locale;
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -44,7 +46,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private PanelLeftTableModel tableModel;
     private PanelLeftComboBoxModel sessionComboBoxModel;
     private JComboBox comboBoxSession;
-    
+    private PanelLeftPopup popup;
+    private int selectedRow = -1;
     
     /**
      * Creates new form RequestConfigForm
@@ -83,9 +86,39 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
+        
+        popup = new PanelLeftPopup(this);
+        
+        // Add mouse listener for on-row popup menu
+        tableMessages.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                BurpCallbacks.getInstance().print("BBB1");
+                if (popup.getPopup().isPopupTrigger(e)) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    selectedRow = row;
+                    int column = source.columnAtPoint(e.getPoint());
+
+                    if (!source.isRowSelected(row)) {
+                        source.changeSelection(row, column, false, false);
+                    }
+
+                    BurpCallbacks.getInstance().print("BBB2");
+                    popup.refreshIndex();
+                    popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                    BurpCallbacks.getInstance().print("BBB3");
+                }
+            }
+        });    
     }
    
-
+    
+    SentinelHttpParam getSelectedHttpParam() {
+        return origHttpMessage.getReq().getParam(selectedRow);
+    }
+    
+    
     private TableModel getTableModel() {
         return tableModel;
     }
@@ -113,6 +146,25 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     }
 
     
+    /*
+     * Click on popup menu with special attacklist attack list
+     */
+    void attackSelectedParam(LinkedList<SentinelHttpParam> attackHttpParams) {
+        // add httpmessage attacks to send queue
+        Networker.getInstance().addNewMessages(
+                attackHttpParams, 
+                origHttpMessage, 
+                this, 
+                checkboxFollowRedirect.isSelected(), 
+                //(String) comboboxMainSession.getSelectedItem()
+                (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession()
+                );
+    }
+    
+    /*
+     * Click on "Go"
+     * Attacks current httpmessage with all selected attacks
+     */
     private void attackRessource() {
         // Set session options
         if (comboBoxSession.getSelectedIndex() > 0) {
@@ -122,7 +174,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         // Transfer UI attack ticks to HttpMessage attacks
         LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
 
-        
         // reset UI attack ticks
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
@@ -136,7 +187,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                 //(String) comboboxMainSession.getSelectedItem()
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession()
                 );
-
     }
     
     /**
@@ -307,4 +357,5 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;
     }
+
 }

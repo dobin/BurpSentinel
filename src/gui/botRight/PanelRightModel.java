@@ -160,9 +160,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         httpMessage.setTableIndexAttack(messages.size() - 1);
         httpMessage.addObserver(this);
         
-        //int selected = parent.getSelected();
         this.fireTableDataChanged();
-        //parent.setSelected(selected);
     }
 
     public SentinelHttpMessage getHttpMessage(int n) {

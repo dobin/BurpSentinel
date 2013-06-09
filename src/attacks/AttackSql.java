@@ -53,7 +53,7 @@ public class AttackSql extends AttackI {
         "%22%22%22",
     };
     
-     public AttackSql(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
+    public AttackSql(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         super(origHttpMessage, mainSessionName, followRedirect, origParam);
     }
 

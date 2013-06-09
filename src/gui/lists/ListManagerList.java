@@ -30,6 +30,17 @@ public class ListManagerList {
         name = "New";
         content = new LinkedList<String>();
     }
+
+    public ListManagerList(String s, String contentAsString) {
+        content = new LinkedList<String>();
+        name = s;
+        
+        String c[] = contentAsString.split("\n");
+        for(int n=0; n<c.length; n++) {
+            content.add(c[n]);
+        }
+        
+    }
     
     public String getName() {
         return name;
@@ -45,5 +56,13 @@ public class ListManagerList {
     
     public LinkedList<String> getContent() {
         return content;
+    }
+
+    public String getContentAsString() {
+        String s = "";
+        for(String entry: content) {
+            s += entry + "\n";
+        }
+        return s;
     }
 }

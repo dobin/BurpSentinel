@@ -18,6 +18,7 @@ package util;
 
 import gui.session.SessionUser;
 import gui.categorizer.CategoryEntry;
+import gui.lists.ListManagerList;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Rectangle;
@@ -249,4 +250,32 @@ public class UiUtil {
     }
 
 
+    public static void storeAttackLists(LinkedList<ListManagerList> lists) {
+        Preferences pref = Preferences.userRoot().node("AttackLists");
+        try {
+            pref.clear();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        for(ListManagerList list: lists) {
+            pref.put(list.getName(), list.getContentAsString());
+        }
+    }
+    
+    public static void restoreAttackLists(LinkedList<ListManagerList> lists) {
+        Preferences pref = Preferences.userRoot().node("AttackLists");
+    
+        String[] children = null;
+        try {
+            children = pref.keys();
+            for (String s : children) {
+                String value = pref.get(s, "");
+                lists.add( new ListManagerList(s, value));
+            }            
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }
