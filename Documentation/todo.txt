@@ -12,6 +12,8 @@ Overall:
 - should be possible to store and restore messages
 - generate report
 
+- add tooltip to everything
+
 - attack variable names?
 - adding a message is a little bit strange because of onaddrow on topview
 - tab name should "blink" if sent to sentinel
@@ -26,7 +28,7 @@ Feature:
 - fast diff two responses from panelright (to check difference between SQLi)
 - copy-paste should be colorful! (and working...)
 - implement session manager for burp
-- Fix damn UI errors on send-to-sentinel
++ Fix damn UI errors on send-to-sentinel
 - change background color of lines of header, bold interesting one's
 
 Todo CSNC:
