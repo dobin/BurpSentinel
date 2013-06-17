@@ -78,16 +78,15 @@ public class PanelRightUi extends javax.swing.JPanel {
                     if (lsm.isSelectionEmpty()) {
                        //
                     } else {
-                        int newSelectedRow = lsm.getMinSelectionIndex();
+                        int oldSelectedRow = currentSelectedRow;
+                        currentSelectedRow = lsm.getMinSelectionIndex();
                         // Only update if differ
-                        if (newSelectedRow != currentSelectedRow) {
+                        if (oldSelectedRow != currentSelectedRow) {
                             viewHttpMessage(currentSelectedRow);
+                            tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
                         }
-                        currentSelectedRow = newSelectedRow;
-                        tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
                     }
                 }});
-
     }
     
     public void setSelected(int index) {
@@ -123,6 +122,7 @@ public class PanelRightUi extends javax.swing.JPanel {
     
     public void viewHttpMessage(int n) {
         try {
+            BurpCallbacks.getInstance().print("VIEW: " + n);
             panelViewMessage.setHttpMessage(panelRightModel.getHttpMessage(n));
         } catch (Exception ex) {
             BurpCallbacks.getInstance().print(ex.getLocalizedMessage());

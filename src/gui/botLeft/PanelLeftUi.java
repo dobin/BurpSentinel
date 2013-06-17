@@ -124,6 +124,18 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     }
     
     
+/*    
+                            int newSelectedRow = lsm.getMinSelectionIndex();
+                        // Only update if differ
+                        if (newSelectedRow != currentSelectedRow) {
+                            viewHttpMessage(currentSelectedRow);
+                        }
+                        currentSelectedRow = newSelectedRow;
+                        tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
+*/
+    
+    
+    
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);

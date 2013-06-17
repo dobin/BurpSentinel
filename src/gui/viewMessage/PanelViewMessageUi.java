@@ -196,6 +196,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             viewDefaultContent = null;
             viewBeautifyContent = null;
             viewDiffContent = null;
+        } else {
+            
         }
 
         showMessage();
@@ -208,6 +210,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         if (viewDefaultContent == null) {
             viewDefaultContent = httpMessage.getRes().getResponseStr();
         }
+        
+//        BurpCallbacks.getInstance().print("AAA: " + viewDefaultContent);
+//        BurpCallbacks.getInstance().print("AAA: " + httpMessage.getRes().getResponseStr());
         
         setMessageText(viewDefaultContent);
         highlightResponse();
@@ -800,7 +805,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         if (isNew) {
             if (checkboxIsFix.isSelected()) {
                 textareaMessage.setCaretPosition(savedCursor);
-                
             } else {
                 textareaMessage.setCaretPosition(n);
             }
