@@ -142,8 +142,8 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="panelHighlight" max="32767" attributes="0"/>
                               <Component id="checkboxIsLink" max="32767" attributes="0"/>
+                              <Component id="panelHighlight" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>

@@ -118,7 +118,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
         
         this.addNewMessage(myHttpMessage);
-
     }
 
     /*

@@ -40,6 +40,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessageOrig;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -178,8 +179,13 @@ public class PanelTopUi extends javax.swing.JPanel {
                     } else {
                         // Get selected row and tell the main frame to show it 
                         // in the bottom frame
+                        int oldSelected = currentSelectedRow;
                         currentSelectedRow = lsm.getMinSelectionIndex();
-                        SentinelMainUi.getMainUi().showMessage(currentSelectedRow);
+                        
+                        if (currentSelectedRow != oldSelected) {
+                            //setSelected();
+                            SentinelMainUi.getMainUi().showMessage(currentSelectedRow);
+                        }
                     }
                 }});
         
@@ -202,29 +208,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         });    
     }
     
-        
-    public int getSelected() {
-        return currentSelectedRow;
-    }
-    
-/*
-    
-    private void showPopup(MouseEvent me) {
-// is this event a popup trigger?
-        if (pm.isPopupTrigger(me)) {
-            Point p = me.getPoint();
-            int row = table.rowAtPoint(p);
-            int col = table.columnAtPoint(p);
-// if we've clicked on a row in the second col
-            if (row != -1 && col == 1) {
-                one.setText("Do something to row " + row + ".");
-                two.setText("Do something else to row " + row + ".");
-                pm.show(table, p.x, p.y);
-            }
-        }
-    }
-  */  
-    
+
     
     void removeMessage() {
         tableTopModel.removeMessage(currentSelectedRow);
@@ -501,6 +485,15 @@ public class PanelTopUi extends javax.swing.JPanel {
 
     public void reset() {
         tableTopModel.reset();
+    }
+    
+            
+    public int getSelected() {
+        return currentSelectedRow;
+    }
+    
+    public void setSelected() {
+        tableAllMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
     }
 
     public void setSelected(int index) {

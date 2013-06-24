@@ -215,8 +215,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        int selected = parent.getSelected();
         this.fireTableDataChanged();
-        parent.setSelected(selected);
+        parent.setSelected();
     }
 }
