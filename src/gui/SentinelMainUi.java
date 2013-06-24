@@ -131,7 +131,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         cl.show(panelCard, Integer.toString(index));
         
         if (index >= panelBotUiList.size()) {
-            BurpCallbacks.getInstance().print("Error: SIze: " + panelBotUiList.size() + "  I: " + index);
+            BurpCallbacks.getInstance().print("MainUi showMessage Error: Size of list: " + panelBotUiList.size() + " Selected: " + index);
         } else {
             currentPanelBot = panelBotUiList.get(index);
         }
