@@ -113,11 +113,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         scrollPane.add(textareaMessage);
         panelCenter.removeAll();
         panelCenter.add(scrollPane, BorderLayout.CENTER);
-                scrollPane.setViewportView(textareaMessage);
+        scrollPane.setViewportView(textareaMessage);
 
         this.invalidate();
         this.updateUI();
         
+        panelHighlight.setVisible(false);
         
         messagePopup = new PanelViewMessagePopup(this);
         
@@ -180,9 +181,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
     private void reInit() {
         if (httpMessage.getRes().hasResponse()) {
-            labelSize.setText(Integer.toString(httpMessage.getRes().getSize()));
-            labelHttpCode.setText(httpMessage.getRes().getHttpCode());
-            labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
+            ///labelSize.setText(Integer.toString(httpMessage.getRes().getSize()));
+            ///labelHttpCode.setText(httpMessage.getRes().getHttpCode());
+            ///labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
             
             if (httpMessage instanceof SentinelHttpMessageOrig) {
                 panelViewComboboxModel.hasParent(false);
@@ -190,7 +191,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
                 panelViewComboboxModel.hasParent(true);
                 SentinelHttpMessageAtk atk = (SentinelHttpMessageAtk) httpMessage;
                 
-                labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
+                ///labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
             }
             
             viewDefaultContent = null;
@@ -295,29 +296,26 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             }
             
             comboboxView.setVisible(true);
-
-            //buttonShowResponse.setBackground(Color.GRAY);
-            //buttonShowResponse.setSelected(true);
-            //buttonShowRequest.setBackground(Color.LIGHT_GRAY);
-            //buttonShowRequest.setSelected(false);
         } else {
             buttonShowRequest.setText("Request");
             setMessageText(httpMessage.getReq().getRequestStr());
             highlightRequest();
             
             comboboxView.setVisible(false);
-            //buttonShowResponse.setBackground(Color.LIGHT_GRAY);
-            //buttonShowRequest.setBackground(Color.GRAY);
-            //buttonShowResponse.setSelected(false);
-            //buttonShowRequest.setSelected(true);
         }
 
-        labelPosition.setText("/" + myHighlights.size());
+        if (myHighlights != null && myHighlights.size() > 0) {
+            panelHighlight.setVisible(true);
+            
+            if (selectIndex >= 0) {
+                labelPosition.setText((selectIndex + 1) + "/" + myHighlights.size());
+            } else {
+                labelPosition.setText("/" + myHighlights.size());
+            }
+        } else {
+            panelHighlight.setVisible(false);
+        }
         viewMessagePart(0, true);
-        this.invalidate();
-        this.updateUI();
-        
-        //IMessageEditor i = BurpCallbacks.getInstance().getBurp().createMessageEditor(null, false);
     }
 
     
@@ -487,146 +485,23 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
         panelMain = new javax.swing.JPanel();
         panelTop = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        labelHttpCode = new javax.swing.JLabel();
-        labelSize = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        labelDom = new javax.swing.JLabel();
-        labelRedirected = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        checkboxIsFix = new javax.swing.JCheckBox();
-        checkboxIsLink = new javax.swing.JCheckBox();
-        buttonUp = new javax.swing.JButton();
-        buttonDown = new javax.swing.JButton();
-        labelPosition = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         buttonShowRequest = new javax.swing.JButton();
         comboboxView = new javax.swing.JComboBox();
+        jPanel1 = new javax.swing.JPanel();
+        checkboxIsLink = new javax.swing.JCheckBox();
+        panelHighlight = new javax.swing.JPanel();
+        checkboxIsFix = new javax.swing.JCheckBox();
+        buttonUp = new javax.swing.JButton();
+        buttonDown = new javax.swing.JButton();
+        labelPosition = new javax.swing.JLabel();
+        lblSearch = new javax.swing.JLabel();
+        lblIndex = new javax.swing.JLabel();
         panelCenter = new javax.swing.JPanel();
         panelBot = new javax.swing.JPanel();
         buttonPrev = new javax.swing.JButton();
         buttonNext = new javax.swing.JButton();
         textfieldSearch = new javax.swing.JTextField();
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel5.setPreferredSize(new java.awt.Dimension(135, 24));
-
-        labelHttpCode.setText("000");
-        labelHttpCode.setToolTipText("HTTP Response Code");
-
-        labelSize.setText("00000");
-        labelSize.setToolTipText("Size of Response Body in Bytes");
-
-        jLabel1.setText(";");
-
-        labelDom.setText("000");
-        labelDom.setToolTipText("Number of Tags in Response");
-
-        labelRedirected.setText(" ");
-        labelRedirected.setToolTipText("Indicate if message is result of a 302 redirect");
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(labelHttpCode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelSize)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelDom)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelRedirected)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(labelDom)
-                            .addComponent(labelRedirected))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(labelHttpCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelSize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-
-        jPanel6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        checkboxIsFix.setText("Fix");
-        checkboxIsFix.setToolTipText("Fix Cursor Location - keep view for all messages");
-        checkboxIsFix.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
-        checkboxIsLink.setText("Link");
-        checkboxIsLink.setToolTipText("Link Both Window Togeter - Scroll Together");
-        checkboxIsLink.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        checkboxIsLink.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkboxIsLinkActionPerformed(evt);
-            }
-        });
-
-        buttonUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984817_arrow_large_up.png"))); // NOI18N
-        buttonUp.setToolTipText("Select previous Highlight");
-        buttonUp.setMargin(new java.awt.Insets(2, 2, 2, 2));
-        buttonUp.setMaximumSize(new java.awt.Dimension(24, 20));
-        buttonUp.setMinimumSize(new java.awt.Dimension(24, 20));
-        buttonUp.setPreferredSize(new java.awt.Dimension(32, 22));
-        buttonUp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonUpActionPerformed(evt);
-            }
-        });
-
-        buttonDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984823_arrow_large_down.png"))); // NOI18N
-        buttonDown.setToolTipText("Select next Highlight");
-        buttonDown.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        buttonDown.setMaximumSize(new java.awt.Dimension(24, 20));
-        buttonDown.setMinimumSize(new java.awt.Dimension(24, 20));
-        buttonDown.setPreferredSize(new java.awt.Dimension(32, 22));
-        buttonDown.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDownActionPerformed(evt);
-            }
-        });
-
-        labelPosition.setText("0");
-        labelPosition.setToolTipText("Current Highlight Index / Number of Highlights");
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(checkboxIsFix)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(checkboxIsLink)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelPosition)
-                .addGap(0, 8, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelPosition)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(buttonUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(checkboxIsFix)
-                            .addComponent(checkboxIsLink))
-                        .addComponent(buttonDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         buttonShowRequest.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         buttonShowRequest.setForeground(new java.awt.Color(229, 137, 0));
@@ -654,8 +529,103 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buttonShowRequest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(comboboxView)
+            .addComponent(buttonShowRequest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        checkboxIsLink.setText("Link Window");
+        checkboxIsLink.setToolTipText("Link Both Window Togeter - Scroll Together");
+        checkboxIsLink.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        checkboxIsLink.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxIsLinkActionPerformed(evt);
+            }
+        });
+
+        panelHighlight.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        checkboxIsFix.setText("Fix To Index");
+        checkboxIsFix.setToolTipText("Fix Cursor Location - keep view for all messages");
+        checkboxIsFix.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+        buttonUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984817_arrow_large_up.png"))); // NOI18N
+        buttonUp.setToolTipText("Select previous Highlight");
+        buttonUp.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        buttonUp.setMaximumSize(new java.awt.Dimension(24, 20));
+        buttonUp.setMinimumSize(new java.awt.Dimension(24, 20));
+        buttonUp.setPreferredSize(new java.awt.Dimension(32, 22));
+        buttonUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUpActionPerformed(evt);
+            }
+        });
+
+        buttonDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/1356984823_arrow_large_down.png"))); // NOI18N
+        buttonDown.setToolTipText("Select next Highlight");
+        buttonDown.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        buttonDown.setMaximumSize(new java.awt.Dimension(24, 20));
+        buttonDown.setMinimumSize(new java.awt.Dimension(24, 20));
+        buttonDown.setPreferredSize(new java.awt.Dimension(32, 22));
+        buttonDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDownActionPerformed(evt);
+            }
+        });
+
+        labelPosition.setText("00/00");
+        labelPosition.setToolTipText("Current Highlight Index / Number of Highlights");
+
+        lblSearch.setText("Search:");
+
+        lblIndex.setText("Index:");
+
+        javax.swing.GroupLayout panelHighlightLayout = new javax.swing.GroupLayout(panelHighlight);
+        panelHighlight.setLayout(panelHighlightLayout);
+        panelHighlightLayout.setHorizontalGroup(
+            panelHighlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelHighlightLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
+                .addComponent(lblIndex)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelPosition)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkboxIsFix)
+                .addGap(2, 2, 2))
+        );
+        panelHighlightLayout.setVerticalGroup(
+            panelHighlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelHighlightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(labelPosition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(checkboxIsFix)
+                .addComponent(lblIndex))
+            .addComponent(lblSearch)
+            .addComponent(buttonDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(buttonUp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(checkboxIsLink)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelHighlight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelHighlight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(checkboxIsLink, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout panelTopLayout = new javax.swing.GroupLayout(panelTop);
@@ -663,17 +633,17 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
         panelTopLayout.setHorizontalGroup(
             panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTopLayout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelTopLayout.setVerticalGroup(
             panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelTopLayout.createSequentialGroup()
+                .addGroup(panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
 
         panelCenter.setLayout(new java.awt.BorderLayout());
@@ -726,7 +696,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                 .addComponent(panelTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(panelCenter, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addComponent(panelCenter, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -918,17 +888,14 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     private javax.swing.JCheckBox checkboxIsFix;
     private javax.swing.JCheckBox checkboxIsLink;
     private javax.swing.JComboBox comboboxView;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JLabel labelDom;
-    private javax.swing.JLabel labelHttpCode;
     private javax.swing.JLabel labelPosition;
-    private javax.swing.JLabel labelRedirected;
-    private javax.swing.JLabel labelSize;
+    private javax.swing.JLabel lblIndex;
+    private javax.swing.JLabel lblSearch;
     private javax.swing.JPanel panelBot;
     private javax.swing.JPanel panelCenter;
+    private javax.swing.JPanel panelHighlight;
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelTop;
     private javax.swing.JTextField textfieldSearch;

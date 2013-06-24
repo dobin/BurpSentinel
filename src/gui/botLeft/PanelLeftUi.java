@@ -117,19 +117,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private TableModel getTableModel() {
         return tableModel;
     }
-    
-    
-/*    
-                            int newSelectedRow = lsm.getMinSelectionIndex();
-                        // Only update if differ
-                        if (newSelectedRow != currentSelectedRow) {
-                            viewHttpMessage(currentSelectedRow);
-                        }
-                        currentSelectedRow = newSelectedRow;
-                        tableMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
-*/
-    
-    
+
     
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
@@ -168,6 +156,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                 );
     }
     
+    
     /*
      * Click on "Go"
      * Attacks current httpmessage with all selected attacks
@@ -195,6 +184,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession()
                 );
     }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.

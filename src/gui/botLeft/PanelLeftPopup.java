@@ -80,6 +80,10 @@ public class PanelLeftPopup implements ActionListener {
         items = new LinkedList<JMenuItem>();
         menu.removeAll();
         
+        JMenuItem title = new JMenuItem("Attack with:");
+        title.setEnabled(false);
+        menu.add(title);
+        
         for(ListManagerList list: ListManager.getInstance().getModel().getList()) {
             JMenuItem menuItem = new JMenuItem(list.getName());
             items.add(menuItem);
