@@ -54,7 +54,6 @@ public class ReporterUi extends javax.swing.JFrame {
             
             out.append("<td>\n");
             out.append(key.getReq().getUrl());
-            BurpCallbacks.getInstance().print(key.getReq().getUrl().toString());
             out.append("</td>\n");
 
             for(SentinelHttpMessageAtk m: value) {

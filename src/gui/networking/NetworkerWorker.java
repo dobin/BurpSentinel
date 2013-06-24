@@ -102,7 +102,7 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
                 work.result = attackMessage;
                 publish(work);
             } else {
-                //BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
+                BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
             }
 
             if (cancel) {

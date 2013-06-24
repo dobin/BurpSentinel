@@ -17,9 +17,7 @@
 package gui.botLeft;
 
 import gui.SentinelMainUi;
-import gui.lists.ListManagerList;
 import gui.mainBot.PanelBotUi;
-import gui.mainTop.PanelTopPopup;
 import gui.networking.Networker;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -93,7 +91,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         tableMessages.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                BurpCallbacks.getInstance().print("BBB1");
                 if (popup.getPopup().isPopupTrigger(e)) {
                     JTable source = (JTable) e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
@@ -104,10 +101,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                         source.changeSelection(row, column, false, false);
                     }
 
-                    BurpCallbacks.getInstance().print("BBB2");
                     popup.refreshIndex();
                     popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
-                    BurpCallbacks.getInstance().print("BBB3");
                 }
             }
         });    
@@ -150,8 +145,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     /*
      * Add Attack Message
      * 
-     * An attack thread did generate (and send/receive) a new message
-     * add to right panel (call our parent, botpanelui, to do this)
+     * An attack thread did generate (and send/receive) a new message.
+     * Add to right panel (call our parent, botpanelui, to do this)
      */
     public void addAttackMessage(SentinelHttpMessageAtk attackMessage) {
         panelParent.addAttackMessage(attackMessage);

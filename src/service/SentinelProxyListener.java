@@ -58,7 +58,6 @@ public class SentinelProxyListener implements IProxyListener {
     }
     
     private void sentinelCheck(IInterceptedProxyMessage message) {
-        
         SentinelHttpMessage msg = new SentinelHttpMessageOrig(message.getMessageInfo());
         
         String url = msg.getReq().getUrl().toString();
@@ -79,7 +78,7 @@ public class SentinelProxyListener implements IProxyListener {
                 BurpCallbacks.getInstance().getBurp().setProxyInterceptionEnabled(false);
             }
             
-            BurpCallbacks.getInstance().print(url);
+//            BurpCallbacks.getInstance().print(url);
             message.getMessageInfo().setRequest("GET http://burp/ HTTP1.1\r\nHost: burp\r\n\r\n".getBytes());
             message.setInterceptAction(IInterceptedProxyMessage.ACTION_DROP);
         }
