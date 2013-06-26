@@ -71,7 +71,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     @Override
     public int getColumnCount() {
-        return 8;
+        // return 8; 
+        return 8; // ignore "All"
     }
     
 

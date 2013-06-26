@@ -17,11 +17,15 @@
 package gui.botRight;
 
 import gui.mainBot.PanelBotUi;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 import util.UiUtil;
@@ -35,6 +39,7 @@ public class PanelRightUi extends javax.swing.JPanel {
     private PanelBotUi panelParent;
     private PanelRightModel panelRightModel;
     private int currentSelectedRow = -1;
+    private PopupTableHeader popupTableHeader;
     
     /**
      * Creates new form PanelRightUi
@@ -87,6 +92,27 @@ public class PanelRightUi extends javax.swing.JPanel {
                         }
                     }
                 }});
+ 
+        popupTableHeader = new PopupTableHeader(tableMessages);
+        
+        tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                showPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                showPopup(e);
+            }
+
+            private void showPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    popupTableHeader.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+        
     }
     
     public void setSelected(int index) {

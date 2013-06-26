@@ -1,24 +1,15 @@
-ui bla:
-  + #0 broken
-  + no update vulnerable if not added from code
-  + jumping around when scanning
+- panelleft: Send again should be asyncronous and not block burp!
 
 Top View:
 ? Delete multiple items
   - no! breaks stuff!
-! send window is fugly
-  - cancel wont cancel, and user will start a new one - breaks things?
-  - make a real queue of requests to send in a seperate thread?
 ! update cookie stuff
   - no! only in response
-
 
 Overall:
 - should be possible to store and restore messages
 - generate report
-
 - add tooltip to everything
-
 - attack variable names?
 - adding a message is a little bit strange because of onaddrow on topview
 - tab name should "blink" if sent to sentinel
@@ -123,12 +114,19 @@ Questions:
 
 ------------------------------------------------------------------------
 
+ui bla:
+  + #0 broken
+  + no update vulnerable if not added from code
+  + jumping around when scanning
+
 + NONE <-> TEST,  NONE -> "-"
 + Send initial request, too!
 + lefttop: Rename URL to GET
 + attack sql: check ''' and "
 
-
++ send window is fugly
+  - cancel wont cancel, and user will start a new one - breaks things?
+  - make a real queue of requests to send in a seperate thread?
 + smart request copy (initial)
 + possible to remove messages in top
 + save sessions

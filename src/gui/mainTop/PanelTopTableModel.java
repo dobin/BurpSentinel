@@ -60,7 +60,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         // TODO
         //this.fireTableRowsInserted(myMessages.size() - 1, myMessages.size());
         this.fireTableDataChanged();
-        parent.setSelected(myMessages.size() - 1);
+        //parent.setSelected(myMessages.size() - 1);
     }
 
     public SentinelHttpMessage getMessage(int rowIndex) {
