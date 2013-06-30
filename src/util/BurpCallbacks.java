@@ -21,9 +21,12 @@ import burp.IHttpRequestResponse;
 import burp.IHttpService;
 import burp.IRequestInfo;
 import burp.IResponseInfo;
+import gui.viewMessage.ExternalUpdater;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpService;
 
@@ -55,6 +58,21 @@ public class BurpCallbacks {
             burpCallbacks = new BurpCallbacks();
         }
         return burpCallbacks;
+    }
+    
+    public void sendRessource(final SentinelHttpMessage sentinelMessage, final boolean followRedirect, final ExternalUpdater updater) {
+        Thread queryThread = new Thread() {
+            public void run() {
+                try {
+                    sendRessource(sentinelMessage, followRedirect);
+                    updater.externalUpdate();
+                } catch (ConnectionTimeoutException ex) {
+                    BurpCallbacks.getInstance().print("Error sendingz");
+                }
+            }
+        };
+        queryThread.start();
+        
     }
 
     public void sendRessource(SentinelHttpMessage sentinelMessage, boolean followRedirect) throws ConnectionTimeoutException {

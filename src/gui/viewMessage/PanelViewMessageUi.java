@@ -68,7 +68,7 @@ import util.diff.GnuDiff.change;
  *
  * @author Dobin
  */
-public class PanelViewMessageUi extends javax.swing.JPanel {
+public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUpdater {
 
     private SentinelHttpMessage httpMessage = null;
     private boolean showResponse = true;
@@ -446,13 +446,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
     /*** Functions for children ***/
     
     public void c_sendAgain() {
-        try {
-            BurpCallbacks.getInstance().sendRessource(httpMessage, true);
-            this.reInit();
-        } catch (ConnectionTimeoutException ex) {
-            BurpCallbacks.getInstance().print("Error sendingz");
-        }
-        
+        BurpCallbacks.getInstance().sendRessource(httpMessage, true, this);
     }
     
     public void c_sendToRepeater() {
@@ -917,6 +911,11 @@ public class PanelViewMessageUi extends javax.swing.JPanel {
 
     private ComboBoxModel getPanelViewComboboxModel() {
         return panelViewComboboxModel;
+    }
+
+    @Override
+    public void externalUpdate() {
+        this.reInit();
     }
     
 
