@@ -17,15 +17,18 @@
 package gui.botRight;
 
 import gui.mainBot.PanelBotUi;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.RowFilter;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 import util.UiUtil;
@@ -40,6 +43,7 @@ public class PanelRightUi extends javax.swing.JPanel {
     private PanelRightModel panelRightModel;
     private int currentSelectedRow = -1;
     private PopupTableHeader popupTableHeader;
+    private PanelRightPopup panelRightPopup;
     
     /**
      * Creates new form PanelRightUi
@@ -113,6 +117,27 @@ public class PanelRightUi extends javax.swing.JPanel {
             }
         });
         
+        
+        panelRightPopup = new PanelRightPopup(this);
+        
+        // Add mouse listener for on-row popup menu
+        tableMessages.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (panelRightPopup.getPopup().isPopupTrigger(e)) {
+                    JTable source = (JTable) e.getSource();
+                    int row = source.rowAtPoint(e.getPoint());
+                    currentSelectedRow = row;
+                    int column = source.columnAtPoint(e.getPoint());
+
+                    if (!source.isRowSelected(row)) {
+                        source.changeSelection(row, column, false, false);
+                    }
+
+                    panelRightPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });    
     }
     
     public void setSelected(int index) {
@@ -251,4 +276,31 @@ public class PanelRightUi extends javax.swing.JPanel {
         return panelRightModel.getAllAttackMessages();
     }
 
+    /*** Functions for children ***/
+    /*
+    public void c_sendAgain() {
+        BurpCallbacks.getInstance().sendRessource(, true, this);
+    }*/
+    
+    public void c_sendToRepeater() {
+        BurpCallbacks.getInstance().sendToRepeater(panelRightModel.getHttpMessage(currentSelectedRow));
+    }
+    
+    public void c_copySmart() {
+        SentinelHttpMessage httpMessage;
+        
+        httpMessage = panelRightModel.getHttpMessage(currentSelectedRow);
+        
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        String s = "Request:\n";
+        s += httpMessage.getReq().getRequestStr();
+        s += "\n\nResponse:\n";
+        s += httpMessage.getRes().getResponseStr();
+        
+        StringSelection ss = new StringSelection(s);
+        
+        clipboard.setContents(ss, null);
+    }
+    
 }

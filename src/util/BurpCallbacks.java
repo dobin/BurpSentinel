@@ -25,8 +25,6 @@ import gui.viewMessage.ExternalUpdater;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpService;
 
