@@ -72,11 +72,17 @@ public class ListManagerModel {
       
     public void initFuzzDB() {
         boolean isFresh = true;
+        //for(ListManagerList list: myLists) {
+        //    if (list.isFuzzDB()) {
+        //        isFresh = false;
+        //    }
+       // }
         for(ListManagerList list: myLists) {
-            if (list.isFuzzDB()) {
+            if (list.getName().contains(".fuzz")) {
                 isFresh = false;
             }
         }
+            
         
         if (isFresh) {
             loadFuzzDB();

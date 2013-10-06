@@ -25,6 +25,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
+import model.XssIndicator;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
@@ -63,6 +64,10 @@ public class AttackList extends AttackI {
         
         ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackData));
         String data = list.getContent().get(state);
+        
+        // Replace placeholder with our XSS Identifier
+        data = data.replace("XSS", XssIndicator.getInstance().getIndicator());
+        
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
