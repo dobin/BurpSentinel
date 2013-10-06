@@ -24,22 +24,34 @@ import java.util.LinkedList;
  */
 public class ListManagerList {
     private String name;
+    private boolean isFuzzDB = false;
     private LinkedList<String> content;
     
     public ListManagerList() {
         name = "New";
         content = new LinkedList<String>();
     }
-
-    public ListManagerList(String s, String contentAsString) {
+    
+    public ListManagerList(String s) {
         content = new LinkedList<String>();
         name = s;
+    }
+
+    public ListManagerList(String s, String contentAsString) {
+        this(s);
         
         String c[] = contentAsString.split("\n");
         for(int n=0; n<c.length; n++) {
             content.add(c[n]);
         }
-        
+    }
+    
+    public void addLine(String line) {
+        content.add(line);
+    }
+    
+    public boolean isFuzzDB() {
+        return isFuzzDB;
     }
     
     public String getName() {

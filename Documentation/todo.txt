@@ -1,10 +1,3 @@
-- panelleft: Send again should be asyncronous and not block burp!
-
-Top View:
-? Delete multiple items
-  - no! breaks stuff!
-! update cookie stuff
-  - no! only in response
 
 Overall:
 - should be possible to store and restore messages
@@ -13,18 +6,16 @@ Overall:
 - attack variable names?
 - adding a message is a little bit strange because of onaddrow on topview
 - tab name should "blink" if sent to sentinel
+  - how to?
 - log window - popup on mouseover?
- 
-Burp:
 - manually follow 302 with button
-- make panelleft table items right-clickable
-- Make right clickable
 
 Feature:
 - fast diff two responses from panelright (to check difference between SQLi)
 - copy-paste should be colorful! (and working...)
 - implement session manager for burp
-+ Fix damn UI errors on send-to-sentinel
+
+Bugfixes:
 - change background color of lines of header, bold interesting one's
 
 Todo CSNC:
@@ -113,6 +104,18 @@ Questions:
   - invokelater for sendtosentinel?
 
 ------------------------------------------------------------------------
+
++ panelleft: Send again should be asyncronous and not block burp!
++ make panelleft table items right-clickable
++ Make right clickable
++ Fix damn UI errors on send-to-sentinel
+
+Top View:
+? Delete multiple items
+  - no! breaks stuff!
+! update cookie stuff
+  - no! only in response
+
 
 ui bla:
   + #0 broken

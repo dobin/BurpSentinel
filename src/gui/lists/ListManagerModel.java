@@ -16,7 +16,14 @@
  */
 package gui.lists;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -47,6 +54,7 @@ public class ListManagerModel {
     int getCount() {
         return myLists.size();
     }
+  
     
     void readConfig() {
         UiUtil.restoreAttackLists(myLists);
@@ -59,5 +67,46 @@ public class ListManagerModel {
     void delList(int currentSelectedRow) {
         myLists.remove(currentSelectedRow);
     }
+    
+    
+      
+    public void initFuzzDB() {
+        boolean isFresh = true;
+        for(ListManagerList list: myLists) {
+            if (list.isFuzzDB()) {
+                isFresh = false;
+            }
+        }
+        
+        if (isFresh) {
+            loadFuzzDB();
+        }
+        
+    }
+    
+    private void loadFuzzDB() {
+        String[] fileNames = {  "GenericBlind.fuzz.txt", "MSSQL.fuzz.txt", "MSSQL_blind.fuzz.txt",
+                                "MySQL.fuzz.txt", "MySQL_MSSQL.fuzz.txt", "oracle.fuzz.txt", "xss-rsnake.txt" };
+        
+        for(String fileName: fileNames) {
+            InputStream is = getClass().getResourceAsStream("/resources/fuzzdb/" + fileName);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            
+            ListManagerList list = new ListManagerList(fileName, "");
+            
+            String line;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    list.addLine(line);
+                }
+            } catch (IOException ex) {
+                BurpCallbacks.getInstance().print(ex.toString());
+                Logger.getLogger(ListManagerModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+     
+            myLists.add(list);
+        }
+    }
+    
     
 }

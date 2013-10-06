@@ -36,6 +36,7 @@ public class ListManager {
     public ListManager() {
         listModel = new ListManagerModel();
         listModel.readConfig();
+        listModel.initFuzzDB();
     }
 
     public ListManagerModel getModel() {

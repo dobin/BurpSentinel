@@ -131,7 +131,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         textareaMessage.setBracketMatchingEnabled(false);
         textareaMessage.setPopupMenu(messagePopup.getPopup());
         UiUtil.getTheme().apply(textareaMessage);
-        textareaMessage.revalidate();
+        textareaMessage.revalidate(); // TODO necessary?
         textareaMessage.requestFocusInWindow();
         textareaMessage.setMarkAllHighlightColor(new Color(0xff, 0xea, 0x00, 100));
         
