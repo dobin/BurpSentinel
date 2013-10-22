@@ -19,11 +19,9 @@ package model;
 import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
 import gui.categorizer.CategorizerManager;
-import gui.categorizer.CategoryEntry;
+import gui.categorizer.ResponseCategory;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import util.BurpCallbacks;
 
 /**
@@ -37,7 +35,7 @@ public class SentinelHttpResponse {
     private int size = 0;
     private int domCount = 0;
     
-    private LinkedList<String> categories = new LinkedList<String>();
+    private LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
 
     SentinelHttpResponse() {
 
@@ -111,26 +109,16 @@ public class SentinelHttpResponse {
 
     
     public void categorizeResponse() {
-        LinkedList<CategoryEntry> categoryEntries = CategorizerManager.getInstance().getCategories();
-
-        String s = new String(response);
-        
-        for(CategoryEntry entries: categoryEntries) {
-            Pattern pattern = Pattern.compile(entries.getRegex());
-            Matcher matcher = pattern.matcher(s);
-            
-            if (matcher.find()) {
-                categories.add(entries.getTag());
-            }
-        }
+        categories.clear();
+        categories.addAll(CategorizerManager.getInstance().categorize(new String(response)));
     }
     
     
     public String getCategoriesString() {
         String res = "";
         
-        for(String s: categories) {
-            res += s + ",";
+        for(ResponseCategory category: categories) {
+            res += category.getName() + ",";
         }
         
         if (res.length() == 0) {
