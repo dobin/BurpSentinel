@@ -18,7 +18,6 @@ package replayer.gui.ReplayerMain;
 
 import burp.IHttpRequestResponse;
 import burp.ITab;
-import burp.MainUiInterface;
 import gui.mainBot.PanelBotLinkManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -37,7 +36,7 @@ import util.BurpCallbacks;
  *
  * @author unreal
  */
-public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiInterface {
+public class ReplayerMainUi extends javax.swing.JPanel implements ITab {
 
     private int currentSelectedRow = 0;
     private ReplayerMainTableModel tableModel;
@@ -127,7 +126,6 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         return tableModel;
     }
     
-    @Override
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
         SentinelHttpMessage origHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
 

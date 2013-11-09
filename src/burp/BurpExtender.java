@@ -17,7 +17,12 @@
 package burp;
 
 import gui.CustomMenuItem;
+import gui.SentinelMainApi;
 import gui.SentinelMainUi;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import replayer.gui.ReplayerMain.ReplayerMainUi;
 import util.BurpCallbacks;
@@ -35,7 +40,7 @@ public class BurpExtender implements IExtensionStateListener {
     private CustomMenuItem sentinelMenuItem;
     private CustomMenuItem replayerMenuItem;
 
-    private SentinelMainUi sentinelMain;
+    private SentinelMainUi sentinelMainUi;
     private ReplayerMainUi replayerMain;
     
     public BurpExtender() {
@@ -57,21 +62,33 @@ public class BurpExtender implements IExtensionStateListener {
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                sentinelMain = new SentinelMainUi();
-                sentinelMain.init();
+                PrintStream errStream;
+                try {
+                    errStream = new PrintStream("/tmp/out.txt");
+                    System.setErr(errStream);
+                    System.setOut(errStream);
+                    
+                } catch (FileNotFoundException ex) {
+                    BurpCallbacks.getInstance().print("AAA");
+                }
+                
+                SentinelMainApi sentinelApi = SentinelMainApi.getInstance();
+                sentinelApi.init();
+                
+                sentinelMainUi = sentinelApi.getMainUi();
+                sentinelMainUi.init();
                 //replayerMain = new ReplayerMainUi();
                 
-                callbacks.addSuiteTab(sentinelMain);
+                callbacks.addSuiteTab(sentinelMainUi);
                 //callbacks.addSuiteTab(replayerMain);
                 
                 // Add burp connections
-                sentinelMenuItem = new CustomMenuItem(sentinelMain);
+                sentinelMenuItem = new CustomMenuItem(sentinelApi);
                 //replayerMenuItem = new CustomMenuItem(replayerMain);
                 
                 callbacks.registerMenuItem("Send to sentinel", sentinelMenuItem);
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
-
-                callbacks.registerProxyListener(sentinelMain.getProxyListener());
+                callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 
                 BurpCallbacks.getInstance().print("Sentinel v0.2");
             }
@@ -81,6 +98,6 @@ public class BurpExtender implements IExtensionStateListener {
     // On exit, store UI settings
     @Override
     public void extensionUnloaded() {
-        sentinelMain.storeUiPrefs();
+        sentinelMainUi.storeUiPrefs();
     }
 }

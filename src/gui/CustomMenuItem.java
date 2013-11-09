@@ -18,7 +18,6 @@ package gui;
 
 import burp.IHttpRequestResponse;
 import burp.IMenuItemHandler;
-import burp.MainUiInterface;
 import javax.swing.SwingUtilities;
 
 /**
@@ -29,10 +28,10 @@ import javax.swing.SwingUtilities;
 public class CustomMenuItem implements IMenuItemHandler {
 
     // Link to parent MainUi to add messages
-    private MainUiInterface mainGui;
+    private SentinelMainApi mainApi;
 
-    public CustomMenuItem(MainUiInterface mainGui) {
-        this.mainGui = mainGui;
+    public CustomMenuItem(SentinelMainApi mainGui) {
+        this.mainApi = mainGui;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CustomMenuItem implements IMenuItemHandler {
             @Override
             public void run() {
                 for (int i = 0; i < messageInfo.length; i++) {
-                    mainGui.addNewMessage(messageInfo[i]);
+                    mainApi.addNewMessage(messageInfo[i]);
                 }
             }
         });

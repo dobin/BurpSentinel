@@ -21,6 +21,7 @@ import gui.botLeft.PanelLeftComboBoxModel;
 import gui.categorizer.CategorizerManager;
 import gui.categorizer.CategorizerUi;
 import gui.lists.ListManagerUi;
+import gui.mainTop.options.FrameOptions;
 import gui.networking.NetworkerInfoUi;
 import gui.reporter.ReporterUi;
 import gui.session.SessionManager;
@@ -60,6 +61,7 @@ public class PanelTopUi extends javax.swing.JPanel {
     private ListManagerUi listManagerUi;
     private CategorizerUi categorizerUi;
     private SessionManagerUi sessionUi;
+    private FrameOptions frameOptions;
 
     
     
@@ -109,6 +111,18 @@ public class PanelTopUi extends javax.swing.JPanel {
     public void init() {
         ((PanelTopNetworkBtn)btnNetworking).init();
 
+        // Options
+        frameOptions = new FrameOptions();
+        WindowListener optionsWindowListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                btnOptions.setSelected(false);
+                frameOptions.setVisible(false);
+            }
+        };
+        frameOptions.addWindowListener(optionsWindowListener);
+        
+        
         // Categorizer
         categorizerUi = CategorizerManager.getInstance().getCategorizerUi();
         WindowListener categorizerWindowListener = new WindowAdapter() {
@@ -248,8 +262,8 @@ public class PanelTopUi extends javax.swing.JPanel {
         btnSessions = new javax.swing.JToggleButton();
         btnNetworking = new PanelTopNetworkBtn();
         jPanel6 = new javax.swing.JPanel();
-        btnOptions = new javax.swing.JButton();
         btnReporter = new javax.swing.JToggleButton();
+        btnOptions = new javax.swing.JToggleButton();
         btnLists = new javax.swing.JToggleButton();
 
         tableAllMessages.setModel(getMessageTableModel());
@@ -324,6 +338,13 @@ public class PanelTopUi extends javax.swing.JPanel {
                 .addComponent(btnCategorizer))
         );
 
+        btnReporter.setText("Reporter");
+        btnReporter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReporterActionPerformed(evt);
+            }
+        });
+
         btnOptions.setText("Options");
         btnOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -331,12 +352,21 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
-        btnReporter.setText("Reporter");
-        btnReporter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReporterActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btnReporter, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(btnOptions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnReporter)
+                .addContainerGap(90, Short.MAX_VALUE))
+        );
 
         btnLists.setText("Lists");
         btnLists.addActionListener(new java.awt.event.ActionListener() {
@@ -345,25 +375,6 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnReporter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnLists, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(btnLists)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOptions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnReporter)
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -371,12 +382,17 @@ public class PanelTopUi extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLists, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(btnLists)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -384,7 +400,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -399,10 +415,6 @@ public class PanelTopUi extends javax.swing.JPanel {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnOptionsActionPerformed
    
     private void setRelativePos(JToggleButton btn, JFrame frame) {
         frame.setAlwaysOnTop(true);
@@ -461,11 +473,20 @@ public class PanelTopUi extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnListsActionPerformed
 
+    private void btnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionsActionPerformed
+        if (btnOptions.isSelected()) {
+            setRelativePos(btnOptions, (JFrame) frameOptions);
+            frameOptions.setVisible(true);
+        } else {
+            frameOptions.setVisible(false);
+        }
+    }//GEN-LAST:event_btnOptionsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnCategorizer;
     private javax.swing.JToggleButton btnLists;
     private javax.swing.JToggleButton btnNetworking;
-    private javax.swing.JButton btnOptions;
+    private javax.swing.JToggleButton btnOptions;
     private javax.swing.JToggleButton btnReporter;
     private javax.swing.JToggleButton btnSessions;
     private javax.swing.JComboBox jComboBox1;

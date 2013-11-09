@@ -16,20 +16,18 @@
  */
 package gui;
 
-import burp.IHttpRequestResponse;
-import burp.IProxyListener;
 import burp.ITab;
-import burp.MainUiInterface;
 import gui.mainBot.PanelBotUi;
 import gui.mainTop.PanelTopUi;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
-import service.SentinelProxyListener;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -42,7 +40,7 @@ import util.UiUtil;
  *
  * @author Dobin
  */
-public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiInterface {
+public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer {
 
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
@@ -50,6 +48,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     // Current selected panel
     private PanelBotUi currentPanelBot = null;
     
+    private ModelRoot modelRoot;
     
     static void setMainUi(SentinelMainUi ui) {
         mainUi = ui;
@@ -63,21 +62,23 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     /**
      * Creates new form MainGuiFrame
      */
-    public SentinelMainUi() {
+    public SentinelMainUi(ModelRoot modelRoot) {
+        SentinelMainUi.setMainUi(this);
         initComponents();
+        
+        this.modelRoot = modelRoot;
     }
 
     
     public void init() {
-        proxyListener = new SentinelProxyListener();
-        
-        SentinelMainUi.setMainUi(this);
+        BurpCallbacks.getInstance().print("MainUi: Init " + Thread.currentThread());
+        modelRoot.addObserver(this);
         
         // Has to be on top-top, or will not restore split location correclty
         UiUtil.restoreSplitLocation(jSplitPane1, this);
         
         // Has to be on top, or it breaks panelTopUi init stuff
-        initTestMessages();
+        //initTestMessages();
         
         // panelTopUi was inserted with Netbeans palette
         // Set his parent here
@@ -90,6 +91,8 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
 
     
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
+        BurpCallbacks.getInstance().print("MainUi: addmessage");
+        
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
         // but needed for new messages.
@@ -107,18 +110,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
         showMessage(index); // Show newly added message in ui
     }
     
-    /* Add new HttpRequestResponse
-     * This gets called from (external) Burp Menu entry
-     * 
-     * this is the main entry point for new HttpMessages (IHttpRequestResponse)
-     */
-    @Override
-    public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
-        // Make a sentinel http message from the burp message
-        SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
-        
-        this.addNewMessage(myHttpMessage);
-    }
+
 
     /*
      * Show a HttpMessage - based on it's index (derived from top overview)
@@ -171,115 +163,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
      * 
      */
     private void initTestMessages() {
-        String a = "";
-        a += "GET /vulnerable/test1.php?testparam=test%27 HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "\r\n";
-        SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
-        addNewMessage(httpMessage);
-
-
-        a = "";
-        a += "GET /vulnerable/test1.php?abcdefgh HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Cookie: jsessionid=asdfa; bbbbb=ddddd\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
-        addNewMessage(httpMessage);
-
-
-        a = "";
-        a += "POST /vulnerable/test2.php HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "Cookie: jsessionid=useraaaa; bbbbb=ddddd\r\n";
-        a += "Content-Type: application/x-www-form-urlencoded\r\n";
-        a += "Content-Length: 26\r\n";
-        a += "\r\n";
-        a += "bla=blaaa&testparam=teeest";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
-        addNewMessage(httpMessage);
-
-
-        a = "";
-        a += "GET /vulnerable/test3.php?name=test1&testparam=test2 HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "Cookie: jsessionid=useraaaa; bbbbb=ddddd\r\n";
-        a += "\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
-        addNewMessage(httpMessage);
-
-
-        a = "";
-        a += "POST http://192.168.140.134/vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
-        a += "Host: 192.168.140.134\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "Cookie: jsessionid=userbbb; jive.server.info=\"serverName=as-3:serverPort=80:contextPath=:localName=localhost:localPort=9001:localAddr=127.0.0.1\"; ROUTEID=.AS-3; SPRING_SECURITY_REMEMBER_ME_COOKIE=YzEwMDAwMDoxMzU3MDI5NzM1Njk2OjQxZGJkNGRiODZhNWZlNjU4OWQ4YjEyYWM0Y2QyZDVi; jive.user.loggedIn=true\r\n";
-        a += "\r\n";
-        a += "lll1=aaa1\r\n";
-        a += "lll2=aaa2\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
-        addNewMessage(httpMessage);
-
-
-        a = "";
-        a += "POST http://192.168.140.134/vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
-        a += "Host: 192.168.140.134\r\n";
-        a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
-        a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
-        a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
-        a += "Accept-Encoding: gzip, deflate\r\n";
-        a += "Proxy-Connection: keep-alive\r\n";
-        a += "\r\n";
-        a += "Content-Type: multipart/form-data; boundary=---------------------------1645864822313206347576655232\r\n";
-        a += "Content-Length: 3153\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-        a += "Content-Disposition: form-data; name=\"utf8\"\r\n";
-        a += "\r\n";
-        a += "aaa\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-        a += "Content-Disposition: form-data; name=\"_method\"\r\n";
-        a += "\r\n";
-        a += "put\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-        a += "Content-Disposition: form-data; name=\"authenticity_token\"\r\n";
-        a += "\r\n";
-        a += "PTNmG3crwtME0kRijri1uNfS6b8l9ET2CLvZydnEhD4=\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-        a += "Content-Disposition: form-data; name=\"dossier[title]\"\r\n";
-        a += "\r\n";
-        a += "\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-        a += "Content-Disposition: form-data; name=\"dossier[prename]\"\r\n";
-        a += "\r\n";
-        a += "Snb5\r\n";
-        a += "-----------------------------1645864822313206347576655232\r\n";
-
-        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
-        addNewMessage(httpMessage);
+        SentinelMainApi.getInstance().initTestMessages();
     }
 
     
@@ -405,11 +289,15 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, MainUiIn
     public Component getUiComponent() {
         return this;
     }
-    
-    private SentinelProxyListener proxyListener;
 
-    public IProxyListener getProxyListener() {
-        return proxyListener;
+    @Override
+    public void update(Observable o, Object arg) {
+        BurpCallbacks.getInstance().print("MainUi: Update()");
+
+        SentinelHttpMessageOrig newHttpMessage = (SentinelHttpMessageOrig) arg;
+        
+        addNewMessage(newHttpMessage);
     }
+
 
 }

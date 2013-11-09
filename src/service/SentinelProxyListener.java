@@ -18,6 +18,7 @@ package service;
 
 import burp.IInterceptedProxyMessage;
 import burp.IProxyListener;
+import gui.SentinelMainApi;
 import gui.SentinelMainUi;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
@@ -50,7 +51,8 @@ public class SentinelProxyListener implements IProxyListener {
         }
         if (next2Sentinel) {
             SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(message.getMessageInfo());
-            SentinelMainUi.getMainUi().addNewMessage(httpMessage);
+            //SentinelMainUi.getMainUi().addNewMessage(httpMessage);
+            SentinelMainApi.getInstance().addNewMessage(httpMessage);
             next2Sentinel = false;
         }
         

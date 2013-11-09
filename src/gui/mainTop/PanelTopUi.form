@@ -17,7 +17,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="jScrollPane1" pref="475" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="448" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="jPanel3" max="32767" attributes="0"/>
@@ -130,14 +130,21 @@
               <Group type="102" attributes="0">
                   <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLists" max="32767" attributes="0"/>
+                  </Group>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanel5" max="32767" attributes="0"/>
-              <Component id="jPanel6" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Component id="btnLists" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jPanel6" max="32767" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -199,16 +206,13 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="btnReporter" max="32767" attributes="0"/>
-                  <Component id="btnLists" max="32767" attributes="0"/>
+                  <Component id="btnReporter" pref="124" max="32767" attributes="0"/>
                   <Component id="btnOptions" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="btnLists" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnOptions" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnReporter" min="-2" max="-2" attributes="0"/>
@@ -218,14 +222,6 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btnOptions">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Options"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOptionsActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JToggleButton" name="btnReporter">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Reporter"/>
@@ -234,16 +230,24 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReporterActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="btnLists">
+            <Component class="javax.swing.JToggleButton" name="btnOptions">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Lists"/>
+                <Property name="text" type="java.lang.String" value="Options"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListsActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOptionsActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JToggleButton" name="btnLists">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Lists"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListsActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
