@@ -29,6 +29,7 @@ import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
 
@@ -71,7 +72,7 @@ public class FrameOptions extends javax.swing.JFrame {
             }
         });
 
-        textfieldFilename.setText(" ");
+        textfieldFilename.setText("/tmp/serialized.ser");
 
         buttonSelectFile.setText("Select File");
         buttonSelectFile.addActionListener(new java.awt.event.ActionListener() {
@@ -95,9 +96,9 @@ public class FrameOptions extends javax.swing.JFrame {
                 .addComponent(buttonSave)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonRestore)
-                .addGap(0, 404, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(textfieldFilename)
+                .addComponent(textfieldFilename, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonSelectFile))
         );
@@ -144,12 +145,12 @@ public class FrameOptions extends javax.swing.JFrame {
 
     private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/tmp/serialized.ser"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(this.textfieldFilename.getText()));
             out.writeObject(SentinelMainApi.getInstance().getModelRoot());
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "File Not found: " + this.textfieldFilename.getText());
         } catch (IOException ex) {
-                Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "IO exception with: " + this.textfieldFilename.getText() + "\n" + ex.getLocalizedMessage());
         }
         
     }//GEN-LAST:event_buttonSaveActionPerformed
@@ -160,7 +161,7 @@ public class FrameOptions extends javax.swing.JFrame {
         ModelRoot modelRoot;
         
         try {
-            fileIn = new FileInputStream("/tmp/serialized.ser");
+            fileIn = new FileInputStream(this.textfieldFilename.getText());
             in = new ObjectInputStream(fileIn);
             modelRoot = (ModelRoot) in.readObject();
             in.close();
@@ -175,9 +176,9 @@ public class FrameOptions extends javax.swing.JFrame {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "File Not found: " + this.textfieldFilename.getText());
         } catch (IOException ex) {
-            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "IO exception with: " + this.textfieldFilename.getText() + "\n" + ex.getLocalizedMessage());
         }
         
         

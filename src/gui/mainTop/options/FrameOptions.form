@@ -51,10 +51,10 @@
                   <Component id="buttonSave" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonRestore" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="404" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <Group type="102" attributes="0">
-                  <Component id="textfieldFilename" max="32767" attributes="0"/>
+                  <Component id="textfieldFilename" pref="455" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonSelectFile" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -88,7 +88,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="textfieldFilename">
           <Properties>
-            <Property name="text" type="java.lang.String" value=" "/>
+            <Property name="text" type="java.lang.String" value="/tmp/serialized.ser"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="buttonSelectFile">
