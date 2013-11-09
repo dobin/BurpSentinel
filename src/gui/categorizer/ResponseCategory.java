@@ -16,13 +16,21 @@
  */
 package gui.categorizer;
 
+import java.io.Serializable;
+
 /**
  *
+ * Is serializable, because it is used by model
+ * 
  * @author DobinRutishauser@broken.ch
  */
-public class ResponseCategory {
+public class ResponseCategory implements Serializable {
     private String name;
     private String indicator;
+    
+    public ResponseCategory() {
+        // Default constructor for deserializing
+    }
     
     public ResponseCategory(String s) {
         this.name = s;

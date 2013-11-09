@@ -17,13 +17,14 @@
 package model;
 
 import attacks.AttackResult;
+import java.io.Serializable;
 import util.BurpCallbacks;
 
 /**
  *
  * @author dobin
  */
-public class SentinelHttpMessageAtk extends SentinelHttpMessage {
+public class SentinelHttpMessageAtk extends SentinelHttpMessage implements Serializable {
 
     private SentinelHttpMessageOrig parentHttpMessage = null;
     private AttackResult attackResult;

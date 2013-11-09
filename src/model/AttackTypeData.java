@@ -16,13 +16,19 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author unreal
  */
-public class AttackTypeData {
+public class AttackTypeData implements Serializable {
     private boolean active;
     private String data;
+    
+    public AttackTypeData() {
+        // Deserializing Constructor
+    }
     
     public AttackTypeData(boolean active) {
         this.active = active;

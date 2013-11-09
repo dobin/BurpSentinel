@@ -28,10 +28,10 @@ import util.BurpCallbacks;
  * @author DobinRutishauser@broken.ch
  */
 public class ModelRoot extends Observable implements Serializable  {
-    private LinkedList<SentinelHttpMessage> messageList;
+    private LinkedList<SentinelHttpMessageOrig> messageList;
     
     public ModelRoot() {
-        messageList = new LinkedList<SentinelHttpMessage>();
+        messageList = new LinkedList<SentinelHttpMessageOrig>();
     }
 
     void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
@@ -42,5 +42,9 @@ public class ModelRoot extends Observable implements Serializable  {
         this.notifyObservers(myHttpMessage);
     }
 
+    
+    public LinkedList<SentinelHttpMessageOrig> getMessageList() {
+        return messageList;
+    }
     
 }

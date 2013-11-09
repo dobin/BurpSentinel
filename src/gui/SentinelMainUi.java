@@ -85,10 +85,37 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         panelTopUi.init();
     }
     
-    public PanelTopUi getPanelTop() {
-        return panelTopUi;
+    
+    /*
+     * Gets called when a new message arrives.
+     * 
+     * As we observer() ModelRoot, we will get notified when a new message
+     * is added to the Model.
+     * This is usually if the user sent a message to Sentinel with the menu entry.
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        BurpCallbacks.getInstance().print("MainUi: Update()");
+        SentinelHttpMessageOrig newHttpMessage = (SentinelHttpMessageOrig) arg;
+        addNewMessage(newHttpMessage);
     }
 
+    
+    /*
+     * Restore complete state from model
+     * 
+     * This is called if the user wants to restore a previously saved state.
+     * As the messages already have attackmessages and results, this is different
+     * than just addNewMessage().
+     * 
+     */
+    public void reset() {
+        // Clean everything
+        panelTopUi.reset();
+        
+        panelBotUiList = new LinkedList<PanelBotUi>();
+    }
+    
     
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
         BurpCallbacks.getInstance().print("MainUi: addmessage");
@@ -160,12 +187,15 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     
     /*
      * Init testcase messages
-     * 
      */
     private void initTestMessages() {
         SentinelMainApi.getInstance().initTestMessages();
     }
 
+    public PanelTopUi getPanelTop() {
+        return panelTopUi;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -290,14 +320,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         return this;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        BurpCallbacks.getInstance().print("MainUi: Update()");
-
-        SentinelHttpMessageOrig newHttpMessage = (SentinelHttpMessageOrig) arg;
-        
-        addNewMessage(newHttpMessage);
-    }
 
 
 }

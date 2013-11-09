@@ -19,6 +19,7 @@ package model;
 import attacks.AttackMain;
 import attacks.AttackMain.AttackTypes;
 import burp.IParameter;
+import java.io.Serializable;
 import java.util.HashMap;
 import util.BurpCallbacks;
 
@@ -26,7 +27,7 @@ import util.BurpCallbacks;
  *
  * @author unreal
  */
-public class SentinelHttpParam implements IParameter {
+public class SentinelHttpParam implements IParameter, Serializable {
 
     static final byte PARAM_PATH = 7;
     private byte type;

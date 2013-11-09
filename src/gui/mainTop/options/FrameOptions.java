@@ -16,8 +16,21 @@
  */
 package gui.mainTop.options;
 
+import gui.ModelRoot;
+import gui.SentinelMainApi;
+import gui.SentinelMainUi;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import model.SentinelHttpMessage;
+import model.SentinelHttpMessageOrig;
 
 /**
  *
@@ -130,11 +143,44 @@ public class FrameOptions extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonSelectFileActionPerformed
 
     private void buttonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSaveActionPerformed
-        // TODO add your handling code here:
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/tmp/serialized.ser"));
+            out.writeObject(SentinelMainApi.getInstance().getModelRoot());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+                Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_buttonSaveActionPerformed
 
     private void buttonRestoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRestoreActionPerformed
-        // TODO add your handling code here:
+        FileInputStream fileIn = null;
+        ObjectInputStream in = null;
+        ModelRoot modelRoot;
+        
+        try {
+            fileIn = new FileInputStream("/tmp/serialized.ser");
+            in = new ObjectInputStream(fileIn);
+            modelRoot = (ModelRoot) in.readObject();
+            in.close();
+            fileIn.close();
+            
+            SentinelMainUi.getMainUi().reset();
+            //SentinelMainApi.getInstance().setNewModelRoot(modelRoot);
+            for(SentinelHttpMessageOrig httpMessage: modelRoot.getMessageList()) {
+                SentinelMainApi.getInstance().addMessage(httpMessage);
+            }
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }//GEN-LAST:event_buttonRestoreActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

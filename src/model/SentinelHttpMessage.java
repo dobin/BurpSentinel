@@ -19,6 +19,7 @@ package model;
 import burp.IHttpRequestResponse;
 import burp.IHttpService;
 import gui.viewMessage.ResponseHighlight;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -32,23 +33,22 @@ import util.BurpCallbacks;
  *
  * @author Dobin
  */
-public abstract class SentinelHttpMessage extends Observable implements IHttpRequestResponse {
+public abstract class SentinelHttpMessage extends Observable implements IHttpRequestResponse, Serializable {
 
     private SentinelHttpResponse httpResponse;
     private SentinelHttpRequest httpRequest;
     private String comment;
-    private IHttpService httpService;
+    private SentinelHttpService httpService;
     private Date createTime;
     private long loadTime = 0;
 
     public SentinelHttpMessage() {
-        //httpRequest = new SentinelHttpRequest();
-        //httpResponse = new SentinelHttpResponse();
+        // Deserializing Constructor
     }
 
     public SentinelHttpMessage(IHttpRequestResponse httpMessage) {
         httpRequest = new SentinelHttpRequest(httpMessage);
-        httpService = httpMessage.getHttpService();
+        httpService = new SentinelHttpService(httpMessage.getHttpService());
         httpResponse = new SentinelHttpResponse(httpMessage);
 
         createTime = new Date(System.currentTimeMillis());
@@ -61,7 +61,8 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
     }
 
     public SentinelHttpMessage(String s, String host, int port, boolean https) {
-        httpService = BurpCallbacks.getInstance().getBurp().getHelpers().buildHttpService(host, port, https);
+        //httpService = BurpCallbacks.getInstance().getBurp().getHelpers().buildHttpService(host, port, https);
+        httpService = new SentinelHttpService(host, port, https);
         httpRequest = new SentinelHttpRequest(s, httpService);
 
         httpResponse = new SentinelHttpResponse();
@@ -70,7 +71,7 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
     }
 
     public SentinelHttpMessage(String s, IHttpService httpService) {
-        this.httpService = httpService;
+        this.httpService = new SentinelHttpService(httpService);
         httpRequest = new SentinelHttpRequest(s, httpService);
 
         createTime = new Date(System.currentTimeMillis());
@@ -124,7 +125,7 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
 
     @Override
     public void setHttpService(IHttpService httpService) {
-        this.httpService = httpService;
+        this.httpService = new SentinelHttpService(httpService);
     }
     private LinkedList<ResponseHighlight> responseHighlights = new LinkedList<ResponseHighlight>();
 

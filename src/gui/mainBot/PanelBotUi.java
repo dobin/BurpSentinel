@@ -43,6 +43,7 @@ public class PanelBotUi extends javax.swing.JPanel {
                 
         UiUtil.restoreSplitLocation(jSplitPane1, this);
         panelLeftUi.setMessage(iHttpRequestResponse);
+        panelRightUi.setMessage(iHttpRequestResponse);
         
         panelLeftUi.setPanelParent(this);
         panelRightUi.setPanelParent(this);

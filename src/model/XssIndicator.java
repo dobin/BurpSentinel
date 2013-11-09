@@ -20,7 +20,7 @@ package model;
  *
  * @author unreal
  */
-public class XssIndicator {
+public class XssIndicator  {
 
     private String indicator = "";
     static private XssIndicator xssIndicator;

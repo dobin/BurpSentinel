@@ -20,6 +20,8 @@ import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
 import gui.categorizer.CategorizerManager;
 import gui.categorizer.ResponseCategory;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import util.BurpCallbacks;
@@ -28,8 +30,8 @@ import util.BurpCallbacks;
  *
  * @author unreal
  */
-public class SentinelHttpResponse {
-    private IResponseInfo responseInfo;
+public class SentinelHttpResponse implements Serializable {
+    transient private IResponseInfo responseInfo; // re-init upon deserializing in readObject()
     private byte[] response;
     
     private int size = 0;
@@ -38,8 +40,20 @@ public class SentinelHttpResponse {
     private LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
 
     SentinelHttpResponse() {
-
+        // Deserializing Constructor
     }
+    
+    // Deserializing
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        // As I dont want to re-implement IResponseInfo, make it transient
+        // and redo responseInfo upon deserializing
+        if (response != null) {
+            responseInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponse(response);
+        }
+    }
+    
     
     SentinelHttpResponse(byte[] response) {
         this.response = response;

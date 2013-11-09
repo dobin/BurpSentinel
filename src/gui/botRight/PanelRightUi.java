@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 import util.UiUtil;
 
@@ -178,6 +179,18 @@ public class PanelRightUi extends javax.swing.JPanel {
     }
     
     
+    /*
+     * Add Original Message
+     * 
+     * Sometimes, like when restoring state from file, the original http message
+     * already has attack messages. If so, they will be added here.
+     */
+    public void setMessage(SentinelHttpMessageOrig httpMessage) {
+        for(SentinelHttpMessageAtk messageAtk: httpMessage.getHttpMessageChildren()) {
+            panelRightModel.addMessage(messageAtk);
+        }
+    }
+    
     public void viewHttpMessage(int n) {
         try {
             panelViewMessage.setHttpMessage(panelRightModel.getHttpMessage(n));
@@ -302,5 +315,6 @@ public class PanelRightUi extends javax.swing.JPanel {
         
         clipboard.setContents(ss, null);
     }
+
     
 }

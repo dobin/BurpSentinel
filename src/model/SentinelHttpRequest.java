@@ -22,6 +22,8 @@ import burp.IParameter;
 import burp.IRequestInfo;
 import gui.session.SessionManager;
 import gui.session.SessionUser;
+import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.LinkedList;
 import util.BurpCallbacks;
@@ -30,7 +32,7 @@ import util.BurpCallbacks;
  *
  * @author unreal
  */
-public class SentinelHttpRequest {
+public class SentinelHttpRequest implements Serializable {
 
     private LinkedList<SentinelHttpParam> httpParams = httpParams = new LinkedList<SentinelHttpParam>();
     
@@ -39,26 +41,44 @@ public class SentinelHttpRequest {
     
     private byte[] request;
     
-    private IRequestInfo requestInfo;
-    private IHttpService httpService;
+    transient private IRequestInfo requestInfo; // re-init upon deserializing in readObject()
+    private SentinelHttpService httpService;
 
+    public SentinelHttpRequest() {
+        // Deserializing constructor
+    }
+    
+
+    // Deserializing
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
+        // As I dont want to re-implement IRequestInfo, make it transient
+        // and redo requestInfo upon deserializing
+        
+        if (request != null) {
+            requestInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeRequest(httpService, request);
+        } else {
+            System.out.println("Could not restore requestInfo upon deserializing!");
+        }
+    }
     
     public SentinelHttpRequest(IHttpRequestResponse httpMessage) {
         request = httpMessage.getRequest();
-        this.httpService = httpMessage.getHttpService();
+        this.httpService = new SentinelHttpService(httpMessage.getHttpService());
         
         init(httpMessage);
     }
     
     public SentinelHttpRequest(String r, IHttpService httpService) {
-        this.httpService = httpService;
+        this.httpService = new SentinelHttpService(httpService);
         this.request = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(r);
         
         init();
     }
     
     public SentinelHttpRequest(byte[] request, IHttpService httpService) {
-        this.httpService = httpService;
+        this.httpService = new SentinelHttpService(httpService);
         this.request = request;
         
         init();

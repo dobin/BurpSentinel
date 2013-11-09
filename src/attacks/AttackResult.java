@@ -16,13 +16,15 @@
  */
 package attacks;
 
+import java.io.Serializable;
 import model.SentinelHttpParam;
 
 /**
- *
+ * Is serializable, because it is used by model
+ * 
  * @author unreal
  */
-public class AttackResult {
+public class AttackResult implements Serializable {
     private String attackName = "";
     private AttackData.AttackType attackType = null;
     private SentinelHttpParam attackParam = null;

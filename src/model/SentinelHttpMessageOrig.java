@@ -17,6 +17,7 @@
 package model;
 
 import burp.IHttpRequestResponse;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -24,8 +25,11 @@ import java.util.LinkedList;
  *
  * @author dobin
  */
-public class SentinelHttpMessageOrig extends SentinelHttpMessage {
-        
+public class SentinelHttpMessageOrig extends SentinelHttpMessage implements Serializable {
+    // Children
+    private LinkedList<SentinelHttpMessageAtk> httpMessageChildren = new LinkedList<SentinelHttpMessageAtk>();
+
+    
     public SentinelHttpMessageOrig(IHttpRequestResponse httpMessage) {
         super(httpMessage);
     }
@@ -33,10 +37,6 @@ public class SentinelHttpMessageOrig extends SentinelHttpMessage {
     public SentinelHttpMessageOrig(String s, String host, int port, boolean https) {
         super(s, host, port, https);
     }
-
-    
-    // Children
-    private LinkedList<SentinelHttpMessageAtk> httpMessageChildren = new LinkedList<SentinelHttpMessageAtk>();
 
     public void addChildren(SentinelHttpMessageAtk aThis) {
         this.httpMessageChildren.add(aThis);

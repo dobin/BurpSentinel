@@ -17,12 +17,13 @@
 package model;
 
 import burp.IHttpService;
+import java.io.Serializable;
 
 /**
  *
  * @author unreal
  */
-public class SentinelHttpService implements IHttpService {
+public class SentinelHttpService implements IHttpService, Serializable {
 
     private String host;
     private int port;
@@ -32,6 +33,24 @@ public class SentinelHttpService implements IHttpService {
         this.host = host;
         this.port = port;
         this.protocol = protocol;
+    }
+    
+    public SentinelHttpService(String host, int port, boolean https) {
+        this.host = host;
+        this.port = port;
+        
+        if (https) {
+            protocol = "https";
+        } else {
+            protocol = "http";
+        }
+    }
+    
+
+    SentinelHttpService(IHttpService httpService) {
+        this.host = httpService.getHost();
+        this.port = httpService.getPort();
+        this.protocol = httpService.getProtocol();
     }
     
     @Override

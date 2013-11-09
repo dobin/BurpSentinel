@@ -43,7 +43,6 @@ public class SentinelMainApi {
         return sentinelMainApi;
     }
     
-
     public SentinelMainApi() {
     }
     
@@ -66,10 +65,12 @@ public class SentinelMainApi {
         return proxyListener;
     }
 
+    
     /* Add new HttpRequestResponse
-     * This gets called from (external) Burp Menu entry
      * 
+     * This gets called from (external) Burp Menu entry
      * this is the main entry point for new HttpMessages (IHttpRequestResponse)
+     * The message will be added to the main model.
      */
     public void addNewMessage(IHttpRequestResponse iHttpRequestResponse) {
         // Make a sentinel http message from the burp message
@@ -78,10 +79,23 @@ public class SentinelMainApi {
         modelRoot.addNewMessage(myHttpMessage);
     }
     
-    
-       /*
-     * Init testcase messages
+    /*
+     * Add new OriginalHttpMessage
      * 
+     * Used when restoring previously saved messages.
+     */
+    public void addMessage(SentinelHttpMessageOrig httpMessage) {
+        modelRoot.addNewMessage(httpMessage);
+    }
+    
+    
+    public ModelRoot getModelRoot() {
+        return modelRoot;
+    }
+
+    
+    /*
+     * Init testcase messages
      */
     public void initTestMessages() {
         String a = "";
@@ -194,4 +208,6 @@ public class SentinelMainApi {
         httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
         addNewMessage(httpMessage);
     }
+
+
 }
