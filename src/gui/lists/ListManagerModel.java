@@ -67,35 +67,27 @@ public class ListManagerModel {
     void delList(int currentSelectedRow) {
         myLists.remove(currentSelectedRow);
     }
-    
-    
       
     public void initFuzzDB() {
-        boolean isFresh = true;
-        //for(ListManagerList list: myLists) {
-        //    if (list.isFuzzDB()) {
-        //        isFresh = false;
-        //    }
-       // }
-        for(ListManagerList list: myLists) {
-            if (list.getName().contains(".fuzz")) {
-                isFresh = false;
-            }
-        }
-            
-        
-        if (isFresh) {
+        if (UiUtil.getListInitState() == false) {
             loadFuzzDB();
+            UiUtil.setListInitState(true);
         }
-        
     }
     
     private void loadFuzzDB() {
-        String[] fileNames = {  "GenericBlind.fuzz.txt", "MSSQL.fuzz.txt", "MSSQL_blind.fuzz.txt",
-                                "MySQL.fuzz.txt", "MySQL_MSSQL.fuzz.txt", "oracle.fuzz.txt", "xss-rsnake.txt" };
+        String[] fileNames = { 
+            "xss_rsnake",
+            "fuzzdb_mysql",
+            "fuzzdb_generic_blind",
+            "fuzzdb_int",
+            "fuzzdb_mssql",
+            "fuzzdb_mssql_blind",
+            "fuzzdb_oracle", 
+        };
         
         for(String fileName: fileNames) {
-            InputStream is = getClass().getResourceAsStream("/resources/fuzzdb/" + fileName);
+            InputStream is = getClass().getResourceAsStream("/resources/fuzzdb/" + fileName + ".txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             
             ListManagerList list = new ListManagerList(fileName, "");

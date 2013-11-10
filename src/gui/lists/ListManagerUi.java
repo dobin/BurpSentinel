@@ -37,6 +37,7 @@ public class ListManagerUi extends javax.swing.JFrame {
      */
     public ListManagerUi() {
         initComponents();
+   
         init();
     }
     
@@ -175,6 +176,9 @@ public class ListManagerUi extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableIndex.setDragEnabled(true);
+        tableIndex.setDropMode(javax.swing.DropMode.INSERT_ROWS);
+        tableIndex.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tableIndex);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);

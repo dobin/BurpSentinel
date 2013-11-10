@@ -278,4 +278,19 @@ public class UiUtil {
         }
     }
     
+    public static boolean getListInitState() {
+        Preferences pref = Preferences.userRoot().node("Initialization");
+        
+        return pref.getBoolean("FuzzDb", false);
+    }
+    
+    public static void setListInitState(boolean b) {
+        Preferences pref = Preferences.userRoot().node("Initialization");
+        try {
+            pref.clear();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        pref.putBoolean("FuzzDb", b);
+    }
 }
