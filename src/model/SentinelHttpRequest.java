@@ -153,7 +153,14 @@ public class SentinelHttpRequest implements Serializable {
         
     private void initMyParams() {
         String req = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
-        String firstLine = req.substring(0, req.indexOf("\r\n"));
+        
+        int newlineIndex = req.indexOf("\r\n");
+        if (newlineIndex < 0) {
+            BurpCallbacks.getInstance().print("Error in HTTP Request: no newline");
+            return;
+        }
+        
+        String firstLine = req.substring(0, newlineIndex);
         //String rest = req.substring(req.indexOf("\r\n"), req.length());
         
         String header[] = firstLine.split(" ");
