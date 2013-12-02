@@ -16,6 +16,7 @@
  */
 package gui.botRight;
 
+import gui.comparer.ComparerWindow;
 import gui.mainBot.PanelBotUi;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -44,7 +45,9 @@ public class PanelRightUi extends javax.swing.JPanel {
     private PanelRightModel panelRightModel;
     private int currentSelectedRow = -1;
     private PopupTableHeader popupTableHeader;
+    
     private PanelRightPopup panelRightPopup;
+    private PanelRightPopupMultiple panelRightPopupMultiple;
     
     /**
      * Creates new form PanelRightUi
@@ -99,7 +102,6 @@ public class PanelRightUi extends javax.swing.JPanel {
                 }});
  
         popupTableHeader = new PopupTableHeader(tableMessages);
-        
         tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -120,6 +122,7 @@ public class PanelRightUi extends javax.swing.JPanel {
         
         
         panelRightPopup = new PanelRightPopup(this);
+        panelRightPopupMultiple = new PanelRightPopupMultiple(this);
         
         // Add mouse listener for on-row popup menu
         tableMessages.addMouseListener(new MouseAdapter() {
@@ -130,12 +133,26 @@ public class PanelRightUi extends javax.swing.JPanel {
                     int row = source.rowAtPoint(e.getPoint());
                     currentSelectedRow = row;
                     int column = source.columnAtPoint(e.getPoint());
+                    
+                    // Check if only one is selected
+                    ListSelectionModel lsm = tableMessages.getSelectionModel();
+                    BurpCallbacks.getInstance().print("AA: " + lsm.getMinSelectionIndex());
+                    BurpCallbacks.getInstance().print("AA: " + lsm.getMaxSelectionIndex());
+                    if (lsm.getMinSelectionIndex() == lsm.getMaxSelectionIndex()) {
+                        BurpCallbacks.getInstance().print("AA1");
+                        if (!source.isRowSelected(row)) {
+                            source.changeSelection(row, column, false, false);
+                        }
 
-                    if (!source.isRowSelected(row)) {
-                        source.changeSelection(row, column, false, false);
+                        panelRightPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                    } else {
+                        BurpCallbacks.getInstance().print("AA2");
+                        
+                        panelRightPopupMultiple.getPopup().show(e.getComponent(), e.getX(), e.getY());
                     }
+                    
 
-                    panelRightPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                    
                 }
             }
         });    
@@ -314,6 +331,18 @@ public class PanelRightUi extends javax.swing.JPanel {
         StringSelection ss = new StringSelection(s);
         
         clipboard.setContents(ss, null);
+    }
+
+    void c_compare() {
+        ListSelectionModel lsm = tableMessages.getSelectionModel();
+        
+        int first = lsm.getMinSelectionIndex();
+        int second = lsm.getMaxSelectionIndex();
+        
+        BurpCallbacks.getInstance().print("Compare: " + first + " " + second);
+        ComparerWindow comparer = new ComparerWindow();
+        comparer.setMessages( panelRightModel.getHttpMessage(first), panelRightModel.getHttpMessage(second));
+        comparer.setVisible(true);
     }
 
     
