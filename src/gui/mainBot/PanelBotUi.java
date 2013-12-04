@@ -16,6 +16,7 @@
  */
 package gui.mainBot;
 
+import gui.viewMessage.ViewMessageLinkManager;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
@@ -28,13 +29,13 @@ import util.UiUtil;
  */
 public class PanelBotUi extends javax.swing.JPanel {
 
-    private PanelBotLinkManager linkManager;
+    private ViewMessageLinkManager linkManager;
     
     /**
      * Creates new form PanelBotUi
      */
     public PanelBotUi() {
-        linkManager = new PanelBotLinkManager();
+        linkManager = new ViewMessageLinkManager();
         initComponents();
     }
     
@@ -54,7 +55,7 @@ public class PanelBotUi extends javax.swing.JPanel {
         panelRightUi.addHttpMessage(httpMessage);
     }
     
-    public PanelBotLinkManager getLinkManager() {
+    public ViewMessageLinkManager getLinkManager() {
         return linkManager;
     }
     

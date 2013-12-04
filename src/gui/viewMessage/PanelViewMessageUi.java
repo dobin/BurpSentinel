@@ -16,7 +16,6 @@
  */
 package gui.viewMessage;
 
-import gui.mainBot.PanelBotLinkManager;
 import gui.session.SessionManager;
 import gui.session.SessionUser;
 import java.awt.BorderLayout;
@@ -76,7 +75,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     
     private PanelViewComboboxModel panelViewComboboxModel;
     
-    private PanelBotLinkManager linkManager = null;
+    private ViewMessageLinkManager linkManager = null;
     
     private int selectIndex = -1;
     private Object currentHighlight;
@@ -799,7 +798,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         textareaMessage.setText(s);
     }
     
-    public void setLinkManager(PanelBotLinkManager linkManager) {
+    public void setLinkManager(ViewMessageLinkManager linkManager) {
         this.linkManager = linkManager;
         linkManager.registerViewMessage(this);
     }

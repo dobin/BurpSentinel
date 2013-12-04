@@ -18,7 +18,7 @@ package replayer.gui.ReplayerMain;
 
 import burp.IHttpRequestResponse;
 import burp.ITab;
-import gui.mainBot.PanelBotLinkManager;
+import gui.viewMessage.ViewMessageLinkManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
@@ -42,7 +42,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab {
     private ReplayerMainTableModel tableModel;
     private boolean virgin = true;
     private ReplayerMainPopup popup;
-    private PanelBotLinkManager linkManager;
+    private ViewMessageLinkManager linkManager;
     //private SentinelHttpMessage origHttpMessage;
     
     private MainMessageEditorController rightRequestMessageEditorController;
@@ -55,7 +55,7 @@ public class ReplayerMainUi extends javax.swing.JPanel implements ITab {
      * Creates new form ReplayerMainUi
      */
     public ReplayerMainUi() {
-        linkManager = new PanelBotLinkManager();
+        linkManager = new ViewMessageLinkManager();
         tableModel = new ReplayerMainTableModel();
         initComponents();
         jSplitPane1.setDividerLocation(0.5f);

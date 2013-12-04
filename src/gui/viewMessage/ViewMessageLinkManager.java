@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gui.mainBot;
+package gui.viewMessage;
 
 import gui.viewMessage.PanelViewMessageUi;
 import java.util.LinkedList;
@@ -24,7 +24,7 @@ import javax.swing.BoundedRangeModel;
  *
  * @author unreal
  */
-public class PanelBotLinkManager {
+public class ViewMessageLinkManager {
 
     private LinkedList<PanelViewMessageUi> messageUiList = new LinkedList<PanelViewMessageUi>();
     
