@@ -210,7 +210,11 @@ public class PanelRightUi extends javax.swing.JPanel {
     
     public void viewHttpMessage(int n) {
         try {
-            panelViewMessage.setHttpMessage(panelRightModel.getHttpMessage(n));
+            SentinelHttpMessageAtk atkMsg = panelRightModel.getHttpMessage(n);
+            panelViewMessage.setHttpMessage(atkMsg);
+            
+            // Set parent as httpmessage reference for diff
+            panelViewMessage.setBuddy( atkMsg.getParentHttpMessage() );
         } catch (Exception ex) {
             BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
         }

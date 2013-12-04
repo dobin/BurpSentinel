@@ -163,7 +163,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         this.fireTableDataChanged();
     }
 
-    public SentinelHttpMessage getHttpMessage(int n) {
+    public SentinelHttpMessageAtk getHttpMessage(int n) {
         return messages.get(n);
     }
     

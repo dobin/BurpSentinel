@@ -247,6 +247,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         highlightResponse();
     }
     
+    private SentinelHttpMessage diffHttpMessage;
+    
+    public void setBuddy(SentinelHttpMessage msg) {
+        this.diffHttpMessage = msg;
+    }
+    
     
     private void showDiffView() {
         if (httpMessage instanceof SentinelHttpMessageOrig) {
@@ -255,7 +261,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         SentinelHttpMessageAtk messageAtk = (SentinelHttpMessageAtk) httpMessage;
         
         if (viewDiffContent == null) {
-            String origRes = messageAtk.getParentHttpMessage().getRes().getResponseStr();
+            String origRes = diffHttpMessage.getRes().getResponseStr();
             String newRes = httpMessage.getRes().getResponseStr();
 
             String[] origResArr = origRes.split("\n");
@@ -435,7 +441,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     private boolean isDuplicateHighlight(int start, int end) {
         for (SentinelHighlight h: myHighlights) {
             if (start >= h.getStart() && end <= h.getEnd()) {
-                BurpCallbacks.getInstance().print("Duplicate: " + start +":"+end);
+                BurpCallbacks.getInstance().print("Duplicate Highlight: " + start +":"+end);
                 return true;
             }
         }

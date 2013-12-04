@@ -16,6 +16,7 @@
  */
 package gui.comparer;
 
+import gui.mainBot.PanelBotLinkManager;
 import model.SentinelHttpMessage;
 
 /**
@@ -32,8 +33,16 @@ public class ComparerUi extends javax.swing.JPanel {
     }
     
     public void setMessages(SentinelHttpMessage msg1, SentinelHttpMessage msg2) {
+        PanelBotLinkManager linkManager = new PanelBotLinkManager();
+        
         panelViewMessageUi1.setHttpMessage(msg1);
         panelViewMessageUi2.setHttpMessage(msg2);
+        
+        panelViewMessageUi1.setLinkManager(linkManager);
+        panelViewMessageUi2.setLinkManager(linkManager);
+        
+        panelViewMessageUi1.setBuddy(msg2);
+        panelViewMessageUi2.setBuddy(msg1);
     }
     
 

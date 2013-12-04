@@ -52,7 +52,6 @@ public class PanelBotUi extends javax.swing.JPanel {
     // Called when attacking from leftpanel
     public void addAttackMessage(SentinelHttpMessageAtk httpMessage) {
         panelRightUi.addHttpMessage(httpMessage);
-        //this.updateUI();
     }
     
     public PanelBotLinkManager getLinkManager() {

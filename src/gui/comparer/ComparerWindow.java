@@ -36,9 +36,9 @@ public class ComparerWindow extends javax.swing.JFrame {
         this.add(comparerUi , BorderLayout.CENTER);
         //jPanel1.add(new ComparerUi());
         
-        this.validate();
-        this.invalidate();
-        this.repaint();
+        //this.validate();
+        //this.invalidate();
+        //this.repaint();
         
     }
 
