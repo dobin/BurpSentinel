@@ -101,7 +101,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                         source.changeSelection(row, column, false, false);
                     }
 
-                    popup.refreshIndex();
+                    popup.refreshAttackListIndex();
                     popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
                 }
             }

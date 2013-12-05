@@ -22,6 +22,7 @@ import gui.lists.ListManagerList;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import model.SentinelHttpParam;
@@ -33,6 +34,8 @@ import util.BurpCallbacks;
  */
 public class PanelLeftPopup implements ActionListener {
     private JPopupMenu menu;
+    private JMenu attackSubmenu;
+    private JMenu decodeSubmenu;
     private PanelLeftUi parent;
     
     private LinkedList<JMenuItem> items;
@@ -42,6 +45,14 @@ public class PanelLeftPopup implements ActionListener {
         this.parent = parent;
 
         menu = new JPopupMenu("Message");
+        
+        attackSubmenu = new JMenu("Attack with");
+        menu.add(attackSubmenu);
+        
+        decodeSubmenu = new JMenu("Decode with");
+        initDecodeSubmenu();
+        menu.add(decodeSubmenu);
+        
         items = new LinkedList<JMenuItem>();
     }
 
@@ -53,9 +64,19 @@ public class PanelLeftPopup implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         
+        // Test Attack
         int n = items.indexOf(o);
         if (n >= 0) {
             attack(n);
+        }
+        
+        // Test decode
+        if (o == decodeBase64) {
+            BurpCallbacks.getInstance().print("Decode Base64");
+        } else if (o == decodeHTML) {
+            BurpCallbacks.getInstance().print("Decode HTML");
+        } else if (o == decodeURL) {
+            BurpCallbacks.getInstance().print("Decode URL");
         }
     }
     
@@ -73,24 +94,43 @@ public class PanelLeftPopup implements ActionListener {
         parent.attackSelectedParam(attackParams);
     }
 
-    void refreshIndex() {
+    void refreshAttackListIndex() {
         for(JMenuItem item: items) {
             item.removeActionListener(this);
         }
         items = new LinkedList<JMenuItem>();
-        menu.removeAll();
+        attackSubmenu.removeAll();
         
         JMenuItem title = new JMenuItem("Attack with:");
         title.setEnabled(false);
-        menu.add(title);
+        attackSubmenu.add(title);
         
         for(ListManagerList list: ListManager.getInstance().getModel().getList()) {
             JMenuItem menuItem = new JMenuItem(list.getName());
             items.add(menuItem);
-            menu.add(menuItem);
+            attackSubmenu.add(menuItem);
             menuItem.addActionListener(this);
         }
         
+    }
+
+    
+    private JMenuItem decodeURL;
+    private JMenuItem decodeHTML;
+    private JMenuItem decodeBase64;
+    
+    private void initDecodeSubmenu() {
+        decodeBase64 = new JMenuItem("Decode Base64");
+        decodeHTML = new JMenuItem("Decode HTML");
+        decodeURL = new JMenuItem("Decode URL");
+        
+        decodeURL.addActionListener(this);
+        decodeHTML.addActionListener(this);
+        decodeBase64.addActionListener(this);
+        
+        decodeSubmenu.add(decodeURL);
+        decodeSubmenu.add(decodeHTML);
+        decodeSubmenu.add(decodeBase64);
     }
     
     

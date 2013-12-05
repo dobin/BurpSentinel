@@ -220,20 +220,15 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return myMessage.getReq().getParam(rowIndex).getValue();
             case 4:
                 return uiEntries.get(rowIndex).isXssEnabled;
-            //return myRequest.getReq().getParam(rowIndex).getAttackType(AttackMain.AttackTypes.XSS).isActive();
             case 5:
                 return uiEntries.get(rowIndex).isSqlEnabled;
-            //return myRequest.getReq().getParam(rowIndex).getAttackType(AttackMain.AttackTypes.pXSS).isActive();
             case 6:
                 return uiEntries.get(rowIndex).isOtherEnabled;
-            //return myRequest.getReq().getParam(rowIndex).getAttackType(AttackMain.AttackTypes.SQL).isActive();
             case 7:
                 return uiEntries.get(rowIndex).isAllEnabled;
-            //return myRequest.getReq().getParam(rowIndex).getPerformAttack();
             case 8:
                 return "Go";
             case 9:
-                //return myRequest.getReq().getParam(rowIndex).hasVulns();
                 return hasVulns(myMessage.getReq().getParam(rowIndex));
 
             default:

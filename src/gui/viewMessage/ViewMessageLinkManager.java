@@ -16,7 +16,6 @@
  */
 package gui.viewMessage;
 
-import gui.viewMessage.PanelViewMessageUi;
 import java.util.LinkedList;
 import javax.swing.BoundedRangeModel;
 
