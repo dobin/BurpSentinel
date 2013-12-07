@@ -62,7 +62,7 @@ public class BurpExtender implements IExtensionStateListener {
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                /*
+                
                 PrintStream errStream;
                 try {
                     errStream = new PrintStream("/tmp/out.txt");
@@ -71,7 +71,7 @@ public class BurpExtender implements IExtensionStateListener {
                     
                 } catch (FileNotFoundException ex) {
                     BurpCallbacks.getInstance().print("AAA");
-                }*/
+                }
                 
                 SentinelMainApi sentinelApi = SentinelMainApi.getInstance();
                 sentinelApi.init();

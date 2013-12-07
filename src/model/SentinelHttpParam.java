@@ -34,9 +34,11 @@ public class SentinelHttpParam implements IParameter, Serializable {
     private String name;
     private int nameStart;
     private int nameEnd;
-    private String value;
-    private int valueStart;
-    private int valueEnd;
+    
+    protected String value;
+    protected int valueStart;
+    protected int valueEnd;
+    
     private boolean performAttack = false;
 
     public SentinelHttpParam(IParameter burpParameter) {

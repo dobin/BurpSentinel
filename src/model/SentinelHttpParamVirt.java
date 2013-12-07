@@ -14,28 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gui.botLeft;
+package model;
 
-import model.SentinelHttpParam;
+import burp.IParameter;
 
 /**
  *
- * @author dobin
+ * @author DobinRutishauser@broken.ch
  */
-class PanelLeftTableUIEntry {
+public class SentinelHttpParamVirt extends SentinelHttpParam {
+    private SentinelHttpParam parentParam = null; // For reference purposes only
     
-    public SentinelHttpParam sourceHttpParam;
+    public SentinelHttpParamVirt(SentinelHttpParam parentParam) {
+        super(parentParam);
+        
+        this.parentParam = parentParam;
+    }
     
-    public boolean isXssEnabled;
-    public boolean isSqlEnabled;
-    public boolean isOtherEnabled;
+    @Override
+    public String getValue() {
+        return "DECODED<<" + value;
+    }
     
-    public boolean isAllEnabled;
-    
-    public boolean isAuthEnabled;
-    public String authData;
-    
-    public boolean isOrigEnabled;
-    
+    @Override
+    public void changeValue(String v) {
+        String encodedValue = v.substring(9);
+
+        this.value = encodedValue;
+        this.valueEnd = this.valueStart + value.length();
+    }
     
 }

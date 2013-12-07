@@ -34,7 +34,8 @@ import util.BurpCallbacks;
  */
 public class SentinelHttpRequest implements Serializable {
 
-    private LinkedList<SentinelHttpParam> httpParams = httpParams = new LinkedList<SentinelHttpParam>();
+    private LinkedList<SentinelHttpParam> httpParams = new LinkedList<SentinelHttpParam>();
+    private LinkedList<SentinelHttpParamVirt> httpParamsVirt = new LinkedList<SentinelHttpParamVirt>();
     
     private SentinelHttpParam changeParam;
     private SentinelHttpParam origParam;
@@ -45,9 +46,8 @@ public class SentinelHttpRequest implements Serializable {
     private SentinelHttpService httpService;
 
     public SentinelHttpRequest() {
-        // Deserializing constructor
+        // Void Deserializing constructor
     }
-    
 
     // Deserializing
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -218,6 +218,9 @@ public class SentinelHttpRequest implements Serializable {
         this.changeParam = changeParam;
         // TODO: Set orig param
     }
+    
+    
+    /**************************** Param ***************************************/
 
     // Write request
     public void applyChangeParam() {
@@ -248,8 +251,6 @@ public class SentinelHttpRequest implements Serializable {
         // Update change param to reflect new state
         init();
     }
-
-    
     
     private byte[] updateParameterPath(byte[] request, SentinelHttpParam changeParam) {
         String req = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
@@ -272,14 +273,14 @@ public class SentinelHttpRequest implements Serializable {
         return changeParam;
     }
     
-
+/*
     public SentinelHttpParam getParam(int n) {
         return httpParams.get(n);
     }
 
     public int getParamCount() {
         return httpParams.size();
-    }
+    }*/
 
     public String getRequestStr() {
         return BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
@@ -303,7 +304,20 @@ public class SentinelHttpRequest implements Serializable {
 
         return null;
     }
+    
+    public void addParamVirt(SentinelHttpParamVirt paramVirt) {
+        BurpCallbacks.getInstance().print("Add param virt: " + paramVirt);
+        httpParamsVirt.add(paramVirt);
+    }
+    
+    public Iterable<SentinelHttpParamVirt> getParamsVirt() {
+        return httpParamsVirt;
+    }
+    
+    
 
+    /**************************** Session *************************************/
+    
     public void changeSession(String sessionVarName, String sessionVarValue) {
         SentinelHttpParam updateParam = null;
 

@@ -47,14 +47,16 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        if (column == 4 || column == 5 || column == 6 || column == 7) {
+        // For checkboxes
+        if (column == 3 || column == 4 || column == 5) {
             return true;
         }
-        if (column == 3 && isCookieRow(row)) {
+        
+        if (column == 2 && isCookieRow(row)) {
             return true;
-        } else {
-            return false;
-        }
+        } 
+        
+        return false;
     }
     
 
@@ -65,14 +67,13 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             return 0;
         }
 
-        return myMessage.getReq().getParamCount();
+        return uiEntries.size();
     }
 
     
     @Override
     public int getColumnCount() {
-        // return 8; 
-        return 8; // ignore "All"
+        return 6;
     }
     
 
@@ -81,26 +82,18 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
         switch (columnIndex) {
             case 0:
-                return Integer.class;
+                return String.class;
             case 1:
                 return String.class;
             case 2:
                 return String.class;
-            case 3:
-                return String.class;
 
-            case 4: // XSS
+            case 3: // XSS
                 return Boolean.class;
-            case 5: // pXSS
+            case 4: // SQL
                 return Boolean.class;
-            case 6: // SQL
+            case 5: // Other
                 return Boolean.class;
-            case 7: // Attack
-                return Boolean.class;
-            case 8:
-                return String.class;
-            case 9:
-                return String.class;
 
             default:
                 return String.class;
@@ -112,28 +105,18 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return "#";
-            case 1:
                 return "Type";
-            case 2:
+            case 1:
                 return "Name";
-            case 3:
+            case 2:
                 return "Value";
 
-            case 4:
+            case 3:
                 return "XSS";
-            case 5:
+            case 4:
                 return "SQL";
-            case 6:
+            case 5:
                 return "Other";
-            case 7:
-                return "All";
-
-            case 8:
-                return "Go";
-
-            case 9:
-                return "Vulnerable";
 
             default:
                 return "hmm";
@@ -144,62 +127,23 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     @Override
     public void setValueAt(Object value, int row, int column) {
         switch (column) {
-            case 4:
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) value);
-                //if ((Boolean)value == true) { 
-                //    myRequest.getReq().getParam(row).setPerformAttack((Boolean)value);
-                //}
+            case 3:
                 uiEntries.get(row).isXssEnabled = !uiEntries.get(row).isXssEnabled;
                 if (uiEntries.get(row).isXssEnabled == false) {
                     uiEntries.get(row).isAllEnabled = false;
                 }
                 break;
-            case 5:
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) value);
-                //if ((Boolean)value == true) { 
-                //    myRequest.getReq().getParam(row).setPerformAttack((Boolean)value);
-                //}
+            case 4:
                 uiEntries.get(row).isSqlEnabled = !uiEntries.get(row).isSqlEnabled;
                 if (uiEntries.get(row).isSqlEnabled == false) {
                     uiEntries.get(row).isAllEnabled = false;
                 }
                 break;
-            case 6:
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.pXSS, (Boolean) value);
-                //if ((Boolean)value == true) { 
-                //    myRequest.getReq().getParam(row).setPerformAttack((Boolean)value);
-                //}
+            case 5:
                 uiEntries.get(row).isOtherEnabled = !uiEntries.get(row).isOtherEnabled;
                 if (uiEntries.get(row).isOtherEnabled == false) {
                     uiEntries.get(row).isAllEnabled = false;
                 }
-                break;
-
-            case 7:
-                // Check if attacks are set - if not, set em all!
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) value);
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) value);
-                //myRequest.getReq().getParam(row).setAttackType(AttackMain.AttackTypes.pXSS, (Boolean) value);
-                boolean b = !uiEntries.get(row).isAllEnabled;
-
-                uiEntries.get(row).isXssEnabled = b;
-                uiEntries.get(row).isSqlEnabled = b;
-                uiEntries.get(row).isOtherEnabled = b;
-                uiEntries.get(row).isAllEnabled = b;
-
-                /*
-                 SentinelHttpParam param = myRequest.getReq().getParam(row);
-                 if (  ! param.getAttackType(AttackMain.AttackTypes.XSS).isActive()
-                 || ! param.getAttackType(AttackMain.AttackTypes.pXSS).isActive()
-                 || ! param.getAttackType(AttackMain.AttackTypes.SQL).isActive()
-                 || ! param.getAttackType(AttackMain.AttackTypes.AUTHORISATION).isActive()) 
-                 {
-                 param.setAttackType(AttackMain.AttackTypes.ORIGINAL, true);
-                 param.setAttackType(AttackMain.AttackTypes.XSS, true);
-                 param.setAttackType(AttackMain.AttackTypes.SQL, true);
-                 }
-                
-                 myRequest.getReq().getParam(row).setPerformAttack((Boolean)value);*/
                 break;
         }
 
@@ -211,28 +155,19 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return rowIndex;
+                return uiEntries.get(rowIndex).sourceHttpParam.getTypeStr();
             case 1:
-                return myMessage.getReq().getParam(rowIndex).getTypeStr();
+                return uiEntries.get(rowIndex).sourceHttpParam.getName();
             case 2:
-                return myMessage.getReq().getParam(rowIndex).getName();
+                return uiEntries.get(rowIndex).sourceHttpParam.getValue();
             case 3:
-                return myMessage.getReq().getParam(rowIndex).getValue();
-            case 4:
                 return uiEntries.get(rowIndex).isXssEnabled;
-            case 5:
+            case 4:
                 return uiEntries.get(rowIndex).isSqlEnabled;
-            case 6:
+            case 5:
                 return uiEntries.get(rowIndex).isOtherEnabled;
-            case 7:
-                return uiEntries.get(rowIndex).isAllEnabled;
-            case 8:
-                return "Go";
-            case 9:
-                return hasVulns(myMessage.getReq().getParam(rowIndex));
-
             default:
-                return "bbb";
+                return "";
         }
     }
 
@@ -257,19 +192,32 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     void setMessage(SentinelHttpMessageOrig message) {
         try {
-            //this.myRequest = new SentinelHttpMessage(message);
             this.myMessage = message;
             this.myMessage.addObserver(this);
         } catch (Exception ex) {
             BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
         }
 
-        int argc = myMessage.getReq().getParamCount();
+        reinit();
+    }
+    
+    void reinit() {
+        BurpCallbacks.getInstance().print("PanelLeftTableUI: reinit!");
+        
+        uiEntries.clear();
+        
 
-        for (int n = 0; n < argc; n++) {
+        for(SentinelHttpParam httpParam: myMessage.getReq().getParamsVirt()) {
             PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
             entry.isOrigEnabled = true; // Active orig attack
-            
+            entry.sourceHttpParam = httpParam;
+            uiEntries.add(entry);
+        }
+        
+        for(SentinelHttpParam httpParam: myMessage.getReq().getParams()) {
+            PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
+            entry.isOrigEnabled = true; // Active orig attack
+            entry.sourceHttpParam = httpParam;
             uiEntries.add(entry);
         }
 
@@ -282,44 +230,45 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
         // Check all params of httpmessage if they should be attacked
         // This has been set by the UI
-        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
+        for(PanelLeftTableUIEntry entry: uiEntries) {
             boolean attackThis = false;
-            SentinelHttpParam param = myMessage.getReq().getParam(n);
+            SentinelHttpParam param = entry.sourceHttpParam;
             
-            if (uiEntries.get(n).isXssEnabled) {
-                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
+            if (entry.isXssEnabled) {
+                param.setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
             }
             
-            if (uiEntries.get(n).isSqlEnabled) {
-                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
+            if (entry.isSqlEnabled) {
+                param.setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
                 attackThis = true;
             }
             
-            if (uiEntries.get(n).isOtherEnabled) {
-                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
+            if (entry.isOtherEnabled) {
+                param.setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
                 attackThis = true;
             }
             
-            if (uiEntries.get(n).isAuthEnabled) {
-                myMessage.getReq().getParam(n).setAttackType(
+            if (entry.isAuthEnabled) {
+                param.setAttackType(
                     AttackMain.AttackTypes.AUTHORISATION, 
                     true, 
-                    uiEntries.get(n).authData);
+                    entry.authData);
 
                 attackThis = true;
             }
             
-            if (uiEntries.get(n).isOrigEnabled && attackThis) {
-                myMessage.getReq().getParam(n).setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
+            if (entry.isOrigEnabled && attackThis) {
+                param.setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
                 attackThis = true;
                 
                 // TODO bad place here - do it it resetAttackSelection()
-                uiEntries.get(n).isOrigEnabled = false;
+                entry.isOrigEnabled = false;
             }
 
             // Check if we should attack this specific param
             if (attackThis) {
+                BurpCallbacks.getInstance().print("ATTACK THIS: " + param);
                 list.add(param);
             }
         }
@@ -335,21 +284,22 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
 
     void resetAttackSelection() {
-        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
-            uiEntries.get(n).isXssEnabled = false;
-            uiEntries.get(n).isSqlEnabled = false;
-            uiEntries.get(n).isOtherEnabled = false;
-            uiEntries.get(n).isAllEnabled = false;
-            
-            uiEntries.get(n).isAuthEnabled = false;
-            uiEntries.get(n).authData = null;
+        
+        for(PanelLeftTableUIEntry entry: uiEntries) {
+            entry.isAllEnabled = false;
+            entry.isSqlEnabled = false;
+            entry.isOtherEnabled = false;
+            entry.isAllEnabled = false;
+
+            entry.isAuthEnabled = false;
+            entry.authData = null;
         }
     }
 
     
     // Check if a specific row (param) is the session id
     boolean isCookieRow(int row) {
-        SentinelHttpParam param = myMessage.getReq().getParam(row);
+        SentinelHttpParam param = uiEntries.get(row).sourceHttpParam;
 
         if (param.getType() == IParameter.PARAM_COOKIE
                 && param.getName().equals(SessionManager.getInstance().getSessionVarName())) {
@@ -361,17 +311,22 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     // Called if we want to change cookie with a specific session
     void setSessionAttackMessage(boolean enabled, String selected) {
-
-        for (int n = 0; n < myMessage.getReq().getParamCount(); n++) {
-            SentinelHttpParam param = myMessage.getReq().getParam(n);
+        for(PanelLeftTableUIEntry entry: uiEntries) {
+            SentinelHttpParam param = entry.sourceHttpParam;
 
             if (param.getType() == IParameter.PARAM_COOKIE
-                    && param.getName().equals(SessionManager.getInstance().getSessionVarName())) {
-
-                uiEntries.get(n).isAuthEnabled = enabled;
-                uiEntries.get(n).authData = selected;
+                    && param.getName().equals(SessionManager.getInstance().getSessionVarName())) 
+            {
+                entry.isAuthEnabled = enabled;
+                entry.authData = selected;
 
             }
         }
     }
+
+    SentinelHttpParam getHttpParamAt(int selectedRow) {
+        return uiEntries.get(selectedRow).sourceHttpParam;
+    }
+
+
 }

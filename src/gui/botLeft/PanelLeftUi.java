@@ -59,20 +59,15 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         initComponents();
 
         int width = 50;
-        tableMessages.getColumnModel().getColumn(0).setMaxWidth(40);
-        tableMessages.getColumnModel().getColumn(0).setMinWidth(40);
+        tableMessages.getColumnModel().getColumn(0).setMaxWidth(80);
+        tableMessages.getColumnModel().getColumn(0).setMinWidth(80);
         
-        tableMessages.getColumnModel().getColumn(1).setMaxWidth(90);
-        tableMessages.getColumnModel().getColumn(1).setMinWidth(90);
-        
+        tableMessages.getColumnModel().getColumn(3).setMaxWidth(width);
+        tableMessages.getColumnModel().getColumn(3).setMinWidth(width);
         tableMessages.getColumnModel().getColumn(4).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(4).setMinWidth(width);
         tableMessages.getColumnModel().getColumn(5).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(5).setMinWidth(width);
-        tableMessages.getColumnModel().getColumn(6).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(6).setMinWidth(width);
-        tableMessages.getColumnModel().getColumn(7).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(7).setMinWidth(width);
 
         
         tableMessages.setAutoCreateRowSorter(true);
@@ -80,7 +75,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         UiUtil.restoreTableDimensions(tableMessages, this);
 
         // 
-        TableColumn sportColumn = tableMessages.getColumnModel().getColumn(3);
+        TableColumn sportColumn = tableMessages.getColumnModel().getColumn(2);
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
@@ -110,7 +105,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
    
     
     SentinelHttpParam getSelectedHttpParam() {
-        return origHttpMessage.getReq().getParam(selectedRow);
+        return tableModel.getHttpParamAt(selectedRow);
+        ///return origHttpMessage.getReq().getParam(selectedRow);
     }
     
     
@@ -350,9 +346,13 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         this.updateUI();
         panelParent.updateUI();
     }
-    
+
+    void updateModel() {
+        tableModel.reinit();
+    }
+
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;
     }
-
+    
 }

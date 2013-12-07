@@ -26,6 +26,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import model.SentinelHttpParam;
+import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
 
 /**
@@ -73,11 +74,25 @@ public class PanelLeftPopup implements ActionListener {
         // Test decode
         if (o == decodeBase64) {
             BurpCallbacks.getInstance().print("Decode Base64");
+            decodeIt();
         } else if (o == decodeHTML) {
             BurpCallbacks.getInstance().print("Decode HTML");
+            decodeIt();
         } else if (o == decodeURL) {
             BurpCallbacks.getInstance().print("Decode URL");
+            decodeIt();
         }
+    }
+    
+    private void decodeIt() {
+        // get current param
+        SentinelHttpParam httpParam = parent.getSelectedHttpParam();
+        
+        // Create new virt param
+        SentinelHttpParamVirt virtParam = new SentinelHttpParamVirt(httpParam);
+        
+        parent.getOrigHttpMessage().getReq().addParamVirt(virtParam);
+        parent.updateModel();
     }
     
     private void attack(int n) {

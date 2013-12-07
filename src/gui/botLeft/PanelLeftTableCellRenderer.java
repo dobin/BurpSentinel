@@ -42,7 +42,7 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         // Check if we should set tooltip
-        if (column == 3) {
+        if (column == 2) {
             TableModel model = table.getModel();
         
             // Those columns (2, 3) are always string
@@ -56,7 +56,7 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
             setToolTipText(s);
         }
                 
-        if (column != 3) {
+        if (column != 2) {
             return this;
         }
 
