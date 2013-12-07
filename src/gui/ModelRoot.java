@@ -35,7 +35,6 @@ public class ModelRoot extends Observable implements Serializable  {
     }
 
     void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
-        BurpCallbacks.getInstance().print("ModelRoot: Added new message: " + this.countObservers() + " - " + Thread.currentThread());
         messageList.add(myHttpMessage);
         
         this.setChanged();

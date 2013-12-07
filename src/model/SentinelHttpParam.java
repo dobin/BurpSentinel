@@ -126,6 +126,10 @@ public class SentinelHttpParam implements IParameter, Serializable {
         return name;
     }
 
+    public String getDecodedValue() {
+        return value;
+    }
+    
     @Override
     public String getValue() {
         return value;

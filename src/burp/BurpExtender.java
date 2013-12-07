@@ -91,7 +91,7 @@ public class BurpExtender implements IExtensionStateListener {
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.2 - 10.11.2013");
+                BurpCallbacks.getInstance().print("Sentinel v0.3 - 07.12.2013");
             }
         });
     }

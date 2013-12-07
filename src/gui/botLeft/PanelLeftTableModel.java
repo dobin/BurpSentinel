@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import model.SentinelHttpParam;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
 
 /**
@@ -159,7 +160,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 1:
                 return uiEntries.get(rowIndex).sourceHttpParam.getName();
             case 2:
-                return uiEntries.get(rowIndex).sourceHttpParam.getValue();
+                return uiEntries.get(rowIndex).sourceHttpParam.getDecodedValue();
             case 3:
                 return uiEntries.get(rowIndex).isXssEnabled;
             case 4:
@@ -202,21 +203,19 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
     
     void reinit() {
-        BurpCallbacks.getInstance().print("PanelLeftTableUI: reinit!");
-        
         uiEntries.clear();
         
 
-        for(SentinelHttpParam httpParam: myMessage.getReq().getParamsVirt()) {
+        for(SentinelHttpParamVirt httpParam: myMessage.getReq().getParamsVirt()) {
             PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
-            entry.isOrigEnabled = true; // Active orig attack
+            //entry.isOrigEnabled = true; // Active orig attack
             entry.sourceHttpParam = httpParam;
             uiEntries.add(entry);
         }
         
         for(SentinelHttpParam httpParam: myMessage.getReq().getParams()) {
             PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
-            entry.isOrigEnabled = true; // Active orig attack
+            //entry.isOrigEnabled = true; // Active orig attack
             entry.sourceHttpParam = httpParam;
             uiEntries.add(entry);
         }
@@ -233,7 +232,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         for(PanelLeftTableUIEntry entry: uiEntries) {
             boolean attackThis = false;
             SentinelHttpParam param = entry.sourceHttpParam;
-            
+
             if (entry.isXssEnabled) {
                 param.setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
                 attackThis = true;
@@ -268,7 +267,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
             // Check if we should attack this specific param
             if (attackThis) {
-                BurpCallbacks.getInstance().print("ATTACK THIS: " + param);
                 list.add(param);
             }
         }

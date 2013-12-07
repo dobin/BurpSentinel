@@ -214,14 +214,15 @@ public class SentinelHttpRequest implements Serializable {
         return requestInfo.getMethod();
     }
     
+   
+    /**************************** Param ***************************************/
+
     public void setChangeParam(SentinelHttpParam changeParam) {
         this.changeParam = changeParam;
         // TODO: Set orig param
     }
     
     
-    /**************************** Param ***************************************/
-
     // Write request
     public void applyChangeParam() {
         if (request == null || request.length == 0) {
@@ -306,14 +307,12 @@ public class SentinelHttpRequest implements Serializable {
     }
     
     public void addParamVirt(SentinelHttpParamVirt paramVirt) {
-        BurpCallbacks.getInstance().print("Add param virt: " + paramVirt);
         httpParamsVirt.add(paramVirt);
     }
     
     public Iterable<SentinelHttpParamVirt> getParamsVirt() {
         return httpParamsVirt;
     }
-    
     
 
     /**************************** Session *************************************/

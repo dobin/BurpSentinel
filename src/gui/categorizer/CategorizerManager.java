@@ -93,7 +93,7 @@ public class CategorizerManager extends Observable {
             Matcher matcher = pattern.matcher(input);
             
             if (matcher.find()) {
-                BurpCallbacks.getInstance().print("A: " + matcher.group());
+                //BurpCallbacks.getInstance().print("A: " + matcher.group());
                 ResponseCategory c = new ResponseCategory(entries.getTag(), matcher.group());
                 categories.add(c);
             }

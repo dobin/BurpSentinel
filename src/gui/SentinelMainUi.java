@@ -71,7 +71,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
 
     
     public void init() {
-        BurpCallbacks.getInstance().print("MainUi: Init " + Thread.currentThread());
         modelRoot.addObserver(this);
         
         // Has to be on top-top, or will not restore split location correclty
@@ -95,7 +94,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
      */
     @Override
     public void update(Observable o, Object arg) {
-        BurpCallbacks.getInstance().print("MainUi: Update()");
         SentinelHttpMessageOrig newHttpMessage = (SentinelHttpMessageOrig) arg;
         addNewMessage(newHttpMessage);
     }
@@ -118,8 +116,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     
     
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
-        BurpCallbacks.getInstance().print("MainUi: addmessage");
-        
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
         // but needed for new messages.

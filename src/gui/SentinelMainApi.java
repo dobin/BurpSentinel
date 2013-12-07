@@ -47,7 +47,6 @@ public class SentinelMainApi {
     }
     
     public void init() {
-        BurpCallbacks.getInstance().print("MainApi: Init " + Thread.currentThread());
         modelRoot = new ModelRoot();
         sentinelMainUi = new SentinelMainUi(modelRoot);
     }

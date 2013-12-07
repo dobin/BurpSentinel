@@ -17,6 +17,7 @@
 package model;
 
 import burp.IParameter;
+import util.BurpCallbacks;
 
 /**
  *
@@ -25,22 +26,57 @@ import burp.IParameter;
 public class SentinelHttpParamVirt extends SentinelHttpParam {
     private SentinelHttpParam parentParam = null; // For reference purposes only
     
-    public SentinelHttpParamVirt(SentinelHttpParam parentParam) {
+    public enum EncoderType {
+        Base64,
+        URL,
+        HTML,
+    }
+    
+    private EncoderType encoderType;
+    
+    public SentinelHttpParamVirt(SentinelHttpParam parentParam, EncoderType type) {
         super(parentParam);
         
+        this.encoderType = type;
         this.parentParam = parentParam;
     }
     
+    public SentinelHttpParamVirt(SentinelHttpParamVirt virt) {
+        super(virt);
+        this.encoderType = virt.encoderType;
+        this.parentParam = virt.parentParam;
+    }
+    
     @Override
-    public String getValue() {
-        return "DECODED<<" + value;
+    public String getDecodedValue() {
+        String mutatedValue = "";
+        
+        switch (encoderType) {
+            case Base64:
+                byte[] mutated = BurpCallbacks.getInstance().getBurp().getHelpers().base64Decode(value);
+                mutatedValue = "BASE64: " + new String(mutated);
+                break;
+            default:
+                mutatedValue = value;
+        }
+
+        return mutatedValue;
     }
     
     @Override
     public void changeValue(String v) {
-        String encodedValue = v.substring(9);
+        String mutatedValue;
+        
+        switch (encoderType) {
+            case Base64:
+                byte[] b = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(v);
+                mutatedValue = BurpCallbacks.getInstance().getBurp().getHelpers().base64Encode(b);
+                break;
+            default:
+                mutatedValue = value;
+        }
 
-        this.value = encodedValue;
+        this.value = mutatedValue;
         this.valueEnd = this.valueStart + value.length();
     }
     

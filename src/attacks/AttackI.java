@@ -21,6 +21,8 @@ import gui.session.SessionManager;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
+import model.SentinelHttpParamVirt;
+import util.BurpCallbacks;
 
 /**
  * Interface for all attack classes
@@ -72,19 +74,25 @@ public abstract class AttackI {
 
         // Set orig param
         newHttpMessage.getReq().setOrigParam(origParam);
-        
+    
         // Set change param
-        SentinelHttpParam changeParam = new SentinelHttpParam(origParam);
+        SentinelHttpParam changeParam = null;
+        if (origParam instanceof SentinelHttpParamVirt) {
+            changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) origParam);
+        } else if (origParam instanceof SentinelHttpParam) {
+            changeParam = new SentinelHttpParam(origParam);
+        }        
+        
         if (attack != null) {
             changeParam.changeValue(attack);
         } else {
-            //BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
+            BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
         }
         newHttpMessage.getReq().setChangeParam(changeParam);
         if (attack != null) {
             newHttpMessage.getReq().applyChangeParam();
         } else {
-            //BurpCallbacks.getInstance().print("initAttackHttpMessage: ApplyChange: attack is null");
+            BurpCallbacks.getInstance().print("initAttackHttpMessage: ApplyChange: attack is null");
         }
         
         // Set parent

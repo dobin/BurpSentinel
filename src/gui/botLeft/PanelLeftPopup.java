@@ -73,25 +73,24 @@ public class PanelLeftPopup implements ActionListener {
         
         // Test decode
         if (o == decodeBase64) {
-            BurpCallbacks.getInstance().print("Decode Base64");
-            decodeIt();
+            decodeIt(SentinelHttpParamVirt.EncoderType.Base64);
         } else if (o == decodeHTML) {
-            BurpCallbacks.getInstance().print("Decode HTML");
-            decodeIt();
+            decodeIt(SentinelHttpParamVirt.EncoderType.HTML);
         } else if (o == decodeURL) {
-            BurpCallbacks.getInstance().print("Decode URL");
-            decodeIt();
+            decodeIt(SentinelHttpParamVirt.EncoderType.URL);
         }
     }
     
-    private void decodeIt() {
+    private void decodeIt(SentinelHttpParamVirt.EncoderType encoderType) {
         // get current param
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
         
         // Create new virt param
-        SentinelHttpParamVirt virtParam = new SentinelHttpParamVirt(httpParam);
+        SentinelHttpParamVirt virtParam = new SentinelHttpParamVirt(httpParam, encoderType);
         
         parent.getOrigHttpMessage().getReq().addParamVirt(virtParam);
+        
+        // TODO: remove all old selections
         parent.updateModel();
     }
     
