@@ -47,13 +47,13 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
         
             // Those columns (2, 3) are always string
             String s = (String) model.getValueAt(row, column);
-            try {
+            /*try {
                 //s = BurpCallbacks.getInstance().getBurp().getHelpers().urlDecode(s);
                 s = URLDecoder.decode(s, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
                 Logger.getLogger(PanelLeftTableCellRenderer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            setToolTipText(s);
+            }*/
+            //setToolTipText(s);
         }
                 
         if (column != 2) {

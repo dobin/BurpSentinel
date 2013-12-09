@@ -1,6 +1,25 @@
+- Parameter Pollution
+  - add arbitrary param
+- json viewer
++ add decoded param to list
+- json browser
+  - for adding params
+  - test if its type is really JSON?
+- standalone sentinel version
+- add to sentinel in panelright popup
+- attacklists "Test" and "Result" in panelright are "Null"
+- do not fsck store attacktypes in HttpParam... !
+
+- allow multiple changeParam in HttpParam
+- remove changeparam from httpMessage.getReq()
+
+- create repeater implementation
+- panelleftui has 3 update methods...
+- remove old selections in PanelLeftPopup.decodeIt()
+- delete virtparam in panelleft
 
 Overall:
-- should be possible to store and restore messages
++ should be possible to store and restore messages
 - generate report
 - add tooltip to everything
 - attack variable names?
@@ -11,7 +30,7 @@ Overall:
 - manually follow 302 with button
 
 Feature:
-- fast diff two responses from panelright (to check difference between SQLi)
++ fast diff two responses from panelright (to check difference between SQLi)
 - copy-paste should be colorful! (and working...)
 - implement session manager for burp
 
@@ -28,9 +47,9 @@ Todo CSNC:
 - make session ui more usable
   + remove a session
   - session from burp
-- save/restore messages
++ save/restore messages
 - color backgrounds of buttons according to vuln (red, yellow)
-- make go button in table
+? make go button in table
 
 Todo HOME:
 Main usability features:
@@ -82,7 +101,7 @@ Internal test 0:
 
 
 Big features:
-  - diff between 2 window - highlighted only?
+  + diff between 2 window - highlighted only?
   - important param
   - generate overall report
   - only view tags/content/all

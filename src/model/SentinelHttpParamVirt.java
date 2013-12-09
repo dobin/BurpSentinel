@@ -17,6 +17,12 @@
 package model;
 
 import burp.IParameter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.lang3.StringEscapeUtils;
 import util.BurpCallbacks;
 
 /**
@@ -55,6 +61,18 @@ public class SentinelHttpParamVirt extends SentinelHttpParam {
             case Base64:
                 byte[] mutated = BurpCallbacks.getInstance().getBurp().getHelpers().base64Decode(value);
                 mutatedValue = "BASE64: " + new String(mutated);
+                //mutatedValue = "BASE64: " + new String(mutated);
+                break;
+            case URL:
+                try {
+                    BurpCallbacks.getInstance().print("A: " + value);
+                    mutatedValue = "URL: " + URLDecoder.decode(value, "UTF-8");
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(SentinelHttpParamVirt.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case HTML:
+                mutatedValue = "HTML: " + StringEscapeUtils.unescapeHtml4(value);
                 break;
             default:
                 mutatedValue = value;
@@ -65,12 +83,23 @@ public class SentinelHttpParamVirt extends SentinelHttpParam {
     
     @Override
     public void changeValue(String v) {
-        String mutatedValue;
+        String mutatedValue = "";
         
         switch (encoderType) {
             case Base64:
                 byte[] b = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(v);
                 mutatedValue = BurpCallbacks.getInstance().getBurp().getHelpers().base64Encode(b);
+                break;
+            case URL:
+                try {
+                    mutatedValue = URLEncoder.encode(v, "UTF-8");
+                    //mutatedValue = URLEncoder.encode(v, "ISO-8859-1");
+                } catch (UnsupportedEncodingException ex) {
+                    Logger.getLogger(SentinelHttpParamVirt.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            case HTML:
+                mutatedValue = StringEscapeUtils.escapeHtml4(v);
                 break;
             default:
                 mutatedValue = value;
