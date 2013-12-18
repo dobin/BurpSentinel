@@ -16,7 +16,6 @@
  */
 package model;
 
-import burp.IParameter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -61,7 +60,6 @@ public class SentinelHttpParamVirt extends SentinelHttpParam {
             case Base64:
                 byte[] mutated = BurpCallbacks.getInstance().getBurp().getHelpers().base64Decode(value);
                 mutatedValue = "BASE64: " + new String(mutated);
-                //mutatedValue = "BASE64: " + new String(mutated);
                 break;
             case URL:
                 try {
@@ -93,7 +91,6 @@ public class SentinelHttpParamVirt extends SentinelHttpParam {
             case URL:
                 try {
                     mutatedValue = URLEncoder.encode(v, "UTF-8");
-                    //mutatedValue = URLEncoder.encode(v, "ISO-8859-1");
                 } catch (UnsupportedEncodingException ex) {
                     Logger.getLogger(SentinelHttpParamVirt.class.getName()).log(Level.SEVERE, null, ex);
                 }
