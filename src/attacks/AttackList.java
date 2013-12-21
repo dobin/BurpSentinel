@@ -19,6 +19,7 @@ package attacks;
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
 import gui.viewMessage.ResponseHighlight;
+import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessage;
@@ -47,6 +48,26 @@ public class AttackList extends AttackI {
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
 
+        String response = httpMessage.getRes().getResponseStr();
+        if (response == null || response.length() == 0) {
+            BurpCallbacks.getInstance().print("Response error");
+            return httpMessage;
+        }
+        
+        if (response.contains(data)) {
+            AttackResult res = new AttackResult(
+                    AttackData.AttackType.INFO,
+                    "LIST",
+                    httpMessage.getReq().getChangeParam(), 
+                    true);
+            httpMessage.addAttackResult(res);
+
+            ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
+            
+            httpMessage.addHighlight(h);
+        }
+        
+        
         return httpMessage;
     }
     
