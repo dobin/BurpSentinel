@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this prog1ram.  If not, see <http://www.gnu.org/licenses/>.
  */
 package burp;
 
@@ -62,7 +62,7 @@ public class BurpExtender implements IExtensionStateListener {
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                
+                /*
                 PrintStream errStream;
                 try {
                     errStream = new PrintStream("/tmp/out.txt");
@@ -71,7 +71,7 @@ public class BurpExtender implements IExtensionStateListener {
                     
                 } catch (FileNotFoundException ex) {
                     BurpCallbacks.getInstance().print("AAA");
-                }
+                }*/
                 
                 SentinelMainApi sentinelApi = SentinelMainApi.getInstance();
                 sentinelApi.init();
@@ -91,7 +91,7 @@ public class BurpExtender implements IExtensionStateListener {
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.3 - 07.12.2013");
+                BurpCallbacks.getInstance().print("Sentinel v0.3.1 - 21.12.2013");
             }
         });
     }
