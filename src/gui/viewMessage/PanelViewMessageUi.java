@@ -309,6 +309,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             comboboxView.setVisible(false);
         }
 
+        if (! checkboxIsFix.isSelected()) {
+                selectIndex = -1;
+        }
+        
         if (myHighlights != null && myHighlights.size() > 0) {
             panelHighlight.setVisible(true);
             
@@ -321,6 +325,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             panelHighlight.setVisible(false);
         }
         viewMessagePart(0, true);
+        
+
     }
 
     
