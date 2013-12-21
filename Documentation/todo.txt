@@ -6,9 +6,13 @@
   - for adding params
   - test if its type is really JSON?
 - standalone sentinel version
-- add to sentinel in panelright popup
+- "add to sentinel" in panelright popup
 - attacklists "Test" and "Result" in panelright are "Null"
 - do not fsck store attacktypes in HttpParam... !
+- make decoder indicator better (no string)
+  - also in panelright (attack)
+- make "options" popup menu in panel right and panel left
+- insert fucked up json delimiter on attackother };
 
 - allow multiple changeParam in HttpParam
 - remove changeparam from httpMessage.getReq()
