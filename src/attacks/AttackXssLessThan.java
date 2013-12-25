@@ -121,7 +121,7 @@ public class AttackXssLessThan extends AttackI {
             AttackData atkData = new AttackData(n, 
                     XssIndicator.getInstance().getIndicator() + s, 
                     XssIndicator.getInstance().getIndicator() + "<", 
-                    AttackData.AttackType.INFO);
+                    AttackData.AttackType.VULN);
             attackDataXss.add(atkData);
         }        
     }
@@ -162,7 +162,7 @@ public class AttackXssLessThan extends AttackI {
 
             AttackResult res = new AttackResult(
                     data.getAttackType(),
-                    "XSS" + data.getIndex(),
+                    "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     true);
             httpMessage.addAttackResult(res);
@@ -174,7 +174,7 @@ public class AttackXssLessThan extends AttackI {
 
             AttackResult res = new AttackResult(
                     AttackData.AttackType.NONE,
-                    "XSS" + data.getIndex(),
+                    "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     false);
             httpMessage.addAttackResult(res);

@@ -93,17 +93,11 @@ public class PanelLeftPopup implements ActionListener {
     
     
     private void attack(int n) {
-        BurpCallbacks.getInstance().print("ATK: " + n);
-        
         AttackMain.AttackTypes attackType;
         
         String atkStr = attackMenuItems.get(n).getText();
-        BurpCallbacks.getInstance().print("ATK2: " + atkStr);
-        
         attackType = AttackMain.AttackTypes.valueOf(atkStr);
         
-        BurpCallbacks.getInstance().print("Attack: " + attackType.toString());
-
         // get current param
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
 

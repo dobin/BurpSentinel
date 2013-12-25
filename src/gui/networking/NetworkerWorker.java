@@ -214,14 +214,9 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         
         // LIST
         AttackTypeData xssltAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.XSSLESSTHAN);
-        BurpCallbacks.getInstance().print("AAA1");
         if (xssltAttackData != null && xssltAttackData.isActive()) {
-            BurpCallbacks.getInstance().print("AAA2");
             AttackI attack = new AttackXssLessThan(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-            BurpCallbacks.getInstance().print("AAA3");
             ((AttackXssLessThan)attack).init();
-            //performAttack(attack, httpMessages);
-            BurpCallbacks.getInstance().print("AAA4");
             performAttack(attack, work, attackHttpParam);
         }
         
