@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import replayer.gui.ReplayerMain.ReplayerMainUi;
 import util.BurpCallbacks;
+import util.UiUtil;
 
 /*
  * The main plugin class
@@ -60,9 +61,10 @@ public class BurpExtender implements IExtensionStateListener {
             @Override
             public void run() {
                 // Init Burp Helper functions
+                
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
-                /*
+                
                 PrintStream errStream;
                 try {
                     errStream = new PrintStream("/tmp/out.txt");
@@ -71,9 +73,10 @@ public class BurpExtender implements IExtensionStateListener {
                     
                 } catch (FileNotFoundException ex) {
                     BurpCallbacks.getInstance().print("AAA");
-                }*/
+                }
                 
                 SentinelMainApi sentinelApi = SentinelMainApi.getInstance();
+                //UiUtil.resetConfig();
                 sentinelApi.init();
                 
                 sentinelMainUi = sentinelApi.getMainUi();
@@ -92,6 +95,7 @@ public class BurpExtender implements IExtensionStateListener {
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 
                 BurpCallbacks.getInstance().print("Sentinel v0.3.1 - 21.12.2013");
+                
             }
         });
     }

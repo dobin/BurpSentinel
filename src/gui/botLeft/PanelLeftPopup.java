@@ -34,27 +34,34 @@ import util.BurpCallbacks;
  * @author DobinRutishauser@broken.ch
  */
 public class PanelLeftPopup implements ActionListener {
+
     private JPopupMenu menu;
     private JMenu attackSubmenu;
+    private JMenu attackListSubmenu;
     private JMenu decodeSubmenu;
     private PanelLeftUi parent;
-    
-    private LinkedList<JMenuItem> items;
-    
+    private LinkedList<JMenuItem> attackMenuItems;
+    private LinkedList<JMenuItem> attackListMenuItems;
 
     public PanelLeftPopup(PanelLeftUi parent) {
         this.parent = parent;
 
         menu = new JPopupMenu("Message");
-        
-        attackSubmenu = new JMenu("Attack with");
+
+        attackSubmenu = new JMenu("Attack with ");
+        initAttackSubmenu();
         menu.add(attackSubmenu);
-        
-        decodeSubmenu = new JMenu("Decode with");
+
+        attackListSubmenu = new JMenu("Attack with list");
+        menu.add(attackListSubmenu);
+        attackListMenuItems = new LinkedList<JMenuItem>();
+        refreshAttackListIndex();
+
+        decodeSubmenu = new JMenu("Decode as");
         initDecodeSubmenu();
         menu.add(decodeSubmenu);
+
         
-        items = new LinkedList<JMenuItem>();
     }
 
     public JPopupMenu getPopup() {
@@ -64,13 +71,121 @@ public class PanelLeftPopup implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
+
+        testActionAttack(o);
+        testActionAttackList(o);
+        testActionDecode(o);
+
+    }
+
+    
+    /**
+     * * Attack **
+     */
+    private void testActionAttack(Object o) {
+        AttackMain.AttackTypes atkType;
         
-        // Test Attack
-        int n = items.indexOf(o);
+        int n = attackMenuItems.indexOf(o);
         if (n >= 0) {
             attack(n);
         }
+    }
+    
+    
+    private void attack(int n) {
+        BurpCallbacks.getInstance().print("ATK: " + n);
         
+        AttackMain.AttackTypes attackType;
+        
+        String atkStr = attackMenuItems.get(n).getText();
+        BurpCallbacks.getInstance().print("ATK2: " + atkStr);
+        
+        attackType = AttackMain.AttackTypes.valueOf(atkStr);
+        
+        BurpCallbacks.getInstance().print("Attack: " + attackType.toString());
+
+        // get current param
+        SentinelHttpParam httpParam = parent.getSelectedHttpParam();
+
+        // add attack to param
+        httpParam.setAttackType(attackType, true);
+
+        // attack it
+        LinkedList<SentinelHttpParam> attackParams = new LinkedList<SentinelHttpParam>();
+        attackParams.add(httpParam);
+
+        parent.attackSelectedParam(attackParams);
+    }
+
+    private void initAttackSubmenu() {
+        attackMenuItems = new LinkedList<JMenuItem>();
+
+        JMenuItem title = new JMenuItem("Attack with:");
+        title.setEnabled(false);
+        attackSubmenu.add(title);
+
+        for (AttackMain.AttackTypes atkType: AttackMain.AttackTypes.values()) {
+            JMenuItem menuItem = new JMenuItem(atkType.name());
+            attackMenuItems.add(menuItem);
+            attackSubmenu.add(menuItem);
+            menuItem.addActionListener(this);
+        }
+
+    }
+    
+
+    /**
+     * * Attack List **
+     */
+    private void testActionAttackList(Object o) {
+        // Test Attack
+
+        int n = attackListMenuItems.indexOf(o);
+        if (n >= 0) {
+            attackList(n);
+        }
+    }
+
+    private void attackList(int n) {
+        // get current param
+        SentinelHttpParam httpParam = parent.getSelectedHttpParam();
+
+        // add attack to param
+        httpParam.setAttackType(AttackMain.AttackTypes.LIST, true, Integer.toString(n));
+
+        // attack it
+        LinkedList<SentinelHttpParam> attackParams = new LinkedList<SentinelHttpParam>();
+        attackParams.add(httpParam);
+
+        parent.attackSelectedParam(attackParams);
+    }
+
+    void refreshAttackListIndex() {
+        for (JMenuItem item : attackListMenuItems) {
+            item.removeActionListener(this);
+        }
+        attackListMenuItems = new LinkedList<JMenuItem>();
+        attackListSubmenu.removeAll();
+
+        JMenuItem title = new JMenuItem("Attack with list:");
+        title.setEnabled(false);
+        attackListSubmenu.add(title);
+
+        for (ListManagerList list : ListManager.getInstance().getModel().getList()) {
+            JMenuItem menuItem = new JMenuItem(list.getName());
+            attackListMenuItems.add(menuItem);
+            attackListSubmenu.add(menuItem);
+            menuItem.addActionListener(this);
+        }
+
+    }
+    
+
+    /**
+     * * Decode **
+     */
+    private void testActionDecode(Object o) {
+
         // Test decode
         if (o == decodeBase64) {
             decodeIt(SentinelHttpParamVirt.EncoderType.Base64);
@@ -80,72 +195,34 @@ public class PanelLeftPopup implements ActionListener {
             decodeIt(SentinelHttpParamVirt.EncoderType.URL);
         }
     }
-    
+
     private void decodeIt(SentinelHttpParamVirt.EncoderType encoderType) {
         // get current param
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
-        
+
         // Create new virt param
         SentinelHttpParamVirt virtParam = new SentinelHttpParamVirt(httpParam, encoderType);
-        
+
         parent.getOrigHttpMessage().getReq().addParamVirt(virtParam);
-        
+
         // TODO: remove all old selections
         parent.updateModel();
     }
-    
-    private void attack(int n) {
-        // get current param
-        SentinelHttpParam httpParam = parent.getSelectedHttpParam();
-        
-        // add attack to param
-        httpParam.setAttackType(AttackMain.AttackTypes.LIST, true, Integer.toString(n));
-        
-        // attack it
-        LinkedList<SentinelHttpParam> attackParams = new LinkedList<SentinelHttpParam>();
-        attackParams.add(httpParam);
-        
-        parent.attackSelectedParam(attackParams);
-    }
-
-    void refreshAttackListIndex() {
-        for(JMenuItem item: items) {
-            item.removeActionListener(this);
-        }
-        items = new LinkedList<JMenuItem>();
-        attackSubmenu.removeAll();
-        
-        JMenuItem title = new JMenuItem("Attack with:");
-        title.setEnabled(false);
-        attackSubmenu.add(title);
-        
-        for(ListManagerList list: ListManager.getInstance().getModel().getList()) {
-            JMenuItem menuItem = new JMenuItem(list.getName());
-            items.add(menuItem);
-            attackSubmenu.add(menuItem);
-            menuItem.addActionListener(this);
-        }
-        
-    }
-
-    
     private JMenuItem decodeURL;
     private JMenuItem decodeHTML;
     private JMenuItem decodeBase64;
-    
+
     private void initDecodeSubmenu() {
         decodeBase64 = new JMenuItem("Decode Base64");
         decodeHTML = new JMenuItem("Decode HTML");
         decodeURL = new JMenuItem("Decode URL");
-        
+
         decodeURL.addActionListener(this);
         decodeHTML.addActionListener(this);
         decodeBase64.addActionListener(this);
-        
+
         decodeSubmenu.add(decodeURL);
         decodeSubmenu.add(decodeHTML);
         decodeSubmenu.add(decodeBase64);
     }
-    
-    
 }

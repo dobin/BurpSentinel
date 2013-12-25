@@ -24,6 +24,7 @@ import attacks.AttackOriginal;
 import attacks.AttackPersistentXss;
 import attacks.AttackSql;
 import attacks.AttackXss;
+import attacks.AttackXssLessThan;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -204,6 +205,23 @@ public class NetworkerWorker extends SwingWorker<String, WorkEntry> {
         if (listAttackData != null && listAttackData.isActive()) {
             AttackI attack = new AttackList(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, listAttackData.getData());
             //performAttack(attack, httpMessages);
+            performAttack(attack, work, attackHttpParam);
+        }
+        
+        if (cancel) {
+            return;
+        }
+        
+        // LIST
+        AttackTypeData xssltAttackData = attackHttpParam.getAttackType(AttackMain.AttackTypes.XSSLESSTHAN);
+        BurpCallbacks.getInstance().print("AAA1");
+        if (xssltAttackData != null && xssltAttackData.isActive()) {
+            BurpCallbacks.getInstance().print("AAA2");
+            AttackI attack = new AttackXssLessThan(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
+            BurpCallbacks.getInstance().print("AAA3");
+            ((AttackXssLessThan)attack).init();
+            //performAttack(attack, httpMessages);
+            BurpCallbacks.getInstance().print("AAA4");
             performAttack(attack, work, attackHttpParam);
         }
         

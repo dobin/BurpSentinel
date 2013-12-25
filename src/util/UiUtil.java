@@ -47,6 +47,27 @@ public class UiUtil {
 
     private static Theme theme = null;
     
+    public static void resetConfig() {
+        BurpCallbacks.getInstance().print("AAA");
+        try {
+            //Preferences.userRoot().removeNode();
+            
+            for (String s: Preferences.userRoot().childrenNames()) {
+                
+                BurpCallbacks.getInstance().print("Remove: " + s);
+                for (String ss: Preferences.userRoot().node(s).keys()) {
+                    BurpCallbacks.getInstance().print("remove 1: " + ss);
+                    Preferences.userRoot().node(s).remove(ss);
+                }
+            }
+            
+            Preferences.userRoot().flush();
+        } catch (BackingStoreException ex) {
+            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     public static Theme getTheme() {
         if (theme == null) {
             try {
@@ -281,7 +302,7 @@ public class UiUtil {
     public static boolean getListInitState() {
         Preferences pref = Preferences.userRoot().node("Initialization");
         
-        return pref.getBoolean("FuzzDb", false);
+        return pref.getBoolean("FuzzDb", true);
     }
     
     public static void setListInitState(boolean b) {

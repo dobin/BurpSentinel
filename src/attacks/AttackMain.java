@@ -28,7 +28,8 @@ public class AttackMain {
         OTHER,
         AUTHORISATION,
         ORIGINAL,
-        LIST
+        LIST,
+        XSSLESSTHAN,
     };
     
 }

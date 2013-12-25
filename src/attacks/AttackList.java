@@ -54,6 +54,7 @@ public class AttackList extends AttackI {
             return httpMessage;
         }
         
+        // Check if input value gets reflected
         if (response.contains(data)) {
             AttackResult res = new AttackResult(
                     AttackData.AttackType.INFO,
@@ -66,6 +67,9 @@ public class AttackList extends AttackI {
             
             httpMessage.addHighlight(h);
         }
+        
+        // Check if input value gets decoded
+        
         
         
         return httpMessage;

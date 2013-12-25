@@ -70,8 +70,11 @@ public class ListManagerModel {
       
     public void initFuzzDB() {
         if (UiUtil.getListInitState() == false) {
+            BurpCallbacks.getInstance().print("Load Lists");
             loadFuzzDB();
             UiUtil.setListInitState(true);
+        } else {
+            BurpCallbacks.getInstance().print("Do not Load Lists");
         }
     }
     
@@ -84,6 +87,7 @@ public class ListManagerModel {
             "fuzzdb_mssql",
             "fuzzdb_mssql_blind",
             "fuzzdb_oracle", 
+            "fuzzdb_metacharacters",
         };
         
         for(String fileName: fileNames) {

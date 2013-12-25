@@ -1,3 +1,6 @@
+- should be possible to add decoded string for attack lists (xss)
+- 
+
 - Parameter Pollution
   - add arbitrary param
 - json viewer

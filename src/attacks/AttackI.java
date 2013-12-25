@@ -39,7 +39,7 @@ public abstract class AttackI {
     protected String attackData;
     protected String mainSessionName;
     protected boolean followRedirect = false;
-    
+        
     public AttackI(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
         this.initialMessage = origHttpMessage;
         this.mainSessionName = mainSessionName;
