@@ -20,8 +20,6 @@ import gui.lists.ListManager;
 import gui.lists.ListManagerList;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
@@ -68,10 +66,6 @@ public class AttackList extends AttackI {
             httpMessage.addHighlight(h);
         }
         
-        // Check if input value gets decoded
-        
-        
-        
         return httpMessage;
     }
     
@@ -80,7 +74,8 @@ public class AttackList extends AttackI {
        boolean doContinue = false;
         
         if (initialMessage == null || initialMessage.getRequest() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
+            BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
+            return false;
         }
         if (initialMessage.getReq().getChangeParam() == null) {
             //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
@@ -88,7 +83,16 @@ public class AttackList extends AttackI {
         }
         
         ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackData));
+        if (list == null) {
+            BurpCallbacks.getInstance().print("Could not load List: " + attackData + " State: " + state);
+            return false;
+        }
+        
         String data = list.getContent().get(state);
+        if (data == null || data.length() == 0) {
+            BurpCallbacks.getInstance().print("List Data error! List: " + attackData + " State: " + state);
+            return false;
+        }
         
         // Replace placeholder with our XSS Identifier
         data = data.replace("XSS", XssIndicator.getInstance().getIndicator());
@@ -96,7 +100,7 @@ public class AttackList extends AttackI {
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
-            state++;
+            BurpCallbacks.getInstance().print("Connection timeout: " + ex.getLocalizedMessage());
             return false;
         }
         

@@ -274,6 +274,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             entry.isAuthEnabled = false;
             entry.authData = null;
         }
+        this.fireTableDataChanged();
     }
 
     

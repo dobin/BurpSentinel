@@ -67,12 +67,12 @@ public class BurpExtender implements IExtensionStateListener {
                 
                 PrintStream errStream;
                 try {
-                    errStream = new PrintStream("/tmp/out.txt");
+                    errStream = new PrintStream("/tmp/sentinel-debug.log");
                     System.setErr(errStream);
                     System.setOut(errStream);
                     
                 } catch (FileNotFoundException ex) {
-                    BurpCallbacks.getInstance().print("AAA");
+                    BurpCallbacks.getInstance().print("Could not create debug log");
                 }
                 
                 SentinelMainApi sentinelApi = SentinelMainApi.getInstance();
@@ -94,7 +94,7 @@ public class BurpExtender implements IExtensionStateListener {
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.3.1 - 21.12.2013");
+                BurpCallbacks.getInstance().print("Sentinel v0.3.2 - 26.12.2013");
                 
             }
         });

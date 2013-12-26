@@ -42,7 +42,9 @@ public class ListManagerList {
         
         String c[] = contentAsString.split("\n");
         for(int n=0; n<c.length; n++) {
-            content.add(c[n]);
+            if (c[n].length() > 0) {
+                content.add(c[n]);
+            }
         }
     }
     
