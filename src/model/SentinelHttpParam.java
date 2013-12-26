@@ -16,12 +16,8 @@
  */
 package model;
 
-import attacks.AttackMain;
-import attacks.AttackMain.AttackTypes;
 import burp.IParameter;
 import java.io.Serializable;
-import java.util.HashMap;
-import util.BurpCallbacks;
 
 /**
  *
@@ -39,8 +35,6 @@ public class SentinelHttpParam implements IParameter, Serializable {
     protected int valueStart;
     protected int valueEnd;
     
-    private boolean performAttack = false;
-
     public SentinelHttpParam(IParameter burpParameter) {
         this.type = burpParameter.getType();
 
@@ -66,31 +60,6 @@ public class SentinelHttpParam implements IParameter, Serializable {
         this.valueEnd = valueEnd;
     }
 
-    private HashMap<AttackMain.AttackTypes, AttackTypeData> attackTypes = new HashMap<AttackMain.AttackTypes, AttackTypeData>();
-
-    public void setAttackType(AttackTypes attackType, boolean enabled, String selected) {
-        AttackTypeData a = new AttackTypeData(enabled, selected);
-        attackTypes.put(attackType, a);
-    }
-
-    public void setAttackType(AttackMain.AttackTypes attackType, boolean enabled) {
-        AttackTypeData a = new AttackTypeData(enabled);
-        attackTypes.put(attackType, a);
-    }
-
-    public AttackTypeData getAttackType(AttackMain.AttackTypes attackType) {
-        if (attackTypes.containsKey(attackType)) {
-            return attackTypes.get(attackType);
-        } else {
-            return new AttackTypeData(false);
-        }
-    }
-    
-    public void resetAttackTypes() {
-        //attackTypes.clear();
-        attackTypes = new HashMap<AttackMain.AttackTypes, AttackTypeData>();
-    }
-    
 
     public String getTypeStr() {
         switch (type) {

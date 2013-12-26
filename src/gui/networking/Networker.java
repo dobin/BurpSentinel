@@ -51,7 +51,12 @@ public class Networker {
     public NetworkerLogger getLogger() {
         return worker.getLogger();
     }
+    
+    public void attackThis(AttackWorkEntry atkRessource) {
+        worker.addAttack(atkRessource);
+    }
 
+/*    
     public void addNewMessages(
             LinkedList<SentinelHttpParam> attackHttpParams,
             SentinelHttpMessageOrig origHttpMessage,
@@ -59,7 +64,7 @@ public class Networker {
             boolean followRedirect,
             String mainSessionName) {
 
-        WorkEntry entry = new WorkEntry(
+        AttackWorkEntry entry = new AttackWorkEntry(
                 attackHttpParams,
                 origHttpMessage,
                 panelParent,
@@ -68,6 +73,7 @@ public class Networker {
 
         worker.addAttack(entry);
     }
+    * */
 
     void cancelAll() {
         worker.cancelAll();

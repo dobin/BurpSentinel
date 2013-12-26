@@ -91,7 +91,6 @@ public class PanelLeftPopup implements ActionListener {
         }
     }
     
-    
     private void attack(int n) {
         AttackMain.AttackTypes attackType;
         
@@ -101,14 +100,8 @@ public class PanelLeftPopup implements ActionListener {
         // get current param
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
 
-        // add attack to param
-        httpParam.setAttackType(attackType, true);
-
         // attack it
-        LinkedList<SentinelHttpParam> attackParams = new LinkedList<SentinelHttpParam>();
-        attackParams.add(httpParam);
-
-        parent.attackSelectedParam(attackParams);
+        parent.attackSelectedParam(httpParam, attackType, null);
     }
 
     private void initAttackSubmenu() {
@@ -144,14 +137,10 @@ public class PanelLeftPopup implements ActionListener {
         // get current param
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
 
-        // add attack to param
-        httpParam.setAttackType(AttackMain.AttackTypes.LIST, true, Integer.toString(n));
-
+        String options = Integer.toString(n);
+        
         // attack it
-        LinkedList<SentinelHttpParam> attackParams = new LinkedList<SentinelHttpParam>();
-        attackParams.add(httpParam);
-
-        parent.attackSelectedParam(attackParams);
+        parent.attackSelectedParam(httpParam, AttackMain.AttackTypes.LIST, options);
     }
 
     void refreshAttackListIndex() {

@@ -16,8 +16,10 @@
  */
 package gui.botLeft;
 
+import attacks.AttackMain;
 import gui.SentinelMainUi;
 import gui.mainBot.PanelBotUi;
+import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
@@ -106,7 +108,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     
     SentinelHttpParam getSelectedHttpParam() {
         return tableModel.getHttpParamAt(selectedRow);
-        ///return origHttpMessage.getReq().getParam(selectedRow);
     }
     
     
@@ -138,18 +139,21 @@ public class PanelLeftUi extends javax.swing.JPanel  {
 
     
     /*
-     * Click on popup menu with special attacklist attack list
+     * Called when click on param attack popup menu
+     * 
+     * The popup menu does not have all the necessary information. Only we have.
      */
-    void attackSelectedParam(LinkedList<SentinelHttpParam> attackHttpParams) {
-        // add httpmessage attacks to send queue
-        Networker.getInstance().addNewMessages(
+    void attackSelectedParam(SentinelHttpParam attackHttpParams, AttackMain.AttackTypes attackType, String options) {
+        AttackWorkEntry attackEntry = new AttackWorkEntry(
                 attackHttpParams, 
+                attackType, 
+                options,
                 origHttpMessage, 
                 this, 
                 checkboxFollowRedirect.isSelected(), 
-                //(String) comboboxMainSession.getSelectedItem()
-                (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession()
-                );
+                (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
+        
+        Networker.getInstance().attackThis(attackEntry);
     }
     
     
@@ -164,21 +168,12 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         }
         
         // Transfer UI attack ticks to HttpMessage attacks
-        LinkedList<SentinelHttpParam> attackHttpParams = tableModel.createChangeParam();
+        // The function will call attackSelectedParam() appropriatly - we are finished here.
+        tableModel.createChangeParam(this);
 
         // reset UI attack ticks
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
-        
-        // add httpmessage attacks to send queue
-        Networker.getInstance().addNewMessages(
-                attackHttpParams, 
-                origHttpMessage, 
-                this, 
-                checkboxFollowRedirect.isSelected(), 
-                //(String) comboboxMainSession.getSelectedItem()
-                (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession()
-                );
     }
     
     

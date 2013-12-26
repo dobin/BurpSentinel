@@ -224,54 +224,37 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     
-    public LinkedList<SentinelHttpParam> createChangeParam() {
-        LinkedList<SentinelHttpParam> list = new LinkedList<SentinelHttpParam>();
-
+    public void createChangeParam(PanelLeftUi parent) {
         // Check all params of httpmessage if they should be attacked
         // This has been set by the UI
+        
         for(PanelLeftTableUIEntry entry: uiEntries) {
-            boolean attackThis = false;
             SentinelHttpParam param = entry.sourceHttpParam;
 
             if (entry.isXssEnabled) {
-                param.setAttackType(AttackMain.AttackTypes.XSS, (Boolean) true);
-                attackThis = true;
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.XSS, null);
             }
             
             if (entry.isSqlEnabled) {
-                param.setAttackType(AttackMain.AttackTypes.SQL, (Boolean) true);
-                attackThis = true;
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.SQL, null);
             }
             
             if (entry.isOtherEnabled) {
-                param.setAttackType(AttackMain.AttackTypes.OTHER, (Boolean) true);
-                attackThis = true;
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.OTHER, null);
             }
             
             if (entry.isAuthEnabled) {
-                param.setAttackType(
-                    AttackMain.AttackTypes.AUTHORISATION, 
-                    true, 
-                    entry.authData);
-
-                attackThis = true;
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData);
             }
-            
+            /*
             if (entry.isOrigEnabled && attackThis) {
                 param.setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
                 attackThis = true;
                 
                 // TODO bad place here - do it it resetAttackSelection()
                 entry.isOrigEnabled = false;
-            }
-
-            // Check if we should attack this specific param
-            if (attackThis) {
-                list.add(param);
-            }
+            }*/
         }
-
-        return list;
     }
 
     
@@ -282,7 +265,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
 
     void resetAttackSelection() {
-        
         for(PanelLeftTableUIEntry entry: uiEntries) {
             entry.isAllEnabled = false;
             entry.isSqlEnabled = false;
