@@ -16,6 +16,7 @@
  */
 package util;
 
+import gui.botLeft.PanelLeftOptions.InsertPositions;
 import gui.session.SessionUser;
 import gui.categorizer.CategoryEntry;
 import gui.lists.ListManagerList;
@@ -314,4 +315,29 @@ public class UiUtil {
         }
         pref.putBoolean("FuzzDb", b);
     }
+
+    public static void storePanelLeftOptionRedirect(boolean optionEnableRedirect) {
+        Preferences pref = Preferences.userRoot().node("PanelLeftOptions");
+        pref.putBoolean("FollowRedirect", optionEnableRedirect);
+    }
+    
+    public static boolean restorePanelLeftOptionRedirect() {
+        Preferences pref = Preferences.userRoot().node("PanelLeftOptions");
+        return pref.getBoolean("FollowRedirect", true);
+    }
+    
+
+    public static void storePanelLeftOptionPosition(InsertPositions optionInsertPosition) {
+        Preferences pref = Preferences.userRoot().node("PanelLeftOptions");
+        pref.put("InsertPosition", optionInsertPosition.toString());
+    }
+    
+    public static InsertPositions restorePanelLeftOptionPosition() {
+        Preferences pref = Preferences.userRoot().node("PanelLeftOptions");
+        String res = pref.get("InsertPosition", "REPLACE");
+        
+        return InsertPositions.valueOf(res);
+    }
+    
+    
 }

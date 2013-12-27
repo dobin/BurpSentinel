@@ -24,8 +24,8 @@ import gui.networking.Networker;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
 import javax.swing.JComboBox;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
@@ -46,7 +46,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private PanelLeftTableModel tableModel;
     private PanelLeftComboBoxModel sessionComboBoxModel;
     private JComboBox comboBoxSession;
-    private PanelLeftPopup popup;
+    private PanelLeftPopup paramPopup;
     private int selectedRow = -1;
     
     /**
@@ -82,13 +82,12 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
         
-        popup = new PanelLeftPopup(this);
-        
+        paramPopup = new PanelLeftPopup(this);
         // Add mouse listener for on-row popup menu
         tableMessages.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (popup.getPopup().isPopupTrigger(e)) {
+                if (paramPopup.getPopup().isPopupTrigger(e)) {
                     JTable source = (JTable) e.getSource();
                     int row = source.rowAtPoint(e.getPoint());
                     selectedRow = row;
@@ -98,12 +97,18 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                         source.changeSelection(row, column, false, false);
                     }
 
-                    popup.refreshAttackListIndex();
-                    popup.getPopup().show(e.getComponent(), e.getX(), e.getY());
+                    paramPopup.refreshAttackListIndex();
+                    paramPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
                 }
             }
         });    
+        
+        
+        optionsPopup = new PanelLeftOptions();
+        
     }
+    
+    private PanelLeftOptions optionsPopup;
    
     
     SentinelHttpParam getSelectedHttpParam() {
@@ -150,7 +155,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                 options,
                 origHttpMessage, 
                 this, 
-                checkboxFollowRedirect.isSelected(), 
+                optionsPopup.getOptionRedirect(),
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
         
         Networker.getInstance().attackThis(attackEntry);
@@ -191,9 +196,9 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelTop = new javax.swing.JPanel();
         panelTopHeader = new javax.swing.JPanel();
         buttonAttack = new javax.swing.JButton();
-        checkboxFollowRedirect = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         textfieldUrl = new javax.swing.JTextField();
+        buttonOptions = new javax.swing.JButton();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -214,14 +219,18 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             }
         });
 
-        checkboxFollowRedirect.setSelected(true);
-        checkboxFollowRedirect.setText("Follow Redirects");
-
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         textfieldUrl.setEditable(false);
         textfieldUrl.setText("jTextField1");
         jPanel1.add(textfieldUrl, java.awt.BorderLayout.CENTER);
+
+        buttonOptions.setText("Options");
+        buttonOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOptionsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
@@ -230,8 +239,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(checkboxFollowRedirect)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonOptions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -240,7 +249,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             .addGroup(panelTopHeaderLayout.createSequentialGroup()
                 .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAttack)
-                    .addComponent(checkboxFollowRedirect))
+                    .addComponent(buttonOptions))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -306,9 +315,14 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         attackRessource();
     }//GEN-LAST:event_buttonAttackActionPerformed
 
+    private void buttonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOptionsActionPerformed
+        JPopupMenu menu = optionsPopup.getPopupMenu();
+        menu.show(buttonOptions, 0, buttonOptions.getBounds().y);
+    }//GEN-LAST:event_buttonOptionsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
-    private javax.swing.JCheckBox checkboxFollowRedirect;
+    private javax.swing.JButton buttonOptions;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -330,6 +344,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     public void storeUiPrefs() {
         UiUtil.storeSplitLocation(jSplitPane1, this);
         UiUtil.storeTableDimensions(tableMessages, this);
+        
+        optionsPopup.storeUiPrefs();
     }
     
     public void externalUpdateUi() {
