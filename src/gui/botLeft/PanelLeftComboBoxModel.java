@@ -25,7 +25,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 
 /**
- *
+ * A combobox to select session for a httpmessage.
+ * 
  * @author unreal
  */
 public class PanelLeftComboBoxModel extends AbstractListModel implements ComboBoxModel, Observer {

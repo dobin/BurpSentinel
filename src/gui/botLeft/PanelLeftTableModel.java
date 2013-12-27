@@ -23,14 +23,18 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.DefaultTableModel;
-import model.SentinelHttpParam;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import model.SentinelHttpParam;
 import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
 
 /**
- *
+ * The table model for panel left.
+ * 
+ * This also acts as model for the params of the httpmessage a little.
+ * 
+ * 
  * @author unreal
  */
 public class PanelLeftTableModel extends DefaultTableModel implements Observer {
@@ -173,24 +177,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     }
 
     
-    private String hasVulns(SentinelHttpParam param) {
-        for (SentinelHttpMessageAtk m : myMessage.getHttpMessageChildren()) {
-            if (m.getAttackResult() == null) {
-                continue;
-            }
-
-            String childrenName = m.getAttackResult().getAttackParam().getName();
-            String thisName = param.getName();
-
-            if (m.getAttackResult().isSuccess() && childrenName.equals(thisName)) {
-                return "VULN";
-            }
-        }
-
-        return "-";
-    }
-
-    
     void setMessage(SentinelHttpMessageOrig message) {
         try {
             this.myMessage = message;
@@ -201,6 +187,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
         reinit();
     }
+    
     
     void reinit() {
         uiEntries.clear();

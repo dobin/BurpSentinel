@@ -19,7 +19,9 @@ package gui.botLeft;
 import model.SentinelHttpParam;
 
 /**
- *
+ * Hold state for individual rows of panel left table.
+ * 
+ * 
  * @author dobin
  */
 class PanelLeftTableUIEntry {
@@ -36,6 +38,4 @@ class PanelLeftTableUIEntry {
     public String authData;
     
     public boolean isOrigEnabled;
-    
-    
 }

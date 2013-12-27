@@ -22,7 +22,11 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 
 /**
- *
+ * Individual cell editor vor panel left param table.
+ * 
+ * To add cookie dropdown box.
+ * 
+ * 
  * @author unreal
  */
 public class PanelLeftTableCellEditor extends DefaultCellEditor  {

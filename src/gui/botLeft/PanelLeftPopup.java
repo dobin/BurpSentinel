@@ -30,6 +30,17 @@ import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
 
 /**
+ * Provides the popup menu for parameters.
+ * 
+ * When user right-clicks on an parameter in panelleft, menu will show up.
+ * Menu entries:
+ *   - Attack param 
+ *   - Attack param with list
+ *   - Add decoded param
+ * 
+ * Note that attack lists are in flux, and therefore the menu entries need
+ * to be updated with refreshAttackList() when changed.
+ * 
  *
  * @author DobinRutishauser@broken.ch
  */
@@ -42,6 +53,10 @@ public class PanelLeftPopup implements ActionListener {
     private PanelLeftUi parent;
     private LinkedList<JMenuItem> attackMenuItems;
     private LinkedList<JMenuItem> attackListMenuItems;
+    
+    private JMenuItem decodeURL;
+    private JMenuItem decodeHTML;
+    private JMenuItem decodeBase64;
 
     public PanelLeftPopup(PanelLeftUi parent) {
         this.parent = parent;
@@ -60,8 +75,6 @@ public class PanelLeftPopup implements ActionListener {
         decodeSubmenu = new JMenu("Decode as");
         initDecodeSubmenu();
         menu.add(decodeSubmenu);
-
-        
     }
 
     public JPopupMenu getPopup() {
@@ -191,9 +204,7 @@ public class PanelLeftPopup implements ActionListener {
         // TODO: remove all old selections
         parent.updateModel();
     }
-    private JMenuItem decodeURL;
-    private JMenuItem decodeHTML;
-    private JMenuItem decodeBase64;
+
 
     private void initDecodeSubmenu() {
         decodeBase64 = new JMenuItem("Decode Base64");

@@ -17,17 +17,16 @@
 package gui.botLeft;
 
 import java.awt.Component;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 /**
- *
+ * Individual cell rednderer for panel left param table.
+ * 
+ * To add cookie dropdown box.
+ * 
  * @author unreal
  */
 public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {

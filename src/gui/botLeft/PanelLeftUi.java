@@ -48,6 +48,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private JComboBox comboBoxSession;
     private PanelLeftPopup paramPopup;
     private int selectedRow = -1;
+    private PanelLeftOptions optionsPopup;
+   
     
     /**
      * Creates new form RequestConfigForm
@@ -103,13 +105,9 @@ public class PanelLeftUi extends javax.swing.JPanel  {
             }
         });    
         
-        
         optionsPopup = new PanelLeftOptions();
-        
     }
     
-    private PanelLeftOptions optionsPopup;
-   
     
     SentinelHttpParam getSelectedHttpParam() {
         return tableModel.getHttpParamAt(selectedRow);
@@ -181,7 +179,15 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
     }
-    
+      
+       
+    /*
+     * If we add a virtual parameter (decoded version of existing one), we need
+     * to update table model and redraw table.
+     */
+    void updateModel() {
+        tableModel.reinit();
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -348,20 +354,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         
         optionsPopup.storeUiPrefs();
     }
-    
-    public void externalUpdateUi() {
-        sessionComboBoxModel.myupdate();
-        tableModel.fireTableDataChanged();
-    }
-
-    void myUpdateUI() {
-        this.updateUI();
-        panelParent.updateUI();
-    }
-
-    void updateModel() {
-        tableModel.reinit();
-    }
+  
 
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;

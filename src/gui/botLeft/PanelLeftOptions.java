@@ -24,7 +24,14 @@ import javax.swing.JPopupMenu;
 import util.UiUtil;
 
 /**
- *
+ * Provides Options submenu, and handles option details
+ * 
+ * Will provide the options menu for panelleft. It also has state of 
+ * the following options:
+ *   - Follow Redirects
+ *   - Attack Vector insert location
+ * 
+ * 
  * @author DobinRutishauser@broken.ch
  */
 public class PanelLeftOptions implements ActionListener {

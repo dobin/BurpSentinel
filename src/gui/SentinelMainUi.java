@@ -171,14 +171,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         //panelBotUiList.remove(currentSelectedRow);
         //panelCard.remove(currentSelectedRow);
     }
-    
-    // TODO
-    public void updateBottomPanel() {
-        if (currentPanelBot == null) {
-            return;
-        }
-        currentPanelBot.externalUpdate();
-    }
 
     
     /*

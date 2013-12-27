@@ -58,11 +58,7 @@ public class PanelBotUi extends javax.swing.JPanel {
     public ViewMessageLinkManager getLinkManager() {
         return linkManager;
     }
-    
-    public void externalUpdate() {
-        panelLeftUi.externalUpdateUi();
-    }
-    
+   
     
     public SentinelHttpMessage getOrigMessage() {
         SentinelHttpMessage orig = panelLeftUi.getOrigHttpMessage();
