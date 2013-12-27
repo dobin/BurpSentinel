@@ -73,18 +73,26 @@ public class BurpCallbacks {
         
     }
 
-    public void sendRessource(SentinelHttpMessage sentinelMessage, boolean followRedirect) throws ConnectionTimeoutException {
+    public void sendRessource(SentinelHttpMessage httpMessage, boolean followRedirect) throws ConnectionTimeoutException {
         if (getBurp() == null) {
-            BurpCallbacks.getInstance().print("sendRessource: No burp available");
+            BurpCallbacks.getInstance().print("sendRessource: No burp available. Abort.");
+            return;
+        }
+        if (httpMessage == null) {
+            BurpCallbacks.getInstance().print("sendRessource: Void httpmessage! See previous errors. Abort.");
+            return;
+        }
+        if (httpMessage.getHttpService() == null || httpMessage.getRequest() == null) {
+            BurpCallbacks.getInstance().print("sendRessource: Void data! Abort.");
             return;
         }
 
 //        try {
             IHttpRequestResponse r = null;
             long timeStart = System.currentTimeMillis();
-            r = getBurp().makeHttpRequest(sentinelMessage.getHttpService(), sentinelMessage.getRequest());
+            r = getBurp().makeHttpRequest(httpMessage.getHttpService(), httpMessage.getRequest());
             long time = System.currentTimeMillis() - timeStart;
-            sentinelMessage.setLoadTime(time);
+            httpMessage.setLoadTime(time);
 
             
             if (r.getResponse() == null) {
@@ -95,17 +103,17 @@ public class BurpCallbacks {
                 int n = 0;
                 while (isRedirect(r.getResponse()) && ++n <= 10) {
                     BurpCallbacks.getInstance().print("Is redir, following...");
-                    sentinelMessage.setRedirected(true);
+                    httpMessage.setRedirected(true);
                     r = followRedirect(r);
                 }
                 if (n >= 10) {
                     String s = "Redirected 10 times, aborting...";
-                    sentinelMessage.setResponse(s.getBytes());
+                    httpMessage.setResponse(s.getBytes());
                 } else {
-                    sentinelMessage.setResponse(r.getResponse());
+                    httpMessage.setResponse(r.getResponse());
                 }
             } else {
-                sentinelMessage.setResponse(r.getResponse());
+                httpMessage.setResponse(r.getResponse());
             }
   //      } catch (Exception ex) {
    //         BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());

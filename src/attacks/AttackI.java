@@ -27,9 +27,18 @@ import util.BurpCallbacks;
 /**
  * Interface for all attack classes
  * 
- * initialMessage: the message we want to attack
- * origParam:      the param we want to attack
- * attackData:     additional data from the user for this attack
+ * AttackWorkEntry should have all data we need to send an attack request:
+ *   - original http message
+ *   - param to change
+ *   - which attack to perform
+ *   - additional options
+ * 
+ * init() is called first.
+ * Then, performNextAttack() will be called as long as it returns true.
+ * getLastAttackMessage() should return the last sent HTTP Message by the attack
+ * class (for logging/monitoring purposes). 
+ * initAttackHttpMessage() with the attack vector string should preferably be
+ * called to create the attack http message.
  * 
  * @author Dobin
  */
@@ -45,19 +54,32 @@ public abstract class AttackI {
      */
     abstract public boolean performNextAttack();
     
-    /* Get the last http message sent by performNextAttack()
+    /* 
+     * Get the last http message sent by performNextAttack()
      */
     abstract public SentinelHttpMessageAtk getLastAttackMessage();
 
+    /*
+     * Called before performNextAttack()
+     */
     abstract public boolean init();
     
     /*
+     * Init a http message for an attack
+     * This involves:
+     *   - create a new httpmessage
+     *   - add attack vector as changeparam
+     *   - set parent
      * 
      */
     protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString) {
         if (attackWorkEntry == null) {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: work entry is null");
             return null;
+        }
+        if (attackVectorString == null) {
+             BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
+             return null;
         }
         
         // Copy httpmessage
@@ -72,29 +94,26 @@ public abstract class AttackI {
             changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) attackWorkEntry.attackHttpParam);
         } else if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParam) {
             changeParam = new SentinelHttpParam(attackWorkEntry.attackHttpParam);
-        }        
-        if (attackVectorString != null) {
-            switch(attackWorkEntry.insertPosition) {
-                case LEFT:
-                    changeParam.changeValue( attackVectorString + changeParam.getValue());
-                    break;
-                case RIGHT:
-                    changeParam.changeValue( changeParam.getValue() + attackVectorString);
-                    break;
-                case REPLACE:
-                    changeParam.changeValue(attackVectorString);
-                    break;
-                default: 
-                    return null;
-            }
-        } else {
-            BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
+        }   
+        switch (attackWorkEntry.insertPosition) {
+            case LEFT:
+                changeParam.changeValue(attackVectorString + changeParam.getValue());
+                break;
+            case RIGHT:
+                changeParam.changeValue(changeParam.getValue() + attackVectorString);
+                break;
+            case REPLACE:
+                changeParam.changeValue(attackVectorString);
+                break;
+            default:
+                return null;
         }
+
         newHttpMessage.getReq().setChangeParam(changeParam);
-        if (attackVectorString != null) {
-            newHttpMessage.getReq().applyChangeParam();
-        } else {
-            BurpCallbacks.getInstance().print("initAttackHttpMessage: ApplyChange: attack is null");
+        boolean ret = newHttpMessage.getReq().applyChangeParam();
+        if (ret == false) {
+            BurpCallbacks.getInstance().print("initAttackHttpMessage: problem applying change param");
+            return null;
         }
         
         // Set parent

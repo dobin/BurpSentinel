@@ -224,14 +224,14 @@ public class SentinelHttpRequest implements Serializable {
     
     
     // Write request
-    public void applyChangeParam() {
+    public boolean applyChangeParam() {
         if (request == null || request.length == 0) {
             BurpCallbacks.getInstance().print("ApplyChangeParam: Cant apply changeparam - no request");
-            return;
+            return false;
         }
         if (origParam == null) {
             BurpCallbacks.getInstance().print("ApplyChangeParam: no orig param");
-            return;
+            return false;
         }
 
         byte paramType = changeParam.getType();
@@ -251,6 +251,8 @@ public class SentinelHttpRequest implements Serializable {
         
         // Update change param to reflect new state
         init();
+        
+        return true;
     }
     
     private byte[] updateParameterPath(byte[] request, SentinelHttpParam changeParam) {
