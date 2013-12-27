@@ -28,14 +28,14 @@ import model.SentinelHttpParam;
  * @author dobin
  */
 public class AttackWorkEntry {
-    SentinelHttpParam attackHttpParam;
-    AttackMain.AttackTypes attackType;
-    String options;
-    SentinelHttpMessageOrig origHttpMessage;
-    PanelLeftUi panelParent;
-    boolean followRedirect;
-    PanelLeftOptions.InsertPositions insertPosition;
-    String mainSessionName;
+    public SentinelHttpParam attackHttpParam;
+    public AttackMain.AttackTypes attackType;
+    public String options;
+    public SentinelHttpMessageOrig origHttpMessage;
+    public PanelLeftUi panelParent;
+    public boolean followRedirect;
+    public PanelLeftOptions.InsertPositions insertPosition;
+    public String mainSessionName;
     
     SentinelHttpMessageAtk result;
     

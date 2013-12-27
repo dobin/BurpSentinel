@@ -18,6 +18,7 @@ package attacks;
 
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
+import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
@@ -37,14 +38,21 @@ public class AttackList extends AttackI {
     private SentinelHttpMessageAtk lastHttpMessage = null;
     private int state = 0;
     
-    public AttackList(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam, data);
+    public AttackList(AttackWorkEntry work) {
+        super(work);
     }
     
+            
+    @Override
+    public boolean init() {
+        return true;
+    }
+
+ 
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
         lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {
@@ -73,24 +81,24 @@ public class AttackList extends AttackI {
     public boolean performNextAttack() {
        boolean doContinue = false;
         
-        if (initialMessage == null || initialMessage.getRequest() == null) {
+        if (attackWorkEntry.origHttpMessage == null || attackWorkEntry.origHttpMessage.getRequest() == null) {
             BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
             return false;
         }
-        if (initialMessage.getReq().getChangeParam() == null) {
+        if (attackWorkEntry.origHttpMessage.getReq().getChangeParam() == null) {
             //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
             //return false;
         }
         
-        ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackData));
+        ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackWorkEntry.options));
         if (list == null) {
-            BurpCallbacks.getInstance().print("Could not load List: " + attackData + " State: " + state);
+            BurpCallbacks.getInstance().print("Could not load List: " + attackWorkEntry.options + " State: " + state);
             return false;
         }
         
         String data = list.getContent().get(state);
         if (data == null || data.length() == 0) {
-            BurpCallbacks.getInstance().print("List Data error! List: " + attackData + " State: " + state);
+            BurpCallbacks.getInstance().print("List Data error! List: " + attackWorkEntry.options + " State: " + state);
             return false;
         }
         

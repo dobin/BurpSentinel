@@ -86,12 +86,72 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
         }
     }
 
-    private void performAttack(AttackI attack, AttackWorkEntry work, SentinelHttpParam attackHttpParam) {
+
+    public NetworkerLogger getLogger() {
+        return log;
+    }
+
+    void cancelAll() {
+        cancel = true;
+        log.giveSignal(NetworkerLogger.Signal.CANCEL);
+        log.append("\n\nCanceling, please wait... ");
+    }
+
+    private void doWork(AttackWorkEntry work) {
+        log.newWork();
+        log.giveSignal(NetworkerLogger.Signal.START);
+
+        AttackMain.AttackTypes attackType = work.attackType;
+        AttackI attack = null;
+        
+        // Some basic integrity checks
+        if (work.origHttpMessage == null || work.origHttpMessage.getRequest() == null) {
+            BurpCallbacks.getInstance().print("initialmessage broken");
+            return;
+        }
+        
+        BurpCallbacks.getInstance().print("doAttack: " + work.attackType);
+        
+        switch (attackType) {
+            case ORIGINAL:
+                attack = new AttackOriginal(work);
+                break;
+            case XSS:
+                attack = new AttackXss(work);
+                break;
+            case OTHER:
+                attack = new AttackPersistentXss(work);
+                break;
+            case SQL:
+                break;
+            case AUTHORISATION:
+                attack = new AttackAuthorisation(work);
+                break;
+            case LIST:
+                attack = new AttackList(work);
+                break;
+            case XSSLESSTHAN:
+                attack = new AttackXssLessThan(work);
+                break;
+            default:
+                BurpCallbacks.getInstance().print("Error, unknown attack type: " + attackType);
+                return;
+        }
+        
+        if (attack.init() == true) {
+            performAttack(attack, work);
+        }
+        
+        log.giveSignal(NetworkerLogger.Signal.FINISHED);
+    }
+
+
+    private void performAttack(AttackI attack, AttackWorkEntry work) {
         SentinelHttpMessageAtk attackMessage = null;
         boolean goon = true;
 
         while (goon) {
-            log.append(work.origHttpMessage.getReq().getUrl() + " (" + attackHttpParam.getName() + "=" + attackHttpParam.getValue() + ") ...");
+            log.append(work.origHttpMessage.getReq().getUrl() + " (" + work.attackHttpParam.getName() + "=" + work.attackHttpParam.getValue() + ") ...");
             log.giveSignal(NetworkerLogger.Signal.SEND);
             goon = attack.performNextAttack();
             log.giveSignal(NetworkerLogger.Signal.RECV);
@@ -110,77 +170,5 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
                 goon = false;
             }
         }
-    }
-
-    public NetworkerLogger getLogger() {
-        return log;
-    }
-
-    void cancelAll() {
-        cancel = true;
-        log.giveSignal(NetworkerLogger.Signal.CANCEL);
-        log.append("\n\nCanceling, please wait... ");
-    }
-
-    private void doWork(AttackWorkEntry work) {
-        log.newWork();
-        log.giveSignal(NetworkerLogger.Signal.START);
-
-        doAttack(work);
-        
-        /*
-        for (SentinelHttpParam attackHttpParam : work.attackHttpParams) {
-            doAttack(work, attackHttpParam);
-            
-            if (cancel) {
-                log.append("ok\n");
-                cancel = false;
-                break;
-            }
-        }*/
-        
-        log.giveSignal(NetworkerLogger.Signal.FINISHED);
-    }
-
-    private void doAttack(AttackWorkEntry work) {
-        SentinelHttpParam attackHttpParam = work.attackHttpParam;
-        SentinelHttpMessageOrig origHttpMessage = work.origHttpMessage;
-        String options = work.options;
-        boolean followRedirect = work.followRedirect;
-        String mainSessionName = work.mainSessionName;
-        AttackMain.AttackTypes attackType = work.attackType;
- 
-        AttackI attack = null;
-        
-        BurpCallbacks.getInstance().print("doAttack: " + work.attackType);
-        
-        switch (attackType) {
-            case ORIGINAL:
-                attack = new AttackOriginal(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-                break;
-            case XSS:
-                attack = new AttackXss(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-                break;
-            case OTHER:
-                attack = new AttackPersistentXss(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-                break;
-            case SQL:
-                attack = new AttackSql(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-                break;
-            case AUTHORISATION:
-                attack = new AttackAuthorisation(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, options);
-                break;
-            case LIST:
-                attack = new AttackList(origHttpMessage, mainSessionName, followRedirect, attackHttpParam, options);
-                break;
-            case XSSLESSTHAN:
-                attack = new AttackXssLessThan(origHttpMessage, mainSessionName, followRedirect, attackHttpParam);
-                break;
-            default:
-                BurpCallbacks.getInstance().print("Error, unknown attack type: " + attackType);
-                return;
-        }
-        
-        performAttack(attack, work, attackHttpParam);
     }
 }

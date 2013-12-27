@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import java.util.LinkedList;
@@ -111,11 +112,12 @@ public class AttackXssLessThan extends AttackI {
     private int state = 0;
     private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    public AttackXssLessThan(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam);
+    public AttackXssLessThan(AttackWorkEntry work) {
+        super(work);
     }
     
-    public void init() {
+    @Override
+    public boolean init() {
         int n = 0;
         for (String s : attackStrings) {
             AttackData atkData = new AttackData(n, 
@@ -123,7 +125,8 @@ public class AttackXssLessThan extends AttackI {
                     XssIndicator.getInstance().getIndicator() + "<", 
                     AttackData.AttackType.VULN);
             attackDataXss.add(atkData);
-        }        
+        }       
+        return true;
     }
 
     @Override
@@ -149,7 +152,7 @@ public class AttackXssLessThan extends AttackI {
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {

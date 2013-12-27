@@ -17,9 +17,9 @@
 
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import gui.session.SessionManager;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
@@ -34,28 +34,12 @@ import util.BurpCallbacks;
  * @author Dobin
  */
 public abstract class AttackI {
-    protected SentinelHttpMessageOrig initialMessage;
-    protected SentinelHttpParam origParam;
-    protected String attackData;
-    protected String mainSessionName;
-    protected boolean followRedirect = false;
-        
-    public AttackI(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        this.initialMessage = origHttpMessage;
-        this.mainSessionName = mainSessionName;
-        this.followRedirect = followRedirect;
-        this.origParam = origParam;
+    protected AttackWorkEntry attackWorkEntry;
+    
+    public AttackI(AttackWorkEntry work) {
+        this.attackWorkEntry = work;
     }
-    
-    public AttackI(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
-        this.initialMessage = origHttpMessage;
-        this.mainSessionName = mainSessionName;
-        this.followRedirect = followRedirect;
-        this.origParam = origParam;
-        this.attackData = data;
-    }
-    
-    
+
     /* Will execute the next (or initial) attack
      * Returns true if more attacks are necessary/available
      */
@@ -65,44 +49,46 @@ public abstract class AttackI {
      */
     abstract public SentinelHttpMessageAtk getLastAttackMessage();
 
+    abstract public boolean init();
+    
     /*
      * 
      */
-    protected SentinelHttpMessageAtk initAttackHttpMessage(String attack) {
+    protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString) {
         // Copy httpmessage
-        SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(initialMessage);
+        SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(attackWorkEntry.origHttpMessage);
 
         // Set orig param
-        newHttpMessage.getReq().setOrigParam(origParam);
+        newHttpMessage.getReq().setOrigParam(attackWorkEntry.attackHttpParam);
     
         // Set change param
         SentinelHttpParam changeParam = null;
-        if (origParam instanceof SentinelHttpParamVirt) {
-            changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) origParam);
-        } else if (origParam instanceof SentinelHttpParam) {
-            changeParam = new SentinelHttpParam(origParam);
+        if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParamVirt) {
+            changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) attackWorkEntry.attackHttpParam);
+        } else if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParam) {
+            changeParam = new SentinelHttpParam(attackWorkEntry.attackHttpParam);
         }        
         
-        if (attack != null) {
-            changeParam.changeValue(attack);
+        if (attackVectorString != null) {
+            changeParam.changeValue(attackVectorString);
         } else {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
         }
         newHttpMessage.getReq().setChangeParam(changeParam);
-        if (attack != null) {
+        if (attackVectorString != null) {
             newHttpMessage.getReq().applyChangeParam();
         } else {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: ApplyChange: attack is null");
         }
         
         // Set parent
-        newHttpMessage.setParentHttpMessage(initialMessage);
+        newHttpMessage.setParentHttpMessage(attackWorkEntry.origHttpMessage);
         
         // Apply new session
-        if (mainSessionName != null) {
-            if (! mainSessionName.equals("<default>") && ! mainSessionName.startsWith("<")) {
+        if (attackWorkEntry.mainSessionName != null) {
+            if (! attackWorkEntry.mainSessionName.equals("<default>") && ! attackWorkEntry.mainSessionName.startsWith("<")) {
                 String sessionVarName = SessionManager.getInstance().getSessionVarName();
-                String sessionVarValue = SessionManager.getInstance().getValueFor(mainSessionName);
+                String sessionVarValue = SessionManager.getInstance().getValueFor(attackWorkEntry.mainSessionName);
 
                 // Dont do it if we already modified the session parameter
                 if (!sessionVarName.equals(changeParam.getName())) {

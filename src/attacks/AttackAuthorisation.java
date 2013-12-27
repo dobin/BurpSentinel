@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import gui.session.SessionManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,32 +34,32 @@ public class AttackAuthorisation extends AttackI {
     private boolean attackAsuccess = false;
     private SentinelHttpMessageAtk httpMessageA;
 
-    public AttackAuthorisation(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam, String data) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam, data);
+    public AttackAuthorisation(AttackWorkEntry work) {
+        super(work);
+    }
+    
+    @Override
+    public boolean init() {
+        return true;
     }
 
     @Override
     public boolean performNextAttack() {
-        if (initialMessage == null || initialMessage.getRequest() == null) {
-            BurpCallbacks.getInstance().print("AttackAuthorisation: initialmessage broken");
-            return false;
-        }
-
         return attackA();
     }
 
 
     private boolean attackA() {
-        if (attackData == null) {
+        if (attackWorkEntry.options == null) {
             BurpCallbacks.getInstance().print("initHttpMessage: no selectedSessionUser");
             return false;
         }
 
-        String sessionId = SessionManager.getInstance().getValueFor(attackData);
+        String sessionId = SessionManager.getInstance().getValueFor(attackWorkEntry.options);
 
         httpMessageA = initAttackHttpMessage(sessionId);
         try {
-            BurpCallbacks.getInstance().sendRessource(httpMessageA, followRedirect);
+            BurpCallbacks.getInstance().sendRessource(httpMessageA, attackWorkEntry.followRedirect);
         } catch (ConnectionTimeoutException ex) {
             Logger.getLogger(AttackAuthorisation.class.getName()).log(Level.SEVERE, null, ex);
         }

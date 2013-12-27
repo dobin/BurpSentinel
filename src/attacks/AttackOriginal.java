@@ -17,6 +17,7 @@
 package attacks;
 
 import attacks.AttackData.AttackType;
+import gui.networking.AttackWorkEntry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessageAtk;
@@ -33,19 +34,20 @@ public class AttackOriginal extends AttackI {
 
     private SentinelHttpMessageAtk message;
     
-    public AttackOriginal(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam);
+    public AttackOriginal(AttackWorkEntry work) {
+        super(work);
+    }
+    
+    @Override
+    public boolean init() {
+        return true;
     }
     
     @Override
     public boolean performNextAttack() {
         try {
-            if (initialMessage == null || initialMessage.getRequest() == null) {
-                BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
-            }
-
             SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(null);
-            BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+            BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
             this.message = httpMessage;
             
             AttackResult res = new AttackResult(

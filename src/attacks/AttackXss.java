@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
@@ -49,22 +50,19 @@ public class AttackXss extends AttackI {
     };
     
     
-    public AttackXss(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam);
+    public AttackXss(AttackWorkEntry work) {
+        super(work);
     }
+    
+    @Override
+    public boolean init() {
+        return true;
+    }
+
     
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;
-        
-        if (initialMessage == null || initialMessage.getRequest() == null) {
-            BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
-        }
-        if (initialMessage.getReq().getChangeParam() == null) {
-            //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
-            //return false;
-        }
-
         
         AttackData data = attackDataXss[state];
         SentinelHttpMessage httpMessage;
@@ -127,7 +125,7 @@ public class AttackXss extends AttackI {
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
         
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {

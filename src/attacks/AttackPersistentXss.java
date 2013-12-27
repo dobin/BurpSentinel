@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,24 +47,19 @@ public class AttackPersistentXss extends AttackI {
         new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
     };
     
-    
-    public AttackPersistentXss(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam);
+       public AttackPersistentXss(AttackWorkEntry work) {
+        super(work);
+    }
+       
+    @Override
+    public boolean init() {
+        return true;
     }
     
+
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;
-        
-        if (initialMessage == null || initialMessage.getRequest() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
-        }
-/*
-        if (initialMessage.getReq().getChangeParam() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "performNextAttack: getChangeParam = null");
-            return false;
-        }
-*/
         
         // Send next attack
         AttackData data = attackData[state];
@@ -123,7 +119,7 @@ public class AttackPersistentXss extends AttackI {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
         try {
-            BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+            BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
         } catch (ConnectionTimeoutException ex) {
             Logger.getLogger(AttackPersistentXss.class.getName()).log(Level.SEVERE, null, ex);
         }

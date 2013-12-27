@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import java.util.logging.Level;
@@ -53,21 +54,19 @@ public class AttackSql extends AttackI {
         "%22%22%22",
     };
     
-    public AttackSql(SentinelHttpMessageOrig origHttpMessage, String mainSessionName, boolean followRedirect, SentinelHttpParam origParam) {
-        super(origHttpMessage, mainSessionName, followRedirect, origParam);
+     public AttackSql(AttackWorkEntry work) {
+        super(work);
     }
 
+             
+    @Override
+    public boolean init() {
+        return true;
+    }
+     
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;
-        
-        if (initialMessage == null || initialMessage.getRequest() == null) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "performNextAttack: no initialmessage");
-        }
-        if (initialMessage.getReq().getChangeParam() == null) {
-            //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
-            //return false;
-        }
         
         String data = attackDataSql[state];
         try {
@@ -95,7 +94,7 @@ public class AttackSql extends AttackI {
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
         lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, followRedirect);
+        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
         String response = httpMessage.getRes().getResponseStr();
         if (response.contains("MySQL")) {

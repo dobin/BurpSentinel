@@ -16,12 +16,6 @@
  */
 package gui.networking;
 
-import gui.botLeft.PanelLeftUi;
-import java.util.LinkedList;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
-import util.BurpCallbacks;
-
 /**
  *
  * @author dobin
@@ -55,25 +49,6 @@ public class Networker {
     public void attackThis(AttackWorkEntry atkRessource) {
         worker.addAttack(atkRessource);
     }
-
-/*    
-    public void addNewMessages(
-            LinkedList<SentinelHttpParam> attackHttpParams,
-            SentinelHttpMessageOrig origHttpMessage,
-            PanelLeftUi panelParent,
-            boolean followRedirect,
-            String mainSessionName) {
-
-        AttackWorkEntry entry = new AttackWorkEntry(
-                attackHttpParams,
-                origHttpMessage,
-                panelParent,
-                followRedirect,
-                mainSessionName);
-
-        worker.addAttack(entry);
-    }
-    * */
 
     void cancelAll() {
         worker.cancelAll();
