@@ -55,22 +55,38 @@ public abstract class AttackI {
      * 
      */
     protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString) {
+        if (attackWorkEntry == null) {
+            BurpCallbacks.getInstance().print("initAttackHttpMessage: work entry is null");
+            return null;
+        }
+        
         // Copy httpmessage
         SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(attackWorkEntry.origHttpMessage);
 
         // Set orig param
         newHttpMessage.getReq().setOrigParam(attackWorkEntry.attackHttpParam);
     
-        // Set change param
+        // Set change param (by copying original param)
         SentinelHttpParam changeParam = null;
         if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParamVirt) {
             changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) attackWorkEntry.attackHttpParam);
         } else if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParam) {
             changeParam = new SentinelHttpParam(attackWorkEntry.attackHttpParam);
         }        
-        
         if (attackVectorString != null) {
-            changeParam.changeValue(attackVectorString);
+            switch(attackWorkEntry.insertPosition) {
+                case LEFT:
+                    changeParam.changeValue( attackVectorString + changeParam.getValue());
+                    break;
+                case RIGHT:
+                    changeParam.changeValue( changeParam.getValue() + attackVectorString);
+                    break;
+                case REPLACE:
+                    changeParam.changeValue(attackVectorString);
+                    break;
+                default: 
+                    return null;
+            }
         } else {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
         }
