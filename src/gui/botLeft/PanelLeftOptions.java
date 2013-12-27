@@ -41,8 +41,8 @@ public class PanelLeftOptions implements ActionListener {
     // Options
     private boolean optionEnableRedirect;
 
-    public static enum InsertPositions {
 
+    public static enum InsertPositions {
         REPLACE,
         LEFT,
         RIGHT,};
@@ -144,5 +144,9 @@ public class PanelLeftOptions implements ActionListener {
 
     boolean getOptionRedirect() {
         return optionEnableRedirect;
+    }
+    
+    InsertPositions getOptionInsertPosition() {
+        return optionInsertPosition;
     }
 }

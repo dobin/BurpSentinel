@@ -17,8 +17,8 @@
 package gui.networking;
 
 import attacks.AttackMain;
+import gui.botLeft.PanelLeftOptions;
 import gui.botLeft.PanelLeftUi;
-import java.util.LinkedList;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
@@ -34,6 +34,7 @@ public class AttackWorkEntry {
     SentinelHttpMessageOrig origHttpMessage;
     PanelLeftUi panelParent;
     boolean followRedirect;
+    PanelLeftOptions.InsertPositions insertPosition;
     String mainSessionName;
     
     SentinelHttpMessageAtk result;
@@ -44,6 +45,7 @@ public class AttackWorkEntry {
             SentinelHttpMessageOrig origHttpMessage, 
             PanelLeftUi panelParent, 
             boolean followRedirect, 
+            PanelLeftOptions.InsertPositions insertPosition,
             String mainSessionName) {
      
         this.attackHttpParam = attackHttpParam;
@@ -52,6 +54,7 @@ public class AttackWorkEntry {
         this.options = options;
         this.panelParent = panelParent;
         this.followRedirect = followRedirect;
+        this.insertPosition = insertPosition;
         this.mainSessionName = mainSessionName;
     }
 

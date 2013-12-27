@@ -156,6 +156,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                 origHttpMessage, 
                 this, 
                 optionsPopup.getOptionRedirect(),
+                optionsPopup.getOptionInsertPosition(),
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
         
         Networker.getInstance().attackThis(attackEntry);
