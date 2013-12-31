@@ -23,8 +23,6 @@ import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
@@ -37,18 +35,16 @@ public class AttackList extends AttackI {
 
     private SentinelHttpMessageAtk lastHttpMessage = null;
     private int state = 0;
-    
+
     public AttackList(AttackWorkEntry work) {
         super(work);
     }
-    
-            
+
     @Override
     public boolean init() {
         return true;
     }
 
- 
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
         lastHttpMessage = httpMessage;
@@ -59,65 +55,59 @@ public class AttackList extends AttackI {
             BurpCallbacks.getInstance().print("Response error");
             return httpMessage;
         }
-        
+
         // Check if input value gets reflected
         if (response.contains(data)) {
             AttackResult res = new AttackResult(
                     AttackData.AttackType.INFO,
-                    "LIST",
-                    httpMessage.getReq().getChangeParam(), 
+                    "LST" + attackWorkEntry.options + "." + state,
+                    httpMessage.getReq().getChangeParam(),
                     true);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
-            
+
             httpMessage.addHighlight(h);
+        } else {
+            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "LST" + attackWorkEntry.options + "." + state, httpMessage.getReq().getChangeParam(), false);
+            httpMessage.addAttackResult(res);
         }
-        
+
         return httpMessage;
     }
-    
+
     @Override
     public boolean performNextAttack() {
-       boolean doContinue = false;
-        
-        if (attackWorkEntry.origHttpMessage == null || attackWorkEntry.origHttpMessage.getRequest() == null) {
-            BurpCallbacks.getInstance().print("performNextAttack: no initialmessage");
-            return false;
-        }
-        if (attackWorkEntry.origHttpMessage.getReq().getChangeParam() == null) {
-            //BurpCallbacks.getInstance().print("performNextAttack: no changeparam");
-            //return false;
-        }
-        
+        boolean doContinue = false;
+
         ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackWorkEntry.options));
         if (list == null) {
             BurpCallbacks.getInstance().print("Could not load List: " + attackWorkEntry.options + " State: " + state);
             return false;
         }
-        
+
         String data = list.getContent().get(state);
         if (data == null || data.length() == 0) {
             BurpCallbacks.getInstance().print("List Data error! List: " + attackWorkEntry.options + " State: " + state);
             return false;
         }
-        
+
         // Replace placeholder with our XSS Identifier
         data = data.replace("XSS", XssIndicator.getInstance().getIndicator());
-        
+
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout: " + ex.getLocalizedMessage());
             return false;
         }
-        
+
         if (state < list.getContent().size() - 1) {
             doContinue = true;
         } else {
             doContinue = false;
         }
-        
+
         state++;
         return doContinue;
     }
@@ -126,5 +116,4 @@ public class AttackList extends AttackI {
     public SentinelHttpMessageAtk getLastAttackMessage() {
         return lastHttpMessage;
     }
-    
 }
