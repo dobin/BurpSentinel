@@ -19,12 +19,8 @@ package attacks;
 import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
@@ -69,6 +65,7 @@ public class AttackSql extends AttackI {
         boolean doContinue = false;
         
         String data = attackDataSql[state];
+        
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
