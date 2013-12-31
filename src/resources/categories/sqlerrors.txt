@@ -46,3 +46,4 @@ mysql error
 on MySQL result index
 supplied argument is not a valid MySQL result resource
 unexpected end of SQL command
+SQLSTATE
