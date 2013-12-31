@@ -1,32 +1,42 @@
-- should be possible to add decoded string for attack lists (xss)
-- 
+- A2 authentication
+  - set session name
+  - identify session id in non-usual places
+  - session attacks
+  - 
+
+- integration in burp:
+  - button in FF "attack with sentinel" ?
 
 - Parameter Pollution
   - add arbitrary param
 - json viewer
-+ add decoded param to list
 - json browser
   - for adding params
   - test if its type is really JSON?
+
 - standalone sentinel version
-- "add to sentinel" in panelright popup
+
+- lists:
+  ? should be possible to add decoded string for attack lists (xss)
+  - list entries are usually not encoded - need to encode if sent in GET?
+  - or not?
+
++ "add to sentinel" in panelright popup
+
 - attacklists "Test" and "Result" in panelright are "Null"
-- do not fsck store attacktypes in HttpParam... !
 - make decoder indicator better (no string)
   - also in panelright (attack)
-- make "options" popup menu in panel right and panel left
 - insert fucked up json delimiter on attackother };
-
+- export:
+  - copy paste csnc style
+  - interoperability style
 - allow multiple changeParam in HttpParam
 - remove changeparam from httpMessage.getReq()
-
 - create repeater implementation
-- panelleftui has 3 update methods...
 - remove old selections in PanelLeftPopup.decodeIt()
 - delete virtparam in panelleft
 
 Overall:
-+ should be possible to store and restore messages
 - generate report
 - add tooltip to everything
 - attack variable names?
@@ -129,7 +139,14 @@ Questions:
   - invokelater for maingui?
   - invokelater for sendtosentinel?
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
++ should be possible to store and restore messages
++ make "options" popup menu in panel right and panel left
++ do not fsck store attacktypes in HttpParam... !
++ add decoded param to list
++ why attackSelectedParam() in PanelLeftUi?!
++ panelleftui has 3 update methods...
 
 + panelleft: Send again should be asyncronous and not block burp!
 + make panelleft table items right-clickable
