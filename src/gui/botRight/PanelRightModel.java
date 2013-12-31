@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
+import util.UiUtil;
 
 /**
  *
@@ -129,7 +129,13 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 3: return m.getReq().getOrigParam().getDecodedValue();
             case 4: return m.getReq().getChangeParam().getDecodedValue();
             case 5: return m.getRes().getHttpCode();
-            case 6: return m.getRes().getSize();
+            case 6: 
+                if (UiUtil.getEnableRelativeResponseSize()) {
+                    return m.getRes().getSize();
+                } else {
+                    return m.getRes().getSize() - m.getParentHttpMessage().getRes().getSize();
+                }
+                
             case 7: return m.getRes().getDom();
             case 8: return (int) m.getLoadTime();
             case 9: 

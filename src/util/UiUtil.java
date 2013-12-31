@@ -339,5 +339,15 @@ public class UiUtil {
         return InsertPositions.valueOf(res);
     }
     
+    public static void storeEnableRelativeResponseSize(boolean b) {
+        Preferences pref = Preferences.userRoot().node("Options");
+        pref.putBoolean("RelativeResponseSize", b);
+    }
+    
+    public static boolean getEnableRelativeResponseSize() {
+        Preferences pref = Preferences.userRoot().node("Options");
+        boolean res = pref.getBoolean("RelativeResponseSize", true);
+        return res;
+    }
     
 }

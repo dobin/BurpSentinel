@@ -30,8 +30,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
+import util.UiUtil;
 
 /**
  *
@@ -44,6 +44,13 @@ public class FrameOptions extends javax.swing.JFrame {
      */
     public FrameOptions() {
         initComponents();
+        
+        init();
+    }
+    
+    private void init() {
+        checkboxRelativeSize.setSelected(UiUtil.getEnableRelativeResponseSize());
+
     }
 
     /**
@@ -60,6 +67,8 @@ public class FrameOptions extends javax.swing.JFrame {
         textfieldFilename = new javax.swing.JTextField();
         buttonSelectFile = new javax.swing.JButton();
         buttonRestore = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        checkboxRelativeSize = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -115,17 +124,43 @@ public class FrameOptions extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        checkboxRelativeSize.setText("Relative response size");
+        checkboxRelativeSize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkboxRelativeSizeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(checkboxRelativeSize)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(checkboxRelativeSize)
+                .addGap(0, 54, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 173, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 90, Short.MAX_VALUE))
         );
 
         pack();
@@ -184,11 +219,17 @@ public class FrameOptions extends javax.swing.JFrame {
         
     }//GEN-LAST:event_buttonRestoreActionPerformed
 
+    private void checkboxRelativeSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxRelativeSizeActionPerformed
+        UiUtil.storeEnableRelativeResponseSize(checkboxRelativeSize.isSelected());
+    }//GEN-LAST:event_checkboxRelativeSizeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonRestore;
     private javax.swing.JButton buttonSave;
     private javax.swing.JButton buttonSelectFile;
+    private javax.swing.JCheckBox checkboxRelativeSize;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField textfieldFilename;
     // End of variables declaration//GEN-END:variables
 }
