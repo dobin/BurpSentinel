@@ -123,6 +123,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
                 attack = new AttackPersistentXss(work);
                 break;
             case SQL:
+                attack = new AttackSql(work);
                 break;
             case AUTHORISATION:
                 attack = new AttackAuthorisation(work);
