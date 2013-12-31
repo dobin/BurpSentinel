@@ -16,6 +16,8 @@
  */
 package gui.botRight;
 
+import gui.SentinelMainApi;
+import gui.SentinelMainUi;
 import gui.viewMessage.PanelViewMessageUi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +37,7 @@ public class PanelRightPopup implements ActionListener {
     private JMenuItem menuReissue;
     private JMenuItem menuCopy;
     private JMenuItem menuCopySmart;
+    private JMenuItem menuToSentinel;
     private PanelRightUi panelMessage;
     
     public PanelRightPopup(PanelRightUi panelMessage) {
@@ -48,6 +51,11 @@ public class PanelRightPopup implements ActionListener {
         menuRepeater = new JMenuItem("Send to Repeater");
         menuRepeater.addActionListener(this);
         menu.add(menuRepeater);
+        
+        menuToSentinel = new JMenuItem("Send to Sentinel");
+        menuToSentinel.addActionListener(this);
+        menu.add(menuToSentinel);
+        
 /*        
         menuReissue = new JMenuItem("Send again");
         menuReissue.addActionListener(this);
@@ -76,5 +84,11 @@ public class PanelRightPopup implements ActionListener {
         if (o == menuCopySmart) {
             panelMessage.c_copySmart();
         }
+        
+        if (o == menuToSentinel) {
+            panelMessage.c_sendToSentinel();
+
+        }
+        
     }
 }

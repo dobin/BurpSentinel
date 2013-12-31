@@ -16,6 +16,7 @@
  */
 package gui.botRight;
 
+import gui.SentinelMainApi;
 import gui.comparer.ComparerWindow;
 import gui.mainBot.PanelBotUi;
 import java.awt.Toolkit;
@@ -347,6 +348,10 @@ public class PanelRightUi extends javax.swing.JPanel {
         ComparerWindow comparer = new ComparerWindow();
         comparer.setMessages( panelRightModel.getHttpMessage(first), panelRightModel.getHttpMessage(second));
         comparer.setVisible(true);
+    }
+
+    void c_sendToSentinel() {
+            SentinelMainApi.getInstance().addNewMessage(panelRightModel.getHttpMessage(currentSelectedRow));
     }
 
     

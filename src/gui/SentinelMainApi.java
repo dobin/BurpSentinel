@@ -19,6 +19,7 @@ package gui;
 import burp.IHttpRequestResponse;
 import burp.IProxyListener;
 import model.SentinelHttpMessage;
+import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import service.SentinelProxyListener;
 import util.BurpCallbacks;
@@ -75,6 +76,16 @@ public class SentinelMainApi {
         // Make a sentinel http message from the burp message
         SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(iHttpRequestResponse);
         
+        modelRoot.addNewMessage(myHttpMessage);
+    }
+    
+    /* Add new HttpRequestResponse from Attack Message
+     * 
+     * This gets called from panel right popup, where we already have attack message
+     */
+    public void addNewMessage(SentinelHttpMessageAtk atkMsg) {
+        // Make a sentinel http message from the atk message
+        SentinelHttpMessageOrig myHttpMessage = new SentinelHttpMessageOrig(atkMsg);
         modelRoot.addNewMessage(myHttpMessage);
     }
     
