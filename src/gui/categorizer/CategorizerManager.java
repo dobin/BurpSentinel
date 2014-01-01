@@ -120,7 +120,7 @@ public class CategorizerManager extends Observable {
                 while ((line = reader.readLine()) != null) {
                     //BurpCallbacks.getInstance().print("ADD: " + line + " as " + fileName);
                     String regex = line;
-                    CategoryEntry categoryEntry = new CategoryEntry(fileName, ".*" + Pattern.quote(regex) + ".*");
+                    CategoryEntry categoryEntry = new CategoryEntry(fileName, Pattern.quote(regex));
                     
                     staticCategoryList.add(categoryEntry);
                 }
