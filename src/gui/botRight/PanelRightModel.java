@@ -111,9 +111,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 9:
                 return "Test";
             case 10:
-                return "Result";
+                return "R";
             case 11:
-                return "Trans";
+                return "C";
                 
             default:
                 return "hmm";
@@ -150,7 +150,19 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
                 if (m.getAttackResult() != null) {
                     boolean successful = m.getAttackResult().getSuccess();
                     if (successful) {
-                        return m.getAttackResult().getAttackType();
+                        String ret = "";
+                        switch(m.getAttackResult().getAttackType()) {
+                            case INFO:
+                                ret = "<html><b><font color=\"orange\">\u26A0</font></b></html>";
+                                break;
+                            case NONE:
+                                break;
+                            case VULN:
+                                ret = "<html><b><font color=\"red\">\u2620</font></b></html>";
+                                break;
+                        }
+                        return ret;
+                        //return m.getAttackResult().getAttackType() + "\u26A0";
                     } else {
                         return "-";
                     }

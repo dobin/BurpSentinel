@@ -112,7 +112,6 @@ public class CategorizerManager extends Observable {
             InputStream is = getClass().getResourceAsStream("/resources/categories/" + fileName + ".txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             
-            
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
@@ -124,14 +123,11 @@ public class CategorizerManager extends Observable {
                 }
             } catch (IOException ex) {
                 BurpCallbacks.getInstance().print(ex.toString());
-                Logger.getLogger(ListManagerModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            } 
      
             staticCategories.add(staticCategoryList);
             //staticCategories.put(fileName, staticCategoryList);
         }
-        
-        
     }
 
     void signalModelUpdate() {
