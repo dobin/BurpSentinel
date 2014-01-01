@@ -123,7 +123,9 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
-        textfieldUrl.setText(message.getReq().getUrl().toString());
+        
+        //textfieldUrl.setText(message.getReq().getUrl().toString());
+        textfieldUrl.setText(message.getReq().getUrl().getHost());
         textfieldUrl.setToolTipText(message.getReq().getUrl().toString());
         textfieldUrl.setBackground( Color.lightGray);
         textfieldUrl.setCaretPosition(0);
