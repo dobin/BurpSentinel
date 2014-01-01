@@ -134,21 +134,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         switch (column) {
             case 3:
                 uiEntries.get(row).isXssEnabled = !uiEntries.get(row).isXssEnabled;
-                if (uiEntries.get(row).isXssEnabled == false) {
-                    uiEntries.get(row).isAllEnabled = false;
-                }
                 break;
             case 4:
                 uiEntries.get(row).isSqlEnabled = !uiEntries.get(row).isSqlEnabled;
-                if (uiEntries.get(row).isSqlEnabled == false) {
-                    uiEntries.get(row).isAllEnabled = false;
-                }
                 break;
             case 5:
                 uiEntries.get(row).isOtherEnabled = !uiEntries.get(row).isOtherEnabled;
-                if (uiEntries.get(row).isOtherEnabled == false) {
-                    uiEntries.get(row).isAllEnabled = false;
-                }
                 break;
         }
 
@@ -218,6 +209,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         for(PanelLeftTableUIEntry entry: uiEntries) {
             SentinelHttpParam param = entry.sourceHttpParam;
 
+            if (entry.isSomethingEnabled()) {
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.ORIGINAL, null);
+            }
+            
             if (entry.isXssEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.XSS, null);
             }
@@ -233,14 +228,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             if (entry.isAuthEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData);
             }
-            /*
-            if (entry.isOrigEnabled && attackThis) {
-                param.setAttackType(AttackMain.AttackTypes.ORIGINAL, (Boolean) true);
-                attackThis = true;
-                
-                // TODO bad place here - do it it resetAttackSelection()
-                entry.isOrigEnabled = false;
-            }*/
         }
     }
 
@@ -253,10 +240,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     void resetAttackSelection() {
         for(PanelLeftTableUIEntry entry: uiEntries) {
-            entry.isAllEnabled = false;
             entry.isSqlEnabled = false;
             entry.isOtherEnabled = false;
-            entry.isAllEnabled = false;
 
             entry.isAuthEnabled = false;
             entry.authData = null;

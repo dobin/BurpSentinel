@@ -46,7 +46,7 @@ public class AttackOriginal extends AttackI {
     @Override
     public boolean performNextAttack() {
         try {
-            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(null);
+            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue());
             BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
             this.message = httpMessage;
             

@@ -32,10 +32,12 @@ class PanelLeftTableUIEntry {
     public boolean isSqlEnabled;
     public boolean isOtherEnabled;
     
-    public boolean isAllEnabled;
-    
     public boolean isAuthEnabled;
     public String authData;
     
     public boolean isOrigEnabled;
+    
+    public boolean isSomethingEnabled() {
+        return isXssEnabled || isSqlEnabled || isOtherEnabled;
+    }
 }

@@ -59,6 +59,7 @@ public class CategorizerManager extends Observable {
         categorizerManagerUi.setVisible(true);
     }
     
+    
     public LinkedList<CategoryEntry> getStaticList(String name) {
         if (staticCategories.containsKey(name)) {
             return staticCategories.get(name);
@@ -90,6 +91,7 @@ public class CategorizerManager extends Observable {
         return categories;
     }
     
+    
     private LinkedList<ResponseCategory> scanForRegex(CategoryEntry entry, String input) {
         LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
         
@@ -118,7 +120,6 @@ public class CategorizerManager extends Observable {
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
-                    //BurpCallbacks.getInstance().print("ADD: " + line + " as " + fileName);
                     String regex = line;
                     CategoryEntry categoryEntry = new CategoryEntry(fileName, Pattern.quote(regex));
                     
@@ -131,6 +132,7 @@ public class CategorizerManager extends Observable {
             staticCategories.put(fileName, staticCategoryList);
         }
     }
+    
 
     void signalModelUpdate() {
         this.setChanged();
