@@ -17,11 +17,13 @@
 package gui.botRight;
 
 import gui.categorizer.CategorizerManager;
+import gui.categorizer.ResponseCategory;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessageAtk;
+import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
@@ -156,7 +158,16 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
                     return "Null";
                 }
             case 11:
-                return m.getRes().getCategoriesString();
+                StringBuilder res = new StringBuilder("<html>");
+                for(ResponseCategory resCategory: m.getRes().getCategories()) {
+                    res.append("<font color=\"");
+                    res.append(UiUtil.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
+                    res.append("\">");
+                    res.append(resCategory.getCategoryEntry().getTag());
+                    res.append("</font>");
+                }
+                res.append("</html>");
+                return res;
             default: return "AAA";
         }
     }

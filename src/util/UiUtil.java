@@ -20,6 +20,7 @@ import gui.botLeft.PanelLeftOptions.InsertPositions;
 import gui.session.SessionUser;
 import gui.categorizer.CategoryEntry;
 import gui.lists.ListManagerList;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Rectangle;
@@ -246,15 +247,15 @@ public class UiUtil {
     public static void restoreCategories(LinkedList<CategoryEntry> categoryEntries) {
         Preferences pref = Preferences.userRoot().node("CategoryEntries");
     
-        String[] children = null;
-        try {
-            children = pref.keys();
-            for (String s : children) {
-                String value = pref.get(s, "");
-                categoryEntries.add(new CategoryEntry(s, value));
-            }            
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
+        int n=0;
+        int last = pref.getInt("numbers", 0);
+        
+        for(n=0; n<last; n++) {
+            String tag = pref.get(Integer.toString(n) + "_tag", "");
+            String regex = pref.get(Integer.toString(n) + "_regex", "");
+            Color c = new Color (pref.getInt(Integer.toString(n) + "_color", 0));
+            boolean enabled = pref.getBoolean(Integer.toString(n) + "_enabled", true);
+            categoryEntries.add( new CategoryEntry (tag, regex, c, enabled));
         }
     }
 
@@ -266,9 +267,15 @@ public class UiUtil {
             Logger.getLogger(UiUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        int n = 0;
         for(CategoryEntry c: categoryEntries) {
-            pref.put(c.getTag(), c.getRegex());
-        }        
+            pref.put(Integer.toString(n) + "_tag", c.getTag());
+            pref.put(Integer.toString(n) + "_regex", c.getRegex());
+            pref.putInt(Integer.toString(n) + "_color", c.getColor().getRGB());
+            pref.putBoolean(Integer.toString(n) + "_enabled", c.isEnabled());
+            n++;
+        }
+        pref.putInt("numbers", n);
     }
 
 
@@ -351,6 +358,27 @@ public class UiUtil {
     }
     
     
-    
+    // From: http://stackoverflow.com/questions/4059133/getting-html-color-codes-with-a-jcolorchooser
+    public static String ColorToHtmlString(Color c) {
+        StringBuilder sb = new StringBuilder("#");
+
+        if (c.getRed() < 16) {
+            sb.append('0');
+        }
+        sb.append(Integer.toHexString(c.getRed()));
+
+        if (c.getGreen() < 16) {
+            sb.append('0');
+        }
+        sb.append(Integer.toHexString(c.getGreen()));
+
+        if (c.getBlue() < 16) {
+            sb.append('0');
+        }
+        sb.append(Integer.toHexString(c.getBlue()));
+
+        return sb.toString();
+    }
+
     
 }

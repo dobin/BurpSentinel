@@ -17,8 +17,6 @@
 package gui.categorizer;
 
 import java.awt.Color;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
 
 /**
  *
@@ -28,14 +26,21 @@ public class CategoryEntry {
     private String name;
     private String regex;
         
-    private Boolean checkboxEnabled;
-    private Color myColor = Color.red;
+    private Boolean isEnabled;
+    private Color myColor = Color.black;
     
     public CategoryEntry(String name, String regex) {
         this.name = name;
         this.regex = regex;
         
-        checkboxEnabled = true;
+        isEnabled = true;
+    }
+    
+    public CategoryEntry(String name, String regex, Color c, boolean isEnabled) {
+        this.name = name;
+        this.regex = regex;
+        this.myColor = c;
+        this.isEnabled = isEnabled;
     }
     
     public String getTag() {
@@ -55,20 +60,20 @@ public class CategoryEntry {
     }
 
 
-    Object isEnabled() {
-        return checkboxEnabled;
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
 
-    Object getColor() {
+    public Color getColor() {
         return myColor;
     }
 
-    void setEnabled(Boolean aBoolean) {
-        this.checkboxEnabled = aBoolean;
+    public void setEnabled(Boolean aBoolean) {
+        this.isEnabled = aBoolean;
     }
 
-    void setColor(Color color) {
+    public void setColor(Color color) {
         this.myColor = color;
     }
     

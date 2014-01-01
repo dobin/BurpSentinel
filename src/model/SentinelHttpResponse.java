@@ -127,22 +127,10 @@ public class SentinelHttpResponse implements Serializable {
         categories.addAll(CategorizerManager.getInstance().categorize(new String(response)));
     }
     
-    
-    public String getCategoriesString() {
-        String res = "";
-        
-        for(ResponseCategory category: categories) {
-            res += category.getName() + ",";
-        }
-        
-        if (res.length() == 0) {
-            return "";
-        } else {
-            return res.substring(0, res.length() - 1);
-        }
+    public LinkedList<ResponseCategory> getCategories() {
+        return categories;
     }
-
-    
+        
     public int getDom() {
         return domCount;
     }

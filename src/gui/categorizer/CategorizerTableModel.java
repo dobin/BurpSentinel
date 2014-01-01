@@ -123,7 +123,7 @@ public class CategorizerTableModel extends AbstractTableModel {
     }
 
     void addEmptyLine() {
-        char c = (char) (97 + getRowCount());
+        char c = (char) (65 + getRowCount());
         String res = Character.toString(c) +Character.toString(c);
         
         categoryEntries.add( new CategoryEntry(res, ".*XXX.*"));

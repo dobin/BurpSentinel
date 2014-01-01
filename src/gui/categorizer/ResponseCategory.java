@@ -25,24 +25,20 @@ import java.io.Serializable;
  * @author DobinRutishauser@broken.ch
  */
 public class ResponseCategory implements Serializable {
-    private String name;
+    private CategoryEntry categoryEntry;
     private String indicator;
     
     public ResponseCategory() {
         // Default constructor for deserializing
     }
-    
-    public ResponseCategory(String s) {
-        this.name = s;
-    }
-    
-    public ResponseCategory(String s, String i) {
-        this.name = s;
+        
+    public ResponseCategory(CategoryEntry categoryEntry, String i) {
+        this.categoryEntry = categoryEntry;
         this.indicator = i;
     }
     
-    public String getName() {
-        return name;
+    public CategoryEntry getCategoryEntry() {
+        return categoryEntry;
     }
     
     public String getIndicator() {

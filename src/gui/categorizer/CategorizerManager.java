@@ -94,7 +94,7 @@ public class CategorizerManager extends Observable {
             
             if (matcher.find()) {
                 //BurpCallbacks.getInstance().print("A: " + matcher.group());
-                ResponseCategory c = new ResponseCategory(entries.getTag(), matcher.group());
+                ResponseCategory c = new ResponseCategory(entries, matcher.group());
                 categories.add(c);
             }
         }

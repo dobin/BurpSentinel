@@ -138,6 +138,9 @@ public class CategorizerUi extends JFrame {
     }//GEN-LAST:event_buttonAddLineActionPerformed
 
     private void buttonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonApplyActionPerformed
+        // Store current window in config
+        tableModel.storeUiPrefs();
+        
         // Yes, update all the messages!
         LinkedList<SentinelHttpMessageOrig> origMsgs = ModelRoot.getInstance().getMessageList();
         for(SentinelHttpMessageOrig origMsg: origMsgs) {
