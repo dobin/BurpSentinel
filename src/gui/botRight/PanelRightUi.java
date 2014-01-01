@@ -82,8 +82,8 @@ public class PanelRightUi extends javax.swing.JPanel {
         tableMessages.getColumnModel().getColumn(10).setMaxWidth(20);
         tableMessages.getColumnModel().getColumn(10).setMinWidth(20);
         
-        tableMessages.getColumnModel().getColumn(11).setMaxWidth(80);
-        tableMessages.getColumnModel().getColumn(11).setMinWidth(80);
+        //tableMessages.getColumnModel().getColumn(11).setMaxWidth(80);
+        //tableMessages.getColumnModel().getColumn(11).setMinWidth(80);
         
         
         tableMessages.setAutoCreateRowSorter(true);

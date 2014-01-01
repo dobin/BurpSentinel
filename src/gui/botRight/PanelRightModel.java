@@ -176,7 +176,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
                     res.append(UiUtil.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
                     res.append("\">");
                     res.append(resCategory.getCategoryEntry().getTag());
-                    res.append("</font>");
+                    res.append(" </font>");
                 }
                 res.append("</html>");
                 return res;
