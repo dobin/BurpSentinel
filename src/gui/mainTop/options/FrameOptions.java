@@ -16,7 +16,7 @@
  */
 package gui.mainTop.options;
 
-import gui.ModelRoot;
+import model.ModelRoot;
 import gui.SentinelMainApi;
 import gui.SentinelMainUi;
 import java.io.File;

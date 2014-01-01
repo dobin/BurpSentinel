@@ -54,7 +54,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
 //            this.fireTableDataChanged();
 //        }
         if (o.getClass().equals(CategorizerManager.class)) {
-            System.out.println("CATEGORIZE!");
+            this.fireTableDataChanged();
         }
     }
     

@@ -16,6 +16,10 @@
  */
 package gui.categorizer;
 
+import java.awt.Color;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+
 /**
  *
  * @author dobin
@@ -23,10 +27,15 @@ package gui.categorizer;
 public class CategoryEntry {
     private String name;
     private String regex;
+        
+    private Boolean checkboxEnabled;
+    private Color myColor = Color.red;
     
     public CategoryEntry(String name, String regex) {
         this.name = name;
         this.regex = regex;
+        
+        checkboxEnabled = true;
     }
     
     public String getTag() {
@@ -43,6 +52,16 @@ public class CategoryEntry {
     
     public void setRegex(String regex) {
         this.regex = regex;
+    }
+
+
+    Object isEnabled() {
+        return checkboxEnabled;
+    }
+
+
+    Object getColor() {
+        return myColor;
     }
     
 }

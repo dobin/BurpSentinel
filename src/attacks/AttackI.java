@@ -116,9 +116,6 @@ public abstract class AttackI {
             return null;
         }
         
-        // Set parent
-        newHttpMessage.setParentHttpMessage(attackWorkEntry.origHttpMessage);
-        
         // Apply new session
         if (attackWorkEntry.mainSessionName != null) {
             if (! attackWorkEntry.mainSessionName.equals("<default>") && ! attackWorkEntry.mainSessionName.startsWith("<")) {

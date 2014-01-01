@@ -16,6 +16,7 @@
  */
 package gui;
 
+import model.ModelRoot;
 import burp.ITab;
 import gui.mainBot.PanelBotUi;
 import gui.mainTop.PanelTopUi;
@@ -150,21 +151,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
             currentPanelBot = panelBotUiList.get(index);
         }
     }
-    
-    public HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> getAllMessageList() {
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map;
-        map = new HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>>();
-        
-        for(PanelBotUi panelBot: panelBotUiList) {
-            SentinelHttpMessage origHttpMessage = panelBot.getOrigMessage();
-            LinkedList<SentinelHttpMessageAtk> atkHttpMessages = panelBot.getAttackMessages();
-            
-            map.put(origHttpMessage, atkHttpMessages);
-        }
-        
-        return map;
-    }
-    
+
     
     public void removeMessage(int currentSelectedRow) {
         // TODO FIXME breaks if removed...

@@ -14,27 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gui;
+package model;
 
+import gui.mainBot.PanelBotUi;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
-import model.SentinelHttpMessage;
-import model.SentinelHttpMessageOrig;
-import util.BurpCallbacks;
 
 /**
  *
  * @author DobinRutishauser@broken.ch
  */
 public class ModelRoot extends Observable implements Serializable  {
+    
+    private static ModelRoot modelRoot;
+    
+    public static ModelRoot getInstance() {
+        if (modelRoot == null) {
+            modelRoot = new ModelRoot();
+        }
+        return modelRoot;
+    }
+    
     private LinkedList<SentinelHttpMessageOrig> messageList;
     
     public ModelRoot() {
         messageList = new LinkedList<SentinelHttpMessageOrig>();
     }
 
-    void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
+    public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
         messageList.add(myHttpMessage);
         
         this.setChanged();

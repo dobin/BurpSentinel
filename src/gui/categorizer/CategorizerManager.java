@@ -48,7 +48,7 @@ public class CategorizerManager extends Observable {
     private LinkedList< LinkedList<CategoryEntry>> staticCategories = new LinkedList<LinkedList<CategoryEntry>>();
 
     public CategorizerManager() {
-        categorizerManagerUi = new CategorizerUi();
+        categorizerManagerUi = new CategorizerUi(this);
         
         loadStaticCategories();
     }
@@ -132,6 +132,11 @@ public class CategorizerManager extends Observable {
         }
         
         
+    }
+
+    void signalModelUpdate() {
+        this.setChanged();
+        this.notifyObservers();
     }
      
 }

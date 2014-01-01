@@ -16,6 +16,7 @@
  */
 package gui.categorizer;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
 import util.UiUtil;
@@ -27,7 +28,7 @@ import util.UiUtil;
 public class CategorizerTableModel extends AbstractTableModel {
 
     private LinkedList<CategoryEntry> categoryEntries = new LinkedList<CategoryEntry>();
-
+        
     public CategorizerTableModel() {
         UiUtil.restoreCategories(categoryEntries);
     }
@@ -39,15 +40,35 @@ public class CategorizerTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 4;
     }
 
+    @Override
+    public Class getColumnClass(int column) {
+        switch (column) {
+            case 0:
+                return Boolean.class;
+            case 1:
+                return Color.class;
+            case 2:
+                return String.class;
+            case 3:
+                return String.class;
+            default:
+                return String.class;
+        }
+    }
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return categoryEntries.get(rowIndex).getTag();
+                return categoryEntries.get(rowIndex).isEnabled();
             case 1:
+                return categoryEntries.get(rowIndex).getColor();
+            case 2:
+                return categoryEntries.get(rowIndex).getTag();
+            case 3:
                 return categoryEntries.get(rowIndex).getRegex();
             default:
                 return "";

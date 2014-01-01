@@ -29,8 +29,11 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage implements Seria
     private SentinelHttpMessageOrig parentHttpMessage = null;
     private AttackResult attackResult;
     
-     public SentinelHttpMessageAtk(SentinelHttpMessage httpMessage) {
+     public SentinelHttpMessageAtk(SentinelHttpMessageOrig httpMessage) {
          super(httpMessage);
+         this.parentHttpMessage = httpMessage;
+         
+         parentHttpMessage.addChildren(this);
     }
 
     public enum ObserveResult {
@@ -53,17 +56,6 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage implements Seria
 
     public AttackResult getAttackResult() {
         return attackResult;
-    }
-
-    
-    // Parenting
-    public void setParentHttpMessage(SentinelHttpMessageOrig httpMessage) {
-        this.parentHttpMessage = httpMessage;
-        
-        parentHttpMessage.addChildren(this);
-        
-        this.setChanged();
-        this.notifyObservers(ObserveResult.CHILDREN);
     }
 
     public SentinelHttpMessage getParentHttpMessage() {

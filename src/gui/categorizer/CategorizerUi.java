@@ -19,6 +19,9 @@ package gui.categorizer;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.table.TableModel;
+import model.ModelRoot;
+import model.SentinelHttpMessageAtk;
+import model.SentinelHttpMessageOrig;
 
 /**
  *
@@ -27,9 +30,11 @@ import javax.swing.table.TableModel;
 public class CategorizerUi extends JFrame {
 
     private CategorizerTableModel tableModel;
+    private CategorizerManager parentCategorizerManager;
     
-    public CategorizerUi() {
+    public CategorizerUi(CategorizerManager parentCategorizerManager) {
         tableModel = new CategorizerTableModel();
+        this.parentCategorizerManager = parentCategorizerManager;
         initComponents();
     }
 
@@ -51,7 +56,7 @@ public class CategorizerUi extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        buttonApply = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -73,7 +78,12 @@ public class CategorizerUi extends JFrame {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jButton5.setText("Apply");
+        buttonApply.setText("Apply");
+        buttonApply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonApplyActionPerformed(evt);
+            }
+        });
 
         buttonAddLine.setText("+");
         buttonAddLine.addActionListener(new java.awt.event.ActionListener() {
@@ -89,14 +99,14 @@ public class CategorizerUi extends JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(buttonAddLine)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5))
+                .addComponent(buttonApply))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
+                    .addComponent(buttonApply)
                     .addComponent(buttonAddLine)))
         );
 
@@ -122,9 +132,21 @@ public class CategorizerUi extends JFrame {
         tableModel.addEmptyLine();
     }//GEN-LAST:event_buttonAddLineActionPerformed
 
+    private void buttonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonApplyActionPerformed
+        // Yes, update all the messages!
+        LinkedList<SentinelHttpMessageOrig> origMsgs = ModelRoot.getInstance().getMessageList();
+        for(SentinelHttpMessageOrig origMsg: origMsgs) {
+            for(SentinelHttpMessageAtk atkMsg: origMsg.getHttpMessageChildren()) {
+                atkMsg.getRes().categorizeResponse();
+            }
+        }
+        
+        parentCategorizerManager.signalModelUpdate();
+    }//GEN-LAST:event_buttonApplyActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddLine;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton buttonApply;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;

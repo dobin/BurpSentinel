@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import javax.swing.JFileChooser;
+import model.ModelRoot;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
@@ -40,9 +41,11 @@ public class ReporterUi extends javax.swing.JFrame {
 
     private void generateReport() {
         StringBuilder out = new StringBuilder();
+/*
+        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = ModelRoot.getInstance().getAllMessageList();
 
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = SentinelMainUi.getMainUi().getAllMessageList();
-
+        
+        
         out.append("<html><body>\n");
         out.append("<table>\n");
         
@@ -70,7 +73,7 @@ public class ReporterUi extends javax.swing.JFrame {
         out.append("</body></html>\n");
 
         jTextArea1.setText(out.toString());
-    }
+*/    }
 
     /**
      * This method is called from within the constructor to initialize the form.

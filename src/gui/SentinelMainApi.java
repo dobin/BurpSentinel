@@ -16,6 +16,7 @@
  */
 package gui;
 
+import model.ModelRoot;
 import burp.IHttpRequestResponse;
 import burp.IProxyListener;
 import model.SentinelHttpMessage;
@@ -48,7 +49,7 @@ public class SentinelMainApi {
     }
     
     public void init() {
-        modelRoot = new ModelRoot();
+        modelRoot = ModelRoot.getInstance();
         sentinelMainUi = new SentinelMainUi(modelRoot);
     }
     
