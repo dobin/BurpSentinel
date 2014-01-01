@@ -109,7 +109,7 @@ public class UiUtil {
     
     
     /** Store location & size of UI */
-    public static void storeFrameDimensions(Frame f, Object o) throws Exception {
+    public static void storeFrameDimensions(Frame f, Object o) {
         Preferences pref = Preferences.userRoot().node(o.getClass().getName());
        
         // restore the frame from 'full screen' first!
@@ -128,13 +128,15 @@ public class UiUtil {
     }
 
     /** Restore location & size of UI */
-    public static void restoreFrameDimensions(Frame f, Object o) throws IOException {
+    public static void restoreFrameDimensions(Frame f, Object o) {
         Preferences pref = Preferences.userRoot().node(o.getClass().getName());
 
+        BurpCallbacks.getInstance().print("AAA: " + f + " " + o);
+        
         int x = pref.getInt("x", 0);
         int y = pref.getInt("y", 0);
-        int w = pref.getInt("w", 0);
-        int h = pref.getInt("h", 0);
+        int w = pref.getInt("w", 1024);
+        int h = pref.getInt("h", 786);
 
         Rectangle r = new Rectangle(x,y,w,h);
         f.setBounds(r);
@@ -349,5 +351,8 @@ public class UiUtil {
         boolean res = pref.getBoolean("RelativeResponseSize", true);
         return res;
     }
+    
+    
+    
     
 }
