@@ -31,10 +31,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import model.AttackTypeData;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import util.BurpCallbacks;
 
 /**
@@ -98,6 +95,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
     }
 
     private void doWork(AttackWorkEntry work) {
+        BurpCallbacks.getInstance().print("TTT NetworkerWorker: doWork");
         log.newWork();
         log.giveSignal(NetworkerLogger.Signal.START);
 
@@ -148,6 +146,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
 
 
     private void performAttack(AttackI attack, AttackWorkEntry work) {
+        BurpCallbacks.getInstance().print("TTT NetworkerWorker: performAttack");
         SentinelHttpMessageAtk attackMessage = null;
         boolean goon = true;
 

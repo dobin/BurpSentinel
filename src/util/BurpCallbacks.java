@@ -86,6 +86,8 @@ public class BurpCallbacks {
             BurpCallbacks.getInstance().print("sendRessource: Void data! Abort.");
             return;
         }
+        
+        BurpCallbacks.getInstance().print("TTT sendRessource: Before sending");
 
 //        try {
             IHttpRequestResponse r = null;
@@ -118,6 +120,8 @@ public class BurpCallbacks {
   //      } catch (Exception ex) {
    //         BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());
     //    }
+            
+          BurpCallbacks.getInstance().print("TTT sendRessource: After sending");
     }
 
     private boolean isRedirect(byte[] response) {
