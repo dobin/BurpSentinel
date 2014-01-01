@@ -25,7 +25,9 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JTable;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 import javax.swing.table.TableCellEditor;
+import util.BurpCallbacks;
 
 /**
  * Based on:
@@ -52,6 +54,16 @@ public class CategorizerCellEditor extends AbstractCellEditor implements TableCe
 
         //Set up the dialog that the button brings up.
         colorChooser = new JColorChooser();
+        
+        // Restrict to just main color chooser tab
+        AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
+        for (AbstractColorChooserPanel accp : panels) {
+            if (accp.getDisplayName().equals("Swatches")) {
+                AbstractColorChooserPanel[] myPanels = {accp};
+                colorChooser.setChooserPanels(myPanels);
+            }
+        }
+
         dialog = JColorChooser.createDialog(button,
                                         "Pick a Color",
                                         true,  //modal

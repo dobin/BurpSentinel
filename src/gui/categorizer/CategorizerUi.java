@@ -38,11 +38,9 @@ public class CategorizerUi extends JFrame {
         this.parentCategorizerManager = parentCategorizerManager;
         initComponents();
         
-                //Set up renderer and editor for the Favorite Color column.
-        jTable1.setDefaultRenderer(Color.class,
-                                 new CategorizerColorRenderer(true));
-        jTable1.setDefaultEditor(Color.class,
-                               new CategorizerCellEditor());
+        // Set up renderer and editor for the Color column.
+        tableMain.setDefaultRenderer(Color.class, new CategorizerColorRenderer(true));
+        tableMain.setDefaultEditor(Color.class, new CategorizerCellEditor());
     }
 
     
@@ -61,7 +59,7 @@ public class CategorizerUi extends JFrame {
 
         jPanel7 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableMain = new javax.swing.JTable();
         jPanel8 = new javax.swing.JPanel();
         buttonApply = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
@@ -69,8 +67,8 @@ public class CategorizerUi extends JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
 
-        jTable1.setModel(getTableModel());
-        jScrollPane1.setViewportView(jTable1);
+        tableMain.setModel(getTableModel());
+        jScrollPane1.setViewportView(tableMain);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -157,7 +155,7 @@ public class CategorizerUi extends JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tableMain;
     // End of variables declaration//GEN-END:variables
 
     public LinkedList<CategoryEntry> getCategories() {

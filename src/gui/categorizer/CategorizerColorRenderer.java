@@ -30,8 +30,7 @@ import javax.swing.table.TableCellRenderer;
  *
  * @author DobinRutishauser@broken.ch
  */
-public class CategorizerColorRenderer extends JLabel
-        implements TableCellRenderer {
+public class CategorizerColorRenderer extends JLabel implements TableCellRenderer {
 
     Border unselectedBorder = null;
     Border selectedBorder = null;
