@@ -78,9 +78,13 @@ public class CategorizerTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         switch (columnIndex) {
-            case 0:
-                return "Tag";
+            case 0: 
+                return "Active";
             case 1:
+                return "Color";
+            case 2:
+                return "Tag";
+            case 3:
                 return "Regex";
             default:
                 return "";
@@ -91,14 +95,22 @@ public class CategorizerTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                categoryEntries.get(rowIndex).setTag((String) aValue);
+                categoryEntries.get(rowIndex).setEnabled( (Boolean) aValue);
                 break;
             case 1:
+                categoryEntries.get(rowIndex).setColor( (Color) aValue);
+                break;
+            case 2:
+                categoryEntries.get(rowIndex).setTag((String) aValue);
+                break;
+            case 3:
                 categoryEntries.get(rowIndex).setRegex((String) aValue);
                 break;
             default:
                 break;
         }
+        
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
     
     @Override
@@ -111,7 +123,10 @@ public class CategorizerTableModel extends AbstractTableModel {
     }
 
     void addEmptyLine() {
-        categoryEntries.add( new CategoryEntry("<tag>", "<regex>"));
+        char c = (char) (97 + getRowCount());
+        String res = Character.toString(c) +Character.toString(c);
+        
+        categoryEntries.add( new CategoryEntry(res, ".*XXX.*"));
         this.fireTableDataChanged();
     }
 

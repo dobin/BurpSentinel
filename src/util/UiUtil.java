@@ -131,8 +131,6 @@ public class UiUtil {
     public static void restoreFrameDimensions(Frame f, Object o) {
         Preferences pref = Preferences.userRoot().node(o.getClass().getName());
 
-        BurpCallbacks.getInstance().print("AAA: " + f + " " + o);
-        
         int x = pref.getInt("x", 0);
         int y = pref.getInt("y", 0);
         int w = pref.getInt("w", 1024);

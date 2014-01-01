@@ -16,6 +16,7 @@
  */
 package gui.categorizer;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.table.TableModel;
@@ -36,6 +37,12 @@ public class CategorizerUi extends JFrame {
         tableModel = new CategorizerTableModel();
         this.parentCategorizerManager = parentCategorizerManager;
         initComponents();
+        
+                //Set up renderer and editor for the Favorite Color column.
+        jTable1.setDefaultRenderer(Color.class,
+                                 new CategorizerColorRenderer(true));
+        jTable1.setDefaultEditor(Color.class,
+                               new CategorizerCellEditor());
     }
 
     

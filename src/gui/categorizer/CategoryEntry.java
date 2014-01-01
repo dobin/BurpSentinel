@@ -63,5 +63,13 @@ public class CategoryEntry {
     Object getColor() {
         return myColor;
     }
+
+    void setEnabled(Boolean aBoolean) {
+        this.checkboxEnabled = aBoolean;
+    }
+
+    void setColor(Color color) {
+        this.myColor = color;
+    }
     
 }
