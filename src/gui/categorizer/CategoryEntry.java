@@ -34,6 +34,7 @@ public class CategoryEntry {
         this.regex = regex;
         
         isEnabled = true;
+        myColor = Color.black;
     }
     
     public CategoryEntry(String name, String regex, Color c, boolean isEnabled) {

@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.categorizer.ResponseCategory;
 import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
@@ -93,12 +94,22 @@ public class AttackSql extends AttackI {
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
-        String response = httpMessage.getRes().getResponseStr();
-        if (response.contains("MySQL")) {
+        boolean hasError = false;
+        ResponseCategory sqlResponseCategory = null;
+        for(ResponseCategory rc: httpMessage.getRes().getCategories()) {
+            
+            if (rc.getCategoryEntry().getTag().equals("sqlerrors")) {
+                hasError = true;
+                sqlResponseCategory = rc;
+                break;
+            }
+        }
+        
+        if (hasError) {
             AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL" + state, httpMessage.getReq().getChangeParam(), true);
             httpMessage.addAttackResult(res);
 
-            ResponseHighlight h = new ResponseHighlight("MySQL", failColor);
+            ResponseHighlight h = new ResponseHighlight(sqlResponseCategory.getIndicator(), failColor);
             httpMessage.addHighlight(h);
         } else {
             AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL" + state, httpMessage.getReq().getChangeParam(), false);

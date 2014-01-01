@@ -16,15 +16,14 @@
  */
 package gui.categorizer;
 
-import gui.lists.ListManagerModel;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import util.BurpCallbacks;
@@ -44,8 +43,7 @@ public class CategorizerManager extends Observable {
     }
 
     private CategorizerUi categorizerManagerUi;
-    //private HashMap<String, LinkedList<CategoryEntry>> staticCategories = new HashMap<String, LinkedList<CategoryEntry>>();
-    private LinkedList< LinkedList<CategoryEntry>> staticCategories = new LinkedList<LinkedList<CategoryEntry>>();
+    private HashMap<String, LinkedList<CategoryEntry>> staticCategories = new HashMap<String, LinkedList<CategoryEntry>>();
 
     public CategorizerManager() {
         categorizerManagerUi = new CategorizerUi(this);
@@ -61,46 +59,51 @@ public class CategorizerManager extends Observable {
         categorizerManagerUi.setVisible(true);
     }
     
-    
-    public LinkedList<CategoryEntry> getCategories() {
-        LinkedList<CategoryEntry> categories = new LinkedList<CategoryEntry>();
-        
-        categories.addAll(categorizerManagerUi.getCategories());
-
-        for(LinkedList<CategoryEntry> list: staticCategories) {
-            categories.addAll(list);
+    public LinkedList<CategoryEntry> getStaticList(String name) {
+        if (staticCategories.containsKey(name)) {
+            return staticCategories.get(name);
+        } else {
+            return null;
         }
-        
-        /*for(Map.Entry entry: staticCategories.entrySet()) {
-            BurpCallbacks.getInstance().print(entry.getValue().toString());
-            LinkedList<CategoryEntry> staticCategoriesEntry = (LinkedList<CategoryEntry>) entry.getValue();
-            categories.addAll(staticCategoriesEntry);
-        }*/
-        
-        return categories;
     }
     
+        
     public LinkedList<ResponseCategory> categorize(String input) {
         LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
         
         if (input == null || input.length() <= 0) {
             return categories;
         }
-        
-        LinkedList<CategoryEntry> categoryEntries = getCategories();
-        for(CategoryEntry entries: categoryEntries) {
-            Pattern pattern = Pattern.compile(entries.getRegex());
-            Matcher matcher = pattern.matcher(input);
-            
-            if (matcher.find()) {
-                //BurpCallbacks.getInstance().print("A: " + matcher.group());
-                ResponseCategory c = new ResponseCategory(entries, matcher.group());
-                categories.add(c);
-            }
+    
+        for(CategoryEntry entry: categorizerManagerUi.getCategories()) {
+            categories.addAll(scanForRegex(entry, input));
         }
+
+        for(Map.Entry entry: staticCategories.entrySet()) {
+            LinkedList<CategoryEntry> staticCategoriesEntry = (LinkedList<CategoryEntry>) entry.getValue();
+            
+            for(CategoryEntry e: staticCategoriesEntry) {
+                categories.addAll(scanForRegex(e, input));
+            }
+        }    
         
         return categories;
     }
+    
+    private LinkedList<ResponseCategory> scanForRegex(CategoryEntry entry, String input) {
+        LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
+        
+            Pattern pattern = Pattern.compile(entry.getRegex());
+            Matcher matcher = pattern.matcher(input);
+            
+            if (matcher.find()) {
+                ResponseCategory c = new ResponseCategory(entry, matcher.group());
+                categories.add(c);
+            }
+        
+            return categories;
+    }
+    
     
     private void loadStaticCategories() {
         String[] fileNames = { "errors", "sqlerrors"  };
@@ -117,7 +120,7 @@ public class CategorizerManager extends Observable {
                 while ((line = reader.readLine()) != null) {
                     //BurpCallbacks.getInstance().print("ADD: " + line + " as " + fileName);
                     String regex = line;
-                    CategoryEntry categoryEntry = new CategoryEntry(fileName, Pattern.quote(regex));
+                    CategoryEntry categoryEntry = new CategoryEntry(fileName, ".*" + Pattern.quote(regex) + ".*");
                     
                     staticCategoryList.add(categoryEntry);
                 }
@@ -125,8 +128,7 @@ public class CategorizerManager extends Observable {
                 BurpCallbacks.getInstance().print(ex.toString());
             } 
      
-            staticCategories.add(staticCategoryList);
-            //staticCategories.put(fileName, staticCategoryList);
+            staticCategories.put(fileName, staticCategoryList);
         }
     }
 
