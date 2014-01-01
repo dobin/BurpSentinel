@@ -185,6 +185,7 @@ public class SentinelHttpRequest implements Serializable {
         }
         
         // Split path
+        LinkedList<SentinelHttpParam> pathParams = new LinkedList<SentinelHttpParam>();
         String[] p = path.split("/");
         int i = 0;
         for (String pathPart : p) {
@@ -199,9 +200,11 @@ public class SentinelHttpRequest implements Serializable {
                     SentinelHttpParam.PARAM_PATH,
                     Integer.toString(i), 0, 0, 
                     pathPart, valStart, valStart + pathPart.length());
-            httpParams.add(sentParam);
+            //httpParams.add(sentParam);
+            pathParams.push(sentParam);
             i++;
         }
+        httpParams.addAll(pathParams);
 
     }
     
