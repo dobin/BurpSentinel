@@ -17,13 +17,16 @@
 package gui.comparer;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import model.SentinelHttpMessage;
+import util.UiUtil;
 
 /**
  *
  * @author DobinRutishauser@broken.ch
  */
-public class ComparerWindow extends javax.swing.JFrame {
+public class ComparerWindow extends javax.swing.JFrame implements WindowListener {
 
     private ComparerUi comparerUi;
     
@@ -34,12 +37,8 @@ public class ComparerWindow extends javax.swing.JFrame {
         initComponents();
         comparerUi = new ComparerUi();
         this.add(comparerUi , BorderLayout.CENTER);
-        //jPanel1.add(new ComparerUi());
-        
-        //this.validate();
-        //this.invalidate();
-        //this.repaint();
-        
+
+        UiUtil.restoreFrameDimensions(this, this);
     }
 
     /**
@@ -57,44 +56,40 @@ public class ComparerWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ComparerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ComparerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ComparerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ComparerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ComparerWindow().setVisible(true);
-            }
-        });
-    }
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
     public void setMessages(SentinelHttpMessage httpMessage, SentinelHttpMessage httpMessage0) {
         comparerUi.setMessages(httpMessage, httpMessage0);
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        UiUtil.storeFrameDimensions(this, this);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
 }
