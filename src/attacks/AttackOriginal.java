@@ -17,6 +17,7 @@
 package attacks;
 
 import attacks.AttackData.AttackType;
+import gui.botLeft.PanelLeftOptions;
 import gui.networking.AttackWorkEntry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +37,9 @@ public class AttackOriginal extends AttackI {
     
     public AttackOriginal(AttackWorkEntry work) {
         super(work);
+        
+        // Overwrite this as workaround (ignore user setting)
+        work.insertPosition = PanelLeftOptions.InsertPositions.REPLACE;
     }
     
     @Override
