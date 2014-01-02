@@ -52,7 +52,6 @@ import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.w3c.tidy.Tidy;
 import util.BurpCallbacks;
-import util.ConnectionTimeoutException;
 import util.UiUtil;
 import util.diff.DiffPrint.UnifiedSmallPrint;
 import util.diff.GnuDiff;
@@ -93,12 +92,12 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     private SearchContext searchContext = null;
     
     private String currentView = "Default";
-    private String viewDefaultContent = null;
-    private String viewBeautifyContent = null;
-    private String viewDiffContent = null;
+
     
     private LinkedList<SentinelHighlight> myHighlights;
 
+    private SentinelHttpMessage diffHttpMessage;
+    
     
     /**
      * Creates new form PanelResponseUi
@@ -192,10 +191,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 
                 ///labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
             }
-            
-            viewDefaultContent = null;
-            viewBeautifyContent = null;
-            viewDiffContent = null;
         } else {
             
         }
@@ -207,80 +202,130 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     /*** Show Data based on different selected views ***/
     
     private void showDefaultView() {
-        if (viewDefaultContent == null) {
-            viewDefaultContent = httpMessage.getRes().getResponseStr();
-        }
-        
-//        BurpCallbacks.getInstance().print("AAA: " + viewDefaultContent);
-//        BurpCallbacks.getInstance().print("AAA: " + httpMessage.getRes().getResponseStr());
-        
+        String viewDefaultContent = httpMessage.getRes().getResponseStr();
         setMessageText(viewDefaultContent);
         highlightResponse();
     }
     
     private void showBeautifyView() {
-        if (viewBeautifyContent == null) {
-            
-            String res = httpMessage.getRes().getBodyStr();
-            
-            InputStream is = new ByteArrayInputStream(res.getBytes());
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            
-            Tidy tidy = new Tidy();
-            tidy.setWraplen(0);
-            tidy.setDropEmptyParas(false);
-            tidy.setDropFontTags(false);
-            tidy.setDropProprietaryAttributes(false);
-            tidy.setIndentContent(true);
-            
-            tidy.parse(is, os);
-            try {
-                String s = new String (os.toByteArray(), "UTF-8");
-                viewBeautifyContent = s;
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String viewBeautifyContent = null;
+
+        String res = httpMessage.getRes().getBodyStr();
+
+        InputStream is = new ByteArrayInputStream(res.getBytes());
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        Tidy tidy = new Tidy();
+        tidy.setWraplen(0);
+        tidy.setDropEmptyParas(false);
+        tidy.setDropFontTags(false);
+        tidy.setDropProprietaryAttributes(false);
+        tidy.setIndentContent(true);
+
+        tidy.parse(is, os);
+        try {
+            String s = new String(os.toByteArray(), "UTF-8");
+            viewBeautifyContent = s;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         setMessageText(viewBeautifyContent);
         highlightResponse();
     }
     
-    private SentinelHttpMessage diffHttpMessage;
+    
     
     public void setBuddy(SentinelHttpMessage msg) {
         this.diffHttpMessage = msg;
     }
     
     
-    private void showDiffView() {
+    private void showUnifiedDiffView() {
         if (httpMessage instanceof SentinelHttpMessageOrig) {
             return;
         }
+        String viewDiffContent = null;
         SentinelHttpMessageAtk messageAtk = (SentinelHttpMessageAtk) httpMessage;
         
-        if (viewDiffContent == null) {
-            String origRes = diffHttpMessage.getRes().getResponseStr();
-            String newRes = httpMessage.getRes().getResponseStr();
+        String origRes = diffHttpMessage.getRes().getResponseStr();
+        String newRes = httpMessage.getRes().getResponseStr();
 
-            String[] origResArr = origRes.split("\n");
-            String[] newResArr = newRes.split("\n");
+        String[] origResArr = origRes.split("\n");
+        String[] newResArr = newRes.split("\n");
 
-            GnuDiff gnuDiff = new GnuDiff(origResArr, newResArr);
-            change changes = gnuDiff.diff(GnuDiff.forwardScript);
+        GnuDiff gnuDiff = new GnuDiff(origResArr, newResArr);
+        change changes = gnuDiff.diff(GnuDiff.forwardScript);
 
-            UnifiedSmallPrint unifiedPrint = new UnifiedSmallPrint(origResArr, newResArr);
-            StringWriter a = new StringWriter();
-            unifiedPrint.setOutput(a);
-            unifiedPrint.print_script(changes);
-            
-            viewDiffContent = a.toString();
-        }
+        UnifiedSmallPrint unifiedPrint = new UnifiedSmallPrint(origResArr, newResArr);
+        StringWriter a = new StringWriter();
+        unifiedPrint.setOutput(a);
+        unifiedPrint.print_script(changes);
+
+        viewDiffContent = a.toString();
         
         setMessageText(viewDiffContent);
         
         highlightResponse();
     }
+    
+    private void showContextDiffView() {
+         if (httpMessage instanceof SentinelHttpMessageOrig) {
+            return;
+        }
+        String viewDiffContent = httpMessage.getRes().getResponseStr();;
+        SentinelHttpMessageAtk messageAtk = (SentinelHttpMessageAtk) httpMessage;
+        
+        setMessageText(viewDiffContent);
+
+        String origRes = diffHttpMessage.getRes().getResponseStr();
+        String newRes = httpMessage.getRes().getResponseStr();
+
+        String[] origResArr = origRes.split("\n");
+        String[] newResArr = newRes.split("\n");
+
+        GnuDiff gnuDiff = new GnuDiff(origResArr, newResArr);
+        change changes = gnuDiff.diff(GnuDiff.forwardScript);
+    
+        setMessageText(viewDiffContent);
+        while(changes != null) {
+            int linesAdded = changes.line1;
+            int linesDeleted = changes.line0;
+            
+            //BurpCallbacks.getInstance().print("Highlight: #Added1: " + changes.inserted + " #Del0: " + changes.deleted);
+            //BurpCallbacks.getInstance().print("Highlight: linenr ins1: " + changes.line1 + " linenr del0: " + changes.line0);
+            
+            addContextDiffHighlight(linesAdded);
+            if (linesAdded != linesDeleted) {
+                addContextDiffHighlight(linesDeleted);
+            }
+            
+            changes = changes.link;
+        }
+        
+        highlightResponse();
+    }
+    
+    private void addContextDiffHighlight(int lineNr) {
+        try {
+            int offsetStart = textareaMessage.getLineStartOffset(lineNr);
+            int offsetEnd = textareaMessage.getLineEndOffset(lineNr);
+            
+            //BurpCallbacks.getInstance().print("Highlight line: " + lineNr + " from: " + offsetStart + " to " + offsetEnd);
+            
+            Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(0xf9, 0x4f, 0x4f, 100));
+            try {
+                textareaMessage.getHighlighter().addHighlight(offsetStart, offsetEnd, painter);
+            } catch (BadLocationException ex) {
+                BurpCallbacks.getInstance().print("ARERRR2");
+            }
+            
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     
     public void setShowResponse(boolean b) {
         this.showResponse = b;
@@ -296,8 +341,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 showDefaultView();
             } else if (currentView.equals("Beautify")) {
                 showBeautifyView();
-            } else if (currentView.equals("Diff")) {
-                showDiffView();
+            } else if (currentView.equals("Unified Diff")) {
+                showUnifiedDiffView();
+            } else if (currentView.equals("Context Diff")) {
+                showContextDiffView();
             }
             
             comboboxView.setVisible(true);
@@ -527,8 +574,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(28, Short.MAX_VALUE)
-                .addComponent(comboboxView, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboboxView, 0, 134, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonShowRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -622,7 +668,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 .addComponent(checkboxIsLink)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelHighlight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -701,7 +747,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                 .addComponent(panelTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(panelCenter, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(panelCenter, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

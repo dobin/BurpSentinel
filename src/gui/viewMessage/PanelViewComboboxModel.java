@@ -33,7 +33,8 @@ public class PanelViewComboboxModel extends AbstractListModel implements ComboBo
     public PanelViewComboboxModel() {
         values.add("Default");
         values.add("Beautify");
-        values.add("Diff");
+        values.add("Unified Diff");
+        values.add("Context Diff");
     }
     
     public void hasParent(boolean hasParent) {
@@ -44,7 +45,7 @@ public class PanelViewComboboxModel extends AbstractListModel implements ComboBo
     @Override
     public int getSize() {
         if (hasParent) {
-            return 3;
+            return 4;
         } else {
             return 2;
         }
