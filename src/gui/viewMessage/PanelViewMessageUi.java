@@ -315,7 +315,8 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             
             Highlighter.HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(0xf9, 0x4f, 0x4f, 100));
             try {
-                textareaMessage.getHighlighter().addHighlight(offsetStart, offsetEnd, painter);
+               //textareaMessage.getHighlighter().addHighlight(offsetStart, offsetEnd, painter);
+                textareaMessage.addLineHighlight(lineNr, new Color(0xf9, 0x4f, 0x4f, 100));
             } catch (BadLocationException ex) {
                 BurpCallbacks.getInstance().print("ARERRR2");
             }
