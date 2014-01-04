@@ -19,6 +19,8 @@ package gui.botLeft;
 import attacks.AttackMain;
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
+import gui.sqlmap.SqlmapManager;
+import gui.sqlmap.SqlmapUi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -46,11 +48,15 @@ import util.BurpCallbacks;
  */
 public class PanelLeftPopup implements ActionListener {
 
+    private PanelLeftUi parent;
+    
     private JPopupMenu menu;
+    
     private JMenu attackSubmenu;
     private JMenu attackListSubmenu;
     private JMenu decodeSubmenu;
-    private PanelLeftUi parent;
+    private JMenuItem sqlmapEntry;
+    
     private LinkedList<JMenuItem> attackMenuItems;
     private LinkedList<JMenuItem> attackListMenuItems;
     
@@ -75,6 +81,10 @@ public class PanelLeftPopup implements ActionListener {
         decodeSubmenu = new JMenu("Decode as");
         initDecodeSubmenu();
         menu.add(decodeSubmenu);
+        
+        sqlmapEntry = new JMenuItem("Open with SQLMap");
+        sqlmapEntry.addActionListener(this);
+        menu.add(sqlmapEntry);
     }
 
     public JPopupMenu getPopup() {
@@ -88,9 +98,21 @@ public class PanelLeftPopup implements ActionListener {
         testActionAttack(o);
         testActionAttackList(o);
         testActionDecode(o);
-
+        testActionSqlmap(o);
     }
 
+    /**
+     * * SQLMap **
+     */
+    
+    private void testActionSqlmap(Object o) {
+        if (o == sqlmapEntry) {
+            SqlmapManager.getInstance().setHttpRequest(parent.getOrigHttpMessage(), parent.getSelectedHttpParam());
+            SqlmapManager.getInstance().showUi();
+            BurpCallbacks.getInstance().print("AAAA");
+        }
+    }
+    
     
     /**
      * * Attack **
