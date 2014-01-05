@@ -87,8 +87,6 @@ public class BurpCallbacks {
             return;
         }
         
-        BurpCallbacks.getInstance().print("TTT sendRessource: Before sending");
-
 //        try {
             IHttpRequestResponse r = null;
             long timeStart = System.currentTimeMillis();
@@ -120,8 +118,6 @@ public class BurpCallbacks {
   //      } catch (Exception ex) {
    //         BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());
     //    }
-            
-          BurpCallbacks.getInstance().print("TTT sendRessource: After sending");
     }
 
     private boolean isRedirect(byte[] response) {

@@ -73,7 +73,6 @@ public abstract class AttackI {
      * 
      */
     protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString) {
-        BurpCallbacks.getInstance().print("TTT AttackI: initAttackHttpMessage");
         if (attackWorkEntry == null) {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: work entry is null");
             return null;

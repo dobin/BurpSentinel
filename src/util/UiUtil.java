@@ -383,7 +383,6 @@ public class UiUtil {
 
 
     public static SqlmapData getSqlmapConfig() {
-        BurpCallbacks.getInstance().print("RESTORE");
         Preferences pref = Preferences.userRoot().node("Sqlmap");
         SqlmapData data = new SqlmapData();
      
@@ -395,8 +394,6 @@ public class UiUtil {
     }
     
     public static void storeSqlmapConfig(SqlmapData data) {
-        
-        BurpCallbacks.getInstance().print("STORE");
         Preferences pref = Preferences.userRoot().node("Sqlmap");
         
         pref.put("PythonPath", data.pythonPath);

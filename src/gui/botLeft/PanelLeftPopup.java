@@ -109,7 +109,6 @@ public class PanelLeftPopup implements ActionListener {
         if (o == sqlmapEntry) {
             SqlmapManager.getInstance().setHttpRequest(parent.getOrigHttpMessage(), parent.getSelectedHttpParam());
             SqlmapManager.getInstance().showUi();
-            BurpCallbacks.getInstance().print("AAAA");
         }
     }
     
