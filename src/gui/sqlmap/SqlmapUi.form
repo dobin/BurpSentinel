@@ -60,7 +60,7 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="textfieldCommandline" pref="512" max="32767" attributes="0"/>
+                              <Component id="textfieldSqlmap" pref="512" max="32767" attributes="0"/>
                               <Component id="textfieldPython" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -83,7 +83,7 @@
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="textfieldCommandline" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="textfieldSqlmap" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -101,7 +101,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Command Line:"/>
+            <Property name="text" type="java.lang.String" value="SQLMAP Python:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
@@ -114,7 +114,7 @@
             <Property name="text" type="java.lang.String" value="/tmp/sqlmap"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="textfieldCommandline">
+        <Component class="javax.swing.JTextField" name="textfieldSqlmap">
           <Properties>
             <Property name="text" type="java.lang.String" value="/home/dobin/Downloads/sqlmapproject-sqlmap-cb1f17c/sqlmap.py"/>
           </Properties>

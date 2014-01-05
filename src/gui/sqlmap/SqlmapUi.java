@@ -17,16 +17,17 @@
 package gui.sqlmap;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingWorker;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import util.BurpCallbacks;
+import util.UiUtil;
 
 /**
  *
@@ -36,24 +37,31 @@ public class SqlmapUi extends javax.swing.JPanel {
 
     private SentinelHttpMessage httpMessage;
     private SentinelHttpParam attackParam;
-    
+
     /**
      * Creates new form SqlmapUi
      */
     public SqlmapUi() {
         initComponents();
+        
+        SqlmapData data = UiUtil.getSqlmapConfig();
+        textfieldSqlmap.setText(data.sqlmapPath);
+        textfieldPython.setText(data.pythonPath);
+        textfieldWorkingdir.setText(data.workingDir);
+
     }
+    private List<String> args;
 
     private void startSqlmap() {
         String python = textfieldPython.getText();
         String workingDir = textfieldWorkingdir.getText();
-        String cmd = textfieldCommandline.getText();
+        String cmd = textfieldSqlmap.getText();
 
         // Do some basic tests
 
 
         // Write request file
-        String requestFile = workingDir + "/request.txt";
+        String requestFile = workingDir + "request.txt";
         try {
             FileOutputStream fos = new FileOutputStream(requestFile);
             fos.write(httpMessage.getRequest());
@@ -63,69 +71,83 @@ public class SqlmapUi extends javax.swing.JPanel {
         }
 
         // Start sqlmap
-        List<String> args = new ArrayList<String>();
+        args = new ArrayList<String>();
         args.add(python);
         args.add(cmd);
         args.add("-r");
         args.add(requestFile);
         args.add("--batch");
-        
+
         args.add("-p");
         args.add(attackParam.getName());
-        
-        String sessionFile = workingDir + "/sessionlog.txt";
+
+        String sessionFile = workingDir + "sessionlog.txt";
         args.add("-s");
         args.add(sessionFile);
         args.add("--flush-session");
-        
-        String traceFile = workingDir + "/tracelog.txt";
+
+        String traceFile = workingDir + "tracelog.txt";
         args.add("-t");
         args.add(traceFile);
-        
+
         args.add("--disable-coloring");
-        
+        args.add("--cleanup");
 
-        ProcessBuilder pb = new ProcessBuilder(args);
-        BurpCallbacks.getInstance().print(pb.command().toString());
-        pb.redirectErrorStream(true);
-        Process proc;
-        try {
-            proc = pb.start();
 
-            InputStream is = proc.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-
-            String line;
-            int exit = -1;
-
-            while ((line = br.readLine()) != null) {
-                // Outputs your process execution
-                BurpCallbacks.getInstance().print(line);
-                addLine(line);
+        SwingWorker worker = new SwingWorker<String, Void>() {
+            @Override
+            public String doInBackground() {
+                ProcessBuilder pb = new ProcessBuilder(args);
+                BurpCallbacks.getInstance().print(pb.command().toString());
+                pb.redirectErrorStream(true);
+                Process proc;
                 try {
-                    exit = proc.exitValue();
-                    if (exit == 0) {
-                        // Process finished
-                    }
-                } catch (IllegalThreadStateException t) {
-                    // The process has not yet finished. 
-                    // Should we stop it?
-                    //if (processMustStop()) // processMustStop can return true 
-                    // after time out, for example.
-                    //{
-                    //    proc.destroy();
-                    //}
-                }
-            }
-        } catch (IOException ex) {
-            BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
+                    proc = pb.start();
 
-        }
+                    InputStream is = proc.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader br = new BufferedReader(isr);
+
+                    String line;
+                    int exit = -1;
+
+                    while ((line = br.readLine()) != null) {
+                        // Outputs your process execution
+                        addLine(line);
+                        try {
+                            exit = proc.exitValue();
+                            if (exit == 0) {
+                                // Process finished
+                            }
+                        } catch (IllegalThreadStateException t) {
+                            // The process has not yet finished. 
+                            // Should we stop it?
+                            //if (processMustStop()) // processMustStop can return true 
+                            // after time out, for example.
+                            //{
+                            //    proc.destroy();
+                            //}
+                        }
+                    }
+                } catch (IOException ex) {
+                    BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
+                }
+                return "";
+            }
+
+            @Override
+            public void done() {
+            }
+        };
+
+        worker.execute();
+
     }
-    
+
     private void addLine(String line) {
-        jTextArea1.setText(jTextArea1.getText() + line + "\n");
+//        if (line.length() > 0) {
+            jTextArea1.setText(jTextArea1.getText() + line + "\n");
+//        }
     }
 
     /**
@@ -141,7 +163,7 @@ public class SqlmapUi extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         textfieldWorkingdir = new javax.swing.JTextField();
-        textfieldCommandline = new javax.swing.JTextField();
+        textfieldSqlmap = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         textfieldPython = new javax.swing.JTextField();
@@ -155,13 +177,13 @@ public class SqlmapUi extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText("Command Line:");
+        jLabel1.setText("SQLMAP Python:");
 
         jLabel2.setText("Working Directory:");
 
         textfieldWorkingdir.setText("/tmp/sqlmap");
 
-        textfieldCommandline.setText("/home/dobin/Downloads/sqlmapproject-sqlmap-cb1f17c/sqlmap.py");
+        textfieldSqlmap.setText("/home/dobin/Downloads/sqlmapproject-sqlmap-cb1f17c/sqlmap.py");
 
         jButton1.setText("Go");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -190,7 +212,7 @@ public class SqlmapUi extends javax.swing.JPanel {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textfieldCommandline, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
+                            .addComponent(textfieldSqlmap, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE)
                             .addComponent(textfieldPython)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -206,7 +228,7 @@ public class SqlmapUi extends javax.swing.JPanel {
                     .addComponent(textfieldPython, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textfieldCommandline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textfieldSqlmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -299,13 +321,25 @@ public class SqlmapUi extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField textfieldCommandline;
     private javax.swing.JTextField textfieldPython;
+    private javax.swing.JTextField textfieldSqlmap;
     private javax.swing.JTextField textfieldWorkingdir;
     // End of variables declaration//GEN-END:variables
 
     void setHttpMessage(SentinelHttpMessage origHttpMessage, SentinelHttpParam attackParam) {
         this.httpMessage = origHttpMessage;
         this.attackParam = attackParam;
+    }
+
+    void storeConfig() {
+        SqlmapData data = new SqlmapData(
+                textfieldPython.getText(),
+                textfieldSqlmap.getText(),
+                textfieldWorkingdir.getText()
+        );
+        
+        UiUtil.storeSqlmapConfig(data);
+
+    
     }
 }

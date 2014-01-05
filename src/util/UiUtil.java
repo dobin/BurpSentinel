@@ -20,6 +20,7 @@ import gui.botLeft.PanelLeftOptions.InsertPositions;
 import gui.session.SessionUser;
 import gui.categorizer.CategoryEntry;
 import gui.lists.ListManagerList;
+import gui.sqlmap.SqlmapData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
@@ -378,6 +379,29 @@ public class UiUtil {
         sb.append(Integer.toHexString(c.getBlue()));
 
         return sb.toString();
+    }
+
+
+    public static SqlmapData getSqlmapConfig() {
+        BurpCallbacks.getInstance().print("RESTORE");
+        Preferences pref = Preferences.userRoot().node("Sqlmap");
+        SqlmapData data = new SqlmapData();
+     
+        data.pythonPath = pref.get("PythonPath", "/usr/bin/python");
+        data.sqlmapPath = pref.get("SqlmapPath", "/home/dobin/Downloads/sqlmapproject-sqlmap-cb1f17c/sqlmap.py");
+        data.workingDir = pref.get("WorkingDir", "/tmp/sqlmap/");
+        
+        return data;
+    }
+    
+    public static void storeSqlmapConfig(SqlmapData data) {
+        
+        BurpCallbacks.getInstance().print("STORE");
+        Preferences pref = Preferences.userRoot().node("Sqlmap");
+        
+        pref.put("PythonPath", data.pythonPath);
+        pref.put("SqlmapPath", data.sqlmapPath);
+        pref.put("WorkingDir", data.workingDir);
     }
 
     

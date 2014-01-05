@@ -16,6 +16,8 @@
  */
 package gui.sqlmap;
 
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JFrame;
 import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
@@ -49,7 +51,37 @@ public class SqlmapManager {
         mainFrame = new JFrame();
         mainFrame.setSize(1024, 786);
         mainFrame.add(sqlmapUi);
+        mainFrame.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
 
+            @Override
+            public void windowClosing(WindowEvent e) {
+                sqlmapUi.storeConfig();
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
+            
+        });
     }
     
     public void showUi() {

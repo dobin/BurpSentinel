@@ -124,7 +124,7 @@ public class FrameOptions extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        checkboxRelativeSize.setText("Relative response size");
+        checkboxRelativeSize.setText("Disable Relative response size");
         checkboxRelativeSize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkboxRelativeSizeActionPerformed(evt);
