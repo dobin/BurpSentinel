@@ -62,9 +62,9 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         
         initComponents();
 
-        int width = 50;
-        tableMessages.getColumnModel().getColumn(0).setMaxWidth(80);
-        tableMessages.getColumnModel().getColumn(0).setMinWidth(80);
+        int width = 48;
+        tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
+        tableMessages.getColumnModel().getColumn(0).setMinWidth(64);
         
         tableMessages.getColumnModel().getColumn(3).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(3).setMinWidth(width);

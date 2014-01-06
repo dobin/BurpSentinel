@@ -121,7 +121,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 4:
                 return "SQL";
             case 5:
-                return "Other";
+                return "Misc";
 
             default:
                 return "hmm";
