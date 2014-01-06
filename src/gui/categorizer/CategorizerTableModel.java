@@ -133,4 +133,9 @@ public class CategorizerTableModel extends AbstractTableModel {
     LinkedList<CategoryEntry> getCategories() {
         return categoryEntries;
     }
+
+    void removeRow(int selectedRow) {
+        categoryEntries.remove(selectedRow);
+        this.fireTableDataChanged();
+    }
 }

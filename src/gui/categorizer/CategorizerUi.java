@@ -48,6 +48,18 @@ public class CategorizerUi extends JFrame {
         return tableModel;
     }
 
+    private void updateAllMessages() {
+        // Yes, update all the messages!
+        LinkedList<SentinelHttpMessageOrig> origMsgs = ModelRoot.getInstance().getMessageList();
+        for(SentinelHttpMessageOrig origMsg: origMsgs) {
+            for(SentinelHttpMessageAtk atkMsg: origMsg.getHttpMessageChildren()) {
+                atkMsg.getRes().categorizeResponse();
+            }
+        }
+        
+        parentCategorizerManager.signalModelUpdate();       
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -63,6 +75,7 @@ public class CategorizerUi extends JFrame {
         jPanel8 = new javax.swing.JPanel();
         buttonApply = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
+        buttonDelSelected = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -97,12 +110,21 @@ public class CategorizerUi extends JFrame {
             }
         });
 
+        buttonDelSelected.setText("Del");
+        buttonDelSelected.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDelSelectedActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
                 .addComponent(buttonAddLine)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonDelSelected)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonApply))
         );
@@ -112,7 +134,8 @@ public class CategorizerUi extends JFrame {
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonApply)
-                    .addComponent(buttonAddLine)))
+                    .addComponent(buttonAddLine)
+                    .addComponent(buttonDelSelected)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -139,22 +162,19 @@ public class CategorizerUi extends JFrame {
 
     private void buttonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonApplyActionPerformed
         // Store current window in config
-        tableModel.storeUiPrefs();
+        save();
         
-        // Yes, update all the messages!
-        LinkedList<SentinelHttpMessageOrig> origMsgs = ModelRoot.getInstance().getMessageList();
-        for(SentinelHttpMessageOrig origMsg: origMsgs) {
-            for(SentinelHttpMessageAtk atkMsg: origMsg.getHttpMessageChildren()) {
-                atkMsg.getRes().categorizeResponse();
-            }
-        }
-        
-        parentCategorizerManager.signalModelUpdate();
+        updateAllMessages();
     }//GEN-LAST:event_buttonApplyActionPerformed
+
+    private void buttonDelSelectedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDelSelectedActionPerformed
+        tableModel.removeRow(tableMain.getSelectedRow());
+    }//GEN-LAST:event_buttonDelSelectedActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAddLine;
     private javax.swing.JButton buttonApply;
+    private javax.swing.JButton buttonDelSelected;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
@@ -163,5 +183,9 @@ public class CategorizerUi extends JFrame {
 
     public LinkedList<CategoryEntry> getCategories() {
         return tableModel.getCategories();
+    }
+
+    public void save() {
+        tableModel.storeUiPrefs();
     }
 }

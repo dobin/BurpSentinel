@@ -130,6 +130,7 @@ public class PanelTopUi extends javax.swing.JPanel {
             public void windowClosing(WindowEvent e) {
                 btnCategorizer.setSelected(false);
                 categorizerUi.setVisible(false);
+                categorizerUi.save();
             }
         };
         categorizerUi.addWindowListener(categorizerWindowListener);
