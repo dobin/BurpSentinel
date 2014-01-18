@@ -221,6 +221,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         jSplitPane1.setDividerLocation(300);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
+        buttonAttack.setBackground(new java.awt.Color(229, 137, 0));
         buttonAttack.setText("Go");
         buttonAttack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -556,8 +556,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         buttonNext = new javax.swing.JButton();
         textfieldSearch = new javax.swing.JTextField();
 
-        buttonShowRequest.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        buttonShowRequest.setForeground(new java.awt.Color(229, 137, 0));
+        buttonShowRequest.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         buttonShowRequest.setText("Request");
         buttonShowRequest.setFocusable(false);
         buttonShowRequest.setMargin(new java.awt.Insets(0, 2, 0, 2));
