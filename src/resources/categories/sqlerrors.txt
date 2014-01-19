@@ -47,3 +47,10 @@ on MySQL result index
 supplied argument is not a valid MySQL result resource
 unexpected end of SQL command
 SQLSTATE
+CMDB Error: Database error : Query error:
+CMDB Error:
+Database error
+Query error
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 
+SQL syntax
+MySQL server
