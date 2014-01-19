@@ -63,13 +63,30 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         //parent.setSelected(myMessages.size() - 1);
     }
 
-    public SentinelHttpMessage getMessage(int rowIndex) {
+    public SentinelHttpMessageOrig getMessage(int rowIndex) {
         return myMessages.get(rowIndex);
     }
     
-    public void removeMessage(int index) {
-        myMessages.remove(index);
+    public void removeMessage(SentinelHttpMessageOrig removeMessage) {
+        for(SentinelHttpMessageOrig msg: myMessages) {
+            if (msg.getMessageNr() == removeMessage.getMessageNr()) {
+                myMessages.remove(msg);
+                break;
+            }
+        }
         this.fireTableDataChanged();
+    }
+    
+    public int getRowForMessage(SentinelHttpMessageOrig msg) {
+        return myMessages.indexOf(msg);
+    }
+    
+    public SentinelHttpMessageOrig getMessageForRow(int n) {
+        if (n >= myMessages.size()) {
+            return null;
+        } else {
+            return myMessages.get(n);
+        }
     }
 
     @Override
@@ -216,6 +233,6 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         this.fireTableDataChanged();
-        parent.setSelected();
+        //parent.setSelected();
     }
 }

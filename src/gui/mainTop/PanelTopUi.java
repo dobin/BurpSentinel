@@ -50,7 +50,7 @@ import util.UiUtil;
  * @author Dobin
  */
 public class PanelTopUi extends javax.swing.JPanel {
-    private PanelTopTableModel tableTopModel;
+    private final PanelTopTableModel tableTopModel;
     
     private int currentSelectedRow = -1;
     
@@ -199,7 +199,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                         
                         if (currentSelectedRow != oldSelected) {
                             //setSelected();
-                            SentinelMainUi.getMainUi().showMessage(currentSelectedRow);
+                            SentinelMainUi.getMainUi().showMessage( tableTopModel.getMessageForRow(currentSelectedRow));
                         }
                     }
                 }});
@@ -223,12 +223,17 @@ public class PanelTopUi extends javax.swing.JPanel {
         });    
     }
     
-
     
-    void removeMessage() {
-        tableTopModel.removeMessage(currentSelectedRow);
-        
-        SentinelMainUi.getMainUi().removeMessage(currentSelectedRow);
+    public SentinelHttpMessageOrig getFirstMessage() {
+        return tableTopModel.getMessageForRow(0);
+    }
+    
+    void removeMessageAction() {
+        SentinelMainUi.getMainUi().removeMessage(tableTopModel.getMessage(currentSelectedRow));
+    }
+    
+    public void removeMessage(SentinelHttpMessageOrig removeMessage) {
+        tableTopModel.removeMessage(removeMessage);
     }
     
     // This gets called from MainGui
@@ -242,6 +247,15 @@ public class PanelTopUi extends javax.swing.JPanel {
     private TableModel getMessageTableModel() {
         return tableTopModel;
     }
+    
+    public void setSelected(SentinelHttpMessageOrig selectedMsg) {
+        int msgIndex = -1;
+        
+        msgIndex = tableTopModel.getRowForMessage(selectedMsg);
+        tableAllMessages.getSelectionModel().setSelectionInterval(msgIndex, msgIndex);
+        this.currentSelectedRow = msgIndex;
+    }    
+            
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -508,20 +522,5 @@ public class PanelTopUi extends javax.swing.JPanel {
     public void reset() {
         tableTopModel.reset();
     }
-    
-            
-    public int getSelected() {
-        return currentSelectedRow;
-    }
-    
-    public void setSelected() {
-        tableAllMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
-    }
-
-    public void setSelected(int index) {
-        tableAllMessages.getSelectionModel().setSelectionInterval(index, index);
-        this.currentSelectedRow = index;
-    }
-
     
 }

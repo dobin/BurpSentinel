@@ -22,12 +22,9 @@ import gui.mainBot.PanelBotUi;
 import gui.mainTop.PanelTopUi;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import model.SentinelHttpMessage;
-import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
 import util.UiUtil;
@@ -45,10 +42,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
 
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
-    
-    // Current selected panel
-    private PanelBotUi currentPanelBot = null;
-    
     private ModelRoot modelRoot;
     
     static void setMainUi(SentinelMainUi ui) {
@@ -96,6 +89,10 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     @Override
     public void update(Observable o, Object arg) {
         SentinelHttpMessageOrig newHttpMessage = (SentinelHttpMessageOrig) arg;
+        
+        newHttpMessage.setSentinelIdentifier(lastMessageNr);
+        lastMessageNr++;
+        
         addNewMessage(newHttpMessage);
     }
 
@@ -115,50 +112,71 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         panelBotUiList = new LinkedList<PanelBotUi>();
     }
     
+
+    private int lastMessageNr = 0;
     
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
         // Save ui preferences
         // For example, the row width's are not automatically stored upon change,
         // but needed for new messages.
         storeUiPrefs();
-
+        
+        BurpCallbacks.getInstance().print("addMessage: " + myHttpMessage.getMessageNr());
+        
         // Add request to top overview (where user can select requests)
         panelTopUi.addMessage(myHttpMessage);
 
         // Create a new PanelBot card and add it to the botPanel and the 
         // LinkedList of available cards
-        int index = panelBotUiList.size();
         PanelBotUi newPanelBot = new PanelBotUi(myHttpMessage);
+        newPanelBot.setName(Integer.toString(myHttpMessage.getMessageNr()));
         panelBotUiList.add(newPanelBot);
-        panelCard.add(newPanelBot, Integer.toString(index));
-        showMessage(index); // Show newly added message in ui
+        panelCard.add(newPanelBot, Integer.toString(myHttpMessage.getMessageNr()));
+        showMessage(myHttpMessage);
     }
     
-
-
-    /*
-     * Show a HttpMessage - based on it's index (derived from top overview)
-     * 
+    
+    /* 
+     * Can be called by:
+     *   - addMessage()
+     *   - PanelTopUi table selection listener
      */
-    public void showMessage(int index) {
-        panelTopUi.setSelected(index);
-        CardLayout cl = (CardLayout) panelCard.getLayout();
-        cl.show(panelCard, Integer.toString(index));
+    public void showMessage(SentinelHttpMessageOrig myMessage) {
+        if (myMessage == null) {
+            return;
+        } 
         
-        if (index >= panelBotUiList.size()) {
-            BurpCallbacks.getInstance().print("MainUi showMessage Error: Size of list: " + panelBotUiList.size() + " Selected: " + index);
+        panelTopUi.setSelected(myMessage);
+        
+        CardLayout cl = (CardLayout) panelCard.getLayout();
+        cl.show(panelCard, Integer.toString(myMessage.getMessageNr()));
+    }
+
+    public void removeMessage(SentinelHttpMessageOrig removeMsg) {
+        // First, remove it from PanelTopUi
+        panelTopUi.removeMessage(removeMsg);
+        
+        // Second, remove it from CardLayout
+        CardLayout cl = (CardLayout) panelCard.getLayout();
+        Component[] components = panelCard.getComponents();
+
+        for (int i = 0; i < components.length; i++) {
+            if (components[i].getName().equals(Integer.toString(removeMsg.getMessageNr()))) {
+                //cl.removeLayoutComponent(components[i]);
+                break;
+            }
+        }
+        
+        // Last, show another message
+        SentinelHttpMessageOrig firstMsg = panelTopUi.getFirstMessage();
+        if (firstMsg == null) {
+            // No message to show...
+            
         } else {
-            currentPanelBot = panelBotUiList.get(index);
+            showMessage(firstMsg);
         }
     }
-
-    
-    public void removeMessage(int currentSelectedRow) {
-        // TODO FIXME breaks if removed...
-        //panelBotUiList.remove(currentSelectedRow);
-        //panelCard.remove(currentSelectedRow);
-    }
-
+ 
     
     /*
      * Init testcase messages

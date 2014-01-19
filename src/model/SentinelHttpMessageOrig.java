@@ -28,7 +28,7 @@ import java.util.LinkedList;
 public class SentinelHttpMessageOrig extends SentinelHttpMessage implements Serializable {
     // Children
     private LinkedList<SentinelHttpMessageAtk> httpMessageChildren = new LinkedList<SentinelHttpMessageAtk>();
-
+    private int messageNr = -1;
     
     public SentinelHttpMessageOrig(IHttpRequestResponse httpMessage) {
         super(httpMessage);
@@ -66,6 +66,13 @@ public class SentinelHttpMessageOrig extends SentinelHttpMessage implements Seri
         this.setChanged();
         this.notifyObservers(SentinelHttpMessageAtk.ObserveResult.ATTACKRESULT);
     }
+
+    public void setSentinelIdentifier(int lastMessageNr) {
+        this.messageNr = lastMessageNr;
+    }
     
+    public int getMessageNr() {
+        return messageNr;
+    }
 
 }

@@ -51,7 +51,7 @@ public class PanelTopPopup implements ActionListener {
         Object o = e.getSource();
 
         if (o == menuDelete) {
-            parent.removeMessage();
+            parent.removeMessageAction();
         }
     }
 }
