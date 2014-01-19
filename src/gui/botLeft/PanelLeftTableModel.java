@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.DefaultTableModel;
-import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import model.SentinelHttpParamVirt;
@@ -229,6 +228,41 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData);
             }
         }
+    }
+    
+    public void intentInvertSelection(int column) {
+        for(PanelLeftTableUIEntry entry: uiEntries) {
+            switch(column) {
+                case 3:
+                    entry.isXssEnabled = ! entry.isXssEnabled;
+                    break;
+                case 4:
+                    entry.isSqlEnabled = ! entry.isSqlEnabled;
+                    break;
+                case 5:
+                    entry.isOtherEnabled = ! entry.isOtherEnabled;
+                    break;
+            }
+        }
+        
+        this.fireTableDataChanged();
+    }
+    
+    public void intentSelectAll(int column) {
+        for(PanelLeftTableUIEntry entry: uiEntries) {
+            switch(column) {
+                case 3:
+                    entry.isXssEnabled = true;
+                    break;
+                case 4:
+                    entry.isSqlEnabled = true;
+                    break;
+                case 5:
+                    entry.isOtherEnabled = true;
+                    break;
+            }
+        }
+        this.fireTableDataChanged();
     }
 
     

@@ -18,6 +18,7 @@ package gui.botLeft;
 
 import attacks.AttackMain;
 import gui.SentinelMainUi;
+import gui.botRight.PopupTableHeader;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
@@ -40,7 +41,8 @@ import util.UiUtil;
  *
  * @author unreal
  */
-public class PanelLeftUi extends javax.swing.JPanel  {
+public class PanelLeftUi extends javax.swing.JPanel {
+
     private PanelBotUi panelParent;
     private SentinelHttpMessageOrig origHttpMessage;
     private PanelLeftTableModel tableModel;
@@ -49,8 +51,8 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private PanelLeftPopup paramPopup;
     private int selectedRow = -1;
     private PanelLeftOptions optionsPopup;
-   
-    
+    private PopupTableHeaderLeft popupTableHeaderLeft;
+
     /**
      * Creates new form RequestConfigForm
      */
@@ -59,13 +61,13 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         sessionComboBoxModel = new PanelLeftComboBoxModel();
         comboBoxSession = new JComboBox();
         comboBoxSession.setModel(sessionComboBoxModel);
-        
+
         initComponents();
 
         int width = 48;
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
         tableMessages.getColumnModel().getColumn(0).setMinWidth(64);
-        
+
         tableMessages.getColumnModel().getColumn(3).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(3).setMinWidth(width);
         tableMessages.getColumnModel().getColumn(4).setMaxWidth(width);
@@ -73,7 +75,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         tableMessages.getColumnModel().getColumn(5).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(5).setMinWidth(width);
 
-        
+
         tableMessages.setAutoCreateRowSorter(true);
         UiUtil.restoreSplitLocation(jSplitPane1, this);
         UiUtil.restoreTableDimensions(tableMessages, this);
@@ -83,7 +85,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
-        
+
         paramPopup = new PanelLeftPopup(this);
         // Add mouse listener for on-row popup menu
         tableMessages.addMouseListener(new MouseAdapter() {
@@ -103,35 +105,52 @@ public class PanelLeftUi extends javax.swing.JPanel  {
                     paramPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
                 }
             }
-        });    
-        
+        });
+
         optionsPopup = new PanelLeftOptions();
+
+
+        popupTableHeaderLeft = new PopupTableHeaderLeft(tableMessages, tableModel);
+        tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                showPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                showPopup(e);
+            }
+
+            private void showPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    //popupTableHeaderLeft.show(e.getComponent(), e.getX(), e.getY());
+                    popupTableHeaderLeft.show(e.getComponent(), e);
+                }
+            }
+        });
     }
-    
-    
+
     SentinelHttpParam getSelectedHttpParam() {
         return tableModel.getHttpParamAt(selectedRow);
     }
-    
-    
+
     private TableModel getTableModel() {
         return tableModel;
     }
 
-    
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
-        
+
         //textfieldUrl.setText(message.getReq().getUrl().toString());
         textfieldUrl.setText(message.getReq().getUrl().getHost());
         textfieldUrl.setToolTipText(message.getReq().getUrl().toString());
-        textfieldUrl.setBackground( Color.lightGray);
+        textfieldUrl.setBackground(Color.lightGray);
         textfieldUrl.setCaretPosition(0);
     }
-    
-  
+
     /*
      * Add Attack Message
      * 
@@ -142,7 +161,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         panelParent.addAttackMessage(attackMessage);
     }
 
-    
     /*
      * Called when click on param attack popup menu
      * 
@@ -150,19 +168,18 @@ public class PanelLeftUi extends javax.swing.JPanel  {
      */
     void attackSelectedParam(SentinelHttpParam attackHttpParams, AttackMain.AttackTypes attackType, String options) {
         AttackWorkEntry attackEntry = new AttackWorkEntry(
-                attackHttpParams, 
-                attackType, 
+                attackHttpParams,
+                attackType,
                 options,
-                origHttpMessage, 
-                this, 
+                origHttpMessage,
+                this,
                 optionsPopup.getOptionRedirect(),
                 optionsPopup.getOptionInsertPosition(),
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
-        
+
         Networker.getInstance().attackThis(attackEntry);
     }
-    
-    
+
     /*
      * Click on "Go"
      * Attacks current httpmessage with all selected attacks
@@ -172,7 +189,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         if (comboBoxSession.getSelectedIndex() > 0) {
             tableModel.setSessionAttackMessage(true, (String) comboBoxSession.getSelectedItem());
         }
-        
+
         // Transfer UI attack ticks to HttpMessage attacks
         // The function will call attackSelectedParam() appropriatly - we are finished here.
         tableModel.createChangeParam(this);
@@ -181,8 +198,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         tableModel.resetAttackSelection();
         comboBoxSession.setSelectedIndex(0);
     }
-      
-       
+
     /*
      * If we add a virtual parameter (decoded version of existing one), we need
      * to update table model and redraw table.
@@ -190,7 +206,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     void updateModel() {
         tableModel.reinit();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -329,7 +345,6 @@ public class PanelLeftUi extends javax.swing.JPanel  {
         JPopupMenu menu = optionsPopup.getPopupMenu();
         menu.show(buttonOptions, 0, buttonOptions.getBounds().y);
     }//GEN-LAST:event_buttonOptionsActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
@@ -345,7 +360,7 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     private javax.swing.JTable tableMessages;
     private javax.swing.JTextField textfieldUrl;
     // End of variables declaration//GEN-END:variables
-    
+
     public void setPanelParent(PanelBotUi aThis) {
         this.panelParent = aThis;
         panelViewMessage.setLinkManager(panelParent.getLinkManager());
@@ -354,13 +369,11 @@ public class PanelLeftUi extends javax.swing.JPanel  {
     public void storeUiPrefs() {
         UiUtil.storeSplitLocation(jSplitPane1, this);
         UiUtil.storeTableDimensions(tableMessages, this);
-        
+
         optionsPopup.storeUiPrefs();
     }
-  
 
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;
     }
-    
 }

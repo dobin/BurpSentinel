@@ -147,23 +147,14 @@ public class PanelRightUi extends javax.swing.JPanel {
                     
                     // Check if only one is selected
                     ListSelectionModel lsm = tableMessages.getSelectionModel();
-                    BurpCallbacks.getInstance().print("AA: " + lsm.getMinSelectionIndex());
-                    BurpCallbacks.getInstance().print("AA: " + lsm.getMaxSelectionIndex());
                     if (lsm.getMinSelectionIndex() == lsm.getMaxSelectionIndex()) {
-                        BurpCallbacks.getInstance().print("AA1");
                         if (!source.isRowSelected(row)) {
                             source.changeSelection(row, column, false, false);
                         }
-
                         panelRightPopup.getPopup().show(e.getComponent(), e.getX(), e.getY());
                     } else {
-                        BurpCallbacks.getInstance().print("AA2");
-                        
                         panelRightPopupMultiple.getPopup().show(e.getComponent(), e.getX(), e.getY());
                     }
-                    
-
-                    
                 }
             }
         });    
