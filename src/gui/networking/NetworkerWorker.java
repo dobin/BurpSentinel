@@ -16,22 +16,11 @@
  */
 package gui.networking;
 
-import attacks.AttackAuthorisation;
-import attacks.AttackI;
-import attacks.AttackList;
-import attacks.AttackMain;
-import attacks.AttackOriginal;
-import attacks.AttackPersistentXss;
-import attacks.AttackSql;
-import attacks.AttackXss;
-import attacks.AttackXssLessThan;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
-import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 
 /**
@@ -40,19 +29,33 @@ import util.BurpCallbacks;
  */
 public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
 
-    private final Queue queue = new LinkedBlockingQueue();
-    private NetworkerLogger log = new NetworkerLogger();
-    private boolean cancel = false;
-
+    //private final LinkedBlockingQueue queue = new LinkedBlockingQueue();
+    private LinkedList queue = new LinkedList();
+    private NetworkerSender networkerSender;
+    private boolean isCanceled = false;
+    
     public NetworkerWorker() {
+        networkerSender = new NetworkerSender();
+        
+        isCanceled = false;
     }
 
     @Override
     protected String doInBackground() {
         AttackWorkEntry work = null;
+        boolean goon;
 
         while (true) {
             synchronized (queue) {
+                if (isCanceled) {
+                    BurpCallbacks.getInstance().print("[A.1] doInBackground Canceling in while - clear queue");
+                    isCanceled = false;
+                    if (queue.size() > 0) {
+                        queue.clear();
+                    }
+                    //this.isCancelled();
+                }
+                
                 while (queue.isEmpty()) {
                     try {
                         queue.wait();
@@ -61,16 +64,55 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
                     }
                 }
 
-                log.append("New requests\n");
                 work = (AttackWorkEntry) queue.remove();
+                
+                /*
+                try {
+                    work = (AttackWorkEntry) queue.take();
+                } catch (InterruptedException ex) {
+                    BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
+                }*/
+
+                BurpCallbacks.getInstance().print("[A.1] doInBackground Got new work! Doing it");
             }
 
-            doWork(work);
+            if (networkerSender.init(work) == true) {
+                BurpCallbacks.getInstance().print("[A.2] doInBackground Init ok");
+
+                goon = true;
+                while(goon) {
+                    goon = networkerSender.sendRequest();
+                    BurpCallbacks.getInstance().print("[A.3] doInBackground Publishing");
+                    
+                    
+                    if (isCanceled) {
+                        getLogger().giveSignal(NetworkerLogger.Signal.CANCEL);
+                        getLogger().append("\n\nCanceling ok");
+                        BurpCallbacks.getInstance().print("[B.4] doInBackground Canceled... ! (inloop)");
+                        goon = false;
+                    } else {
+                        publish(networkerSender.getResult());
+                    }
+                }
+                
+                getLogger().giveSignal(NetworkerLogger.Signal.FINISHED);
+            }
         }
+    }
+    
+    @Override
+    public void done() {
+        BurpCallbacks.getInstance().print("[A.5] Done!");
     }
 
     void addAttack(AttackWorkEntry entry) {
         synchronized (queue) {
+            /*
+            try {
+                queue.put(entry);
+            } catch (InterruptedException ex) {
+                BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
+            }*/
             queue.add(entry);
             queue.notify();
         }
@@ -78,6 +120,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
 
     @Override
     protected void process(List<AttackWorkEntry> pairs) {
+        BurpCallbacks.getInstance().print("[A.4] process Handle publish");
         for (AttackWorkEntry work : pairs) {
             work.panelParent.addAttackMessage(work.result);
         }
@@ -85,88 +128,16 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
 
 
     public NetworkerLogger getLogger() {
-        return log;
+        return networkerSender.getLog();
     }
 
     void cancelAll() {
-        cancel = true;
-        log.giveSignal(NetworkerLogger.Signal.CANCEL);
-        log.append("\n\nCanceling, please wait... ");
+        BurpCallbacks.getInstance().print("[B.6] cancelAll Canceling!");
+        getLogger().giveSignal(NetworkerLogger.Signal.CANCEL);
+        getLogger().append("\n\nCanceling, please wait... ");
+        
+        isCanceled = true;
+
     }
 
-    private void doWork(AttackWorkEntry work) {
-        log.newWork();
-        log.giveSignal(NetworkerLogger.Signal.START);
-
-        AttackMain.AttackTypes attackType = work.attackType;
-        AttackI attack = null;
-        
-        // Some basic integrity checks
-        if (work.origHttpMessage == null || work.origHttpMessage.getRequest() == null) {
-            BurpCallbacks.getInstance().print("initialmessage broken");
-            return;
-        }
-        
-        BurpCallbacks.getInstance().print("doAttack: " + work.attackType);
-        
-        switch (attackType) {
-            case ORIGINAL:
-                attack = new AttackOriginal(work);
-                break;
-            case XSS:
-                attack = new AttackXss(work);
-                break;
-            case OTHER:
-                attack = new AttackPersistentXss(work);
-                break;
-            case SQL:
-                attack = new AttackSql(work);
-                break;
-            case AUTHORISATION:
-                attack = new AttackAuthorisation(work);
-                break;
-            case LIST:
-                attack = new AttackList(work);
-                break;
-            case XSSLESSTHAN:
-                attack = new AttackXssLessThan(work);
-                break;
-            default:
-                BurpCallbacks.getInstance().print("Error, unknown attack type: " + attackType);
-                return;
-        }
-        
-        if (attack.init() == true) {
-            performAttack(attack, work);
-        }
-        
-        log.giveSignal(NetworkerLogger.Signal.FINISHED);
-    }
-
-
-    private void performAttack(AttackI attack, AttackWorkEntry work) {
-        SentinelHttpMessageAtk attackMessage = null;
-        boolean goon = true;
-
-        while (goon) {
-            log.append(work.origHttpMessage.getReq().getUrl() + " (" + work.attackHttpParam.getName() + "=" + work.attackHttpParam.getValue() + ") ...");
-            log.giveSignal(NetworkerLogger.Signal.SEND);
-            goon = attack.performNextAttack();
-            log.giveSignal(NetworkerLogger.Signal.RECV);
-            log.append(" ok\n");
-            
-            attackMessage = attack.getLastAttackMessage();
-
-            if (attackMessage != null) {
-                work.result = attackMessage;
-                publish(work);
-            } else {
-                BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
-            }
-
-            if (cancel) {
-                goon = false;
-            }
-        }
-    }
 }
