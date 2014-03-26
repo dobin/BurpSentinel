@@ -17,13 +17,11 @@
 package attacks;
 
 import attacks.AttackData.AttackType;
-import gui.botLeft.PanelLeftOptions;
+import gui.botLeft.PanelLeftInsertions;
 import gui.networking.AttackWorkEntry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
@@ -39,7 +37,7 @@ public class AttackOriginal extends AttackI {
         super(work);
         
         // Overwrite this as workaround (ignore user setting)
-        work.insertPosition = PanelLeftOptions.InsertPositions.REPLACE;
+        work.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;
     }
     
     @Override

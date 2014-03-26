@@ -48,7 +48,9 @@ public class BurpCallbacks {
     }
 
     public void print(String s) {
-        stdout.println(s);
+        if (stdout != null) {
+            stdout.println(s);
+        }
     }
 
     public static BurpCallbacks getInstance() {

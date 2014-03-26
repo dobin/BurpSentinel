@@ -49,6 +49,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private PanelLeftPopup paramPopup;
     private int selectedRow = -1;
     private PanelLeftOptions optionsPopup;
+    //private PanelLeftInsertions insertionsPopup;
     private PopupTableHeaderLeft popupTableHeaderLeft;
 
     /**
@@ -84,8 +85,9 @@ public class PanelLeftUi extends javax.swing.JPanel {
         sportColumn.setCellRenderer(renderer);
         sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
 
+        
+        // Param Popup
         paramPopup = new PanelLeftPopup(this);
-        // Add mouse listener for on-row popup menu
         tableMessages.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -105,7 +107,11 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
+        // Options Popup
         optionsPopup = new PanelLeftOptions();
+        
+        // Init Payload button
+        ((PanelLeftInsertions) buttonPayload).init();
 
 
         popupTableHeaderLeft = new PopupTableHeaderLeft(tableMessages, tableModel);
@@ -172,7 +178,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 origHttpMessage,
                 this,
                 optionsPopup.getOptionRedirect(),
-                optionsPopup.getOptionInsertPosition(),
+                ((PanelLeftInsertions)buttonPayload).getOptionInsertPosition(),
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
 
         Networker.getInstance().attackThis(attackEntry);
@@ -222,6 +228,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         textfieldUrl = new javax.swing.JTextField();
         buttonOptions = new javax.swing.JButton();
+        buttonPayload = new PanelLeftInsertions();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -256,12 +263,21 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
+        buttonPayload.setText("Insert: ");
+        buttonPayload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPayloadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
         panelTopHeaderLayout.setHorizontalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonPayload)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -273,7 +289,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
             .addGroup(panelTopHeaderLayout.createSequentialGroup()
                 .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAttack)
-                    .addComponent(buttonOptions))
+                    .addComponent(buttonOptions)
+                    .addComponent(buttonPayload))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -343,9 +360,16 @@ public class PanelLeftUi extends javax.swing.JPanel {
         JPopupMenu menu = optionsPopup.getPopupMenu();
         menu.show(buttonOptions, 0, buttonOptions.getBounds().y);
     }//GEN-LAST:event_buttonOptionsActionPerformed
+
+    private void buttonPayloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadActionPerformed
+        JPopupMenu menu = ((PanelLeftInsertions)buttonPayload).getPopupMenu();
+        menu.show(buttonOptions, 0, buttonPayload.getBounds().y);
+    }//GEN-LAST:event_buttonPayloadActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
+    private javax.swing.JButton buttonPayload;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

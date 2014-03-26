@@ -41,19 +41,9 @@ public class PanelLeftOptions implements ActionListener {
     private JMenu menuFollowRedirects;
     private JMenuItem menuItemEnableRedirect;
     private JMenuItem menuItemDisableRedirect;
-    private JMenu menuInsert;
-    private JMenuItem menuItemReplace;
-    private JMenuItem menuItemInsertLeft;
-    private JMenuItem menuItemInsertRight;
+    
     // Options
     private boolean optionEnableRedirect;
-
-
-    public static enum InsertPositions {
-        REPLACE,
-        LEFT,
-        RIGHT,};
-    private InsertPositions optionInsertPosition;
 
     public PanelLeftOptions() {
         init();
@@ -62,7 +52,6 @@ public class PanelLeftOptions implements ActionListener {
     private void init() {
         // Options
         optionEnableRedirect = UiUtil.restorePanelLeftOptionRedirect();
-        optionInsertPosition = UiUtil.restorePanelLeftOptionPosition();
 
         // Menu
         menuMain = new JPopupMenu("Options");
@@ -75,19 +64,7 @@ public class PanelLeftOptions implements ActionListener {
         menuFollowRedirects.add(menuItemEnableRedirect);
         menuFollowRedirects.add(menuItemDisableRedirect);
 
-        menuInsert = new JMenu("Insert payloads at: ");
-        menuItemReplace = new JMenuItem("Replace");
-        menuItemInsertLeft = new JMenuItem("Insert Left");
-        menuItemInsertRight = new JMenuItem("Insert Right");
-        menuItemReplace.addActionListener(this);
-        menuItemInsertLeft.addActionListener(this);
-        menuItemInsertRight.addActionListener(this);
-        menuInsert.add(menuItemReplace);
-        menuInsert.add(menuItemInsertLeft);
-        menuInsert.add(menuItemInsertRight);
-
         menuMain.add(menuFollowRedirects);
-        menuMain.add(menuInsert);
 
         refresh();
     }
@@ -101,29 +78,10 @@ public class PanelLeftOptions implements ActionListener {
             menuItemDisableRedirect.setEnabled(false);
         }
 
-
-        switch (optionInsertPosition) {
-            case REPLACE:
-                menuItemReplace.setEnabled(false);
-                menuItemInsertLeft.setEnabled(true);
-                menuItemInsertRight.setEnabled(true);
-                break;
-            case LEFT:
-                menuItemReplace.setEnabled(true);
-                menuItemInsertLeft.setEnabled(false);
-                menuItemInsertRight.setEnabled(true);
-                break;
-            case RIGHT:
-                menuItemReplace.setEnabled(true);
-                menuItemInsertLeft.setEnabled(true);
-                menuItemInsertRight.setEnabled(false);
-                break;
-        }
     }
 
     void storeUiPrefs() {
         UiUtil.storePanelLeftOptionRedirect(optionEnableRedirect);
-        UiUtil.storePanelLeftOptionPosition(optionInsertPosition);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -138,22 +96,10 @@ public class PanelLeftOptions implements ActionListener {
             optionEnableRedirect = false;
         }
 
-        if (e.getSource() == menuItemReplace) {
-            optionInsertPosition = InsertPositions.REPLACE;
-        } else if (e.getSource() == menuItemInsertLeft) {
-            optionInsertPosition = InsertPositions.LEFT;
-        } else if (e.getSource() == menuItemInsertRight) {
-            optionInsertPosition = InsertPositions.RIGHT;
-        }
-
         refresh();
     }
 
     boolean getOptionRedirect() {
         return optionEnableRedirect;
-    }
-    
-    InsertPositions getOptionInsertPosition() {
-        return optionInsertPosition;
     }
 }

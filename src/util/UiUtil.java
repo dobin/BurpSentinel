@@ -16,7 +16,7 @@
  */
 package util;
 
-import gui.botLeft.PanelLeftOptions.InsertPositions;
+import gui.botLeft.PanelLeftInsertions.InsertPositions;
 import gui.session.SessionUser;
 import gui.categorizer.CategoryEntry;
 import gui.lists.ListManagerList;

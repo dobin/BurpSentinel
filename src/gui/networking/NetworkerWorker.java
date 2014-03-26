@@ -28,9 +28,7 @@ import util.BurpCallbacks;
  * @author dobin
  */
 public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
-
-    //private final LinkedBlockingQueue queue = new LinkedBlockingQueue();
-    private LinkedList queue = new LinkedList();
+    private final LinkedList workEntryList = new LinkedList();
     private NetworkerSender networkerSender;
     private boolean isCanceled = false;
     
@@ -46,34 +44,26 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
         boolean goon;
 
         while (true) {
-            synchronized (queue) {
+            synchronized (workEntryList) {
                 if (isCanceled) {
                     BurpCallbacks.getInstance().print("[A.1] doInBackground Canceling in while - clear queue");
                     isCanceled = false;
-                    if (queue.size() > 0) {
-                        queue.clear();
+                    if (workEntryList.size() > 0) {
+                        workEntryList.clear();
                     }
-                    //this.isCancelled();
                 }
                 
-                while (queue.isEmpty()) {
+                while (workEntryList.isEmpty()) {
                     try {
-                        queue.wait();
+                        workEntryList.wait();
                     } catch (InterruptedException ex) {
                         Logger.getLogger(NetworkerWorker.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
-                work = (AttackWorkEntry) queue.remove();
-                
-                /*
-                try {
-                    work = (AttackWorkEntry) queue.take();
-                } catch (InterruptedException ex) {
-                    BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
-                }*/
+                work = (AttackWorkEntry) workEntryList.remove();
 
-                BurpCallbacks.getInstance().print("[A.1] doInBackground Got new work! Doing it");
+                BurpCallbacks.getInstance().print("\n[A.1] doInBackground Got new work! Doing it");
             }
 
             if (networkerSender.init(work) == true) {
@@ -106,15 +96,9 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
     }
 
     void addAttack(AttackWorkEntry entry) {
-        synchronized (queue) {
-            /*
-            try {
-                queue.put(entry);
-            } catch (InterruptedException ex) {
-                BurpCallbacks.getInstance().print(ex.getLocalizedMessage());
-            }*/
-            queue.add(entry);
-            queue.notify();
+        synchronized (workEntryList) {
+            workEntryList.add(entry);
+            workEntryList.notify();
         }
     }
 
