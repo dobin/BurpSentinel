@@ -38,7 +38,7 @@ public class PanelLeftInsertions extends JButton implements ActionListener {
     private JPopupMenu menuMain;
 
     // Menus
-    private JMenu menuInsert;
+    //private JMenu menuInsert;
     private JMenuItem menuItemReplace;
     private JMenuItem menuItemInsertLeft;
     private JMenuItem menuItemInsertRight;
@@ -50,28 +50,24 @@ public class PanelLeftInsertions extends JButton implements ActionListener {
     private PanelLeftInsertions.InsertPositions optionInsertPosition;
 
     public PanelLeftInsertions() {
-        //init();
     }
 
     public void init() {
         // Options
         optionInsertPosition = UiUtil.restorePanelLeftOptionPosition();
-BurpCallbacks.getInstance().print("NO: " + optionInsertPosition);
+
         // Menu
         menuMain = new JPopupMenu("Options");
 
-        menuInsert = new JMenu("Insert payloads at: ");
         menuItemReplace = new JMenuItem("Replace");
         menuItemInsertLeft = new JMenuItem("Insert Left");
         menuItemInsertRight = new JMenuItem("Insert Right");
         menuItemReplace.addActionListener(this);
         menuItemInsertLeft.addActionListener(this);
         menuItemInsertRight.addActionListener(this);
-        menuInsert.add(menuItemReplace);
-        menuInsert.add(menuItemInsertLeft);
-        menuInsert.add(menuItemInsertRight);
-
-        menuMain.add(menuInsert);
+        menuMain.add(menuItemReplace);
+        menuMain.add(menuItemInsertLeft);
+        menuMain.add(menuItemInsertRight);
 
         refresh();
     }
@@ -97,7 +93,7 @@ BurpCallbacks.getInstance().print("NO: " + optionInsertPosition);
                 this.setText("Payload: Add Right");
                 break;
             default:
-                BurpCallbacks.getInstance().print("NOOOPE");
+                BurpCallbacks.getInstance().print("Nope");
         }
     }
 
