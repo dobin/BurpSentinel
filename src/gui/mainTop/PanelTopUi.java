@@ -63,8 +63,6 @@ public class PanelTopUi extends javax.swing.JPanel {
     private SessionManagerUi sessionUi;
     private FrameOptions frameOptions;
 
-    
-    
     private PanelLeftComboBoxModel sessionComboBoxModelMain;
     
     /**

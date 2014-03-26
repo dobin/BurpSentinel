@@ -27,7 +27,7 @@ import util.BurpCallbacks;
  *
  * @author dobin
  */
-public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
+public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
     private final LinkedList workEntryList = new LinkedList();
     private NetworkerSender networkerSender;
     private boolean isCanceled = false;
@@ -81,7 +81,9 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
                         BurpCallbacks.getInstance().print("[B.4] doInBackground Canceled... ! (inloop)");
                         goon = false;
                     } else {
-                        publish(networkerSender.getResult());
+                        if (networkerSender.getResult() != null) {
+                            publish(networkerSender.getResult());
+                        }
                     }
                 }
                 
@@ -103,10 +105,12 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkEntry> {
     }
 
     @Override
-    protected void process(List<AttackWorkEntry> pairs) {
+    protected void process(List<AttackWorkResult> pairs) {
         BurpCallbacks.getInstance().print("[A.4] process Handle publish");
-        for (AttackWorkEntry work : pairs) {
-            work.panelParent.addAttackMessage(work.result);
+        for (AttackWorkResult work : pairs) {
+            BurpCallbacks.getInstance().print("[A.4] process publish 1: " + pairs);
+            BurpCallbacks.getInstance().print("[A.4] process publish 2: " + work.result);
+            work.attackWorkEntry.panelParent.addAttackMessage(work.result);
         }
     }
 

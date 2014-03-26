@@ -37,7 +37,7 @@ public class AttackWorkEntry {
     public PanelLeftInsertions.InsertPositions insertPosition;
     public String mainSessionName;
     
-    SentinelHttpMessageAtk result;
+    //SentinelHttpMessageAtk result;
     
     public AttackWorkEntry(SentinelHttpParam attackHttpParam, 
             AttackMain.AttackTypes attackType,

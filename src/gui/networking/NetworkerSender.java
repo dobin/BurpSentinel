@@ -36,7 +36,7 @@ public class NetworkerSender {
     private NetworkerLogger log = new NetworkerLogger();
     
     private AttackI attack = null;
-    AttackWorkEntry workEntry;
+    private AttackWorkEntry workEntry;
 
     public boolean init(AttackWorkEntry work) {
         workEntry = work;
@@ -94,9 +94,9 @@ public class NetworkerSender {
         return true;
     }
     
-    private AttackWorkEntry result = null;
+    private AttackWorkResult result = null;
     
-    public AttackWorkEntry getResult() {
+    public AttackWorkResult getResult() {
         return result;
     }
     
@@ -116,9 +116,11 @@ public class NetworkerSender {
         attackMessage = attack.getLastAttackMessage();
 
         if (attackMessage != null) {
-            workEntry.result = attackMessage;
+            result = new AttackWorkResult(workEntry, attackMessage);
+            
+            //workEntry.result = attackMessage;
             //publish(workEntry);
-            result = workEntry;
+            //result = workEntry;
         } else {
             BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
         }
