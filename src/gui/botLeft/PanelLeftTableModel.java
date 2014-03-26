@@ -232,6 +232,12 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     public void intentInvertSelection(int column) {
         for(PanelLeftTableUIEntry entry: uiEntries) {
+            // UI: Skip path
+            if (entry.sourceHttpParam.getTypeStr().equals("PATH") ) {
+                continue;
+            }
+
+            
             switch(column) {
                 case 3:
                     entry.isXssEnabled = ! entry.isXssEnabled;
@@ -250,6 +256,11 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     public void intentSelectAll(int column) {
         for(PanelLeftTableUIEntry entry: uiEntries) {
+            // UI: Skip path
+            if (entry.sourceHttpParam.getTypeStr().equals("PATH") ) {
+                continue;
+            }
+            
             switch(column) {
                 case 3:
                     entry.isXssEnabled = true;
