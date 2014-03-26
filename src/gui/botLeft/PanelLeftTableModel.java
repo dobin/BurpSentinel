@@ -285,6 +285,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     void resetAttackSelection() {
         for(PanelLeftTableUIEntry entry: uiEntries) {
+            entry.isXssEnabled = false;
             entry.isSqlEnabled = false;
             entry.isOtherEnabled = false;
 

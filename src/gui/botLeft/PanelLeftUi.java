@@ -18,7 +18,6 @@ package gui.botLeft;
 
 import attacks.AttackMain;
 import gui.SentinelMainUi;
-import gui.botRight.PopupTableHeader;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
@@ -34,7 +33,6 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
-import util.BurpCallbacks;
 import util.UiUtil;
 
 /**
