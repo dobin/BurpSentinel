@@ -54,3 +54,9 @@ Query error
 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 
 SQL syntax
 MySQL server
+Error Executing Database Query
+Incorrect syntax near
+SQLServer JDBC Driver
+java.sql.SQLException:
+[SQLServer JDBC Driver]
+[SQLServer]
