@@ -146,8 +146,9 @@ public class PanelLeftPopup implements ActionListener {
         attackSubmenu.add(title);
 
         AttackMain.AttackTypes displayTypes[] = {
-            AttackMain.AttackTypes.SQL,
-            AttackMain.AttackTypes.XSS,
+            // Removed following two, as they are already available with checkboxes
+//            AttackMain.AttackTypes.SQL, 
+//            AttackMain.AttackTypes.XSS,
             AttackMain.AttackTypes.XSSLESSTHAN,
             AttackMain.AttackTypes.OTHER,
             AttackMain.AttackTypes.AUTHORISATION,
