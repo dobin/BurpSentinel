@@ -449,9 +449,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 }
             }
         }
-        
-        //String response = httpMessage.getRes().getResponseStr();
-        for (ResponseHighlight h : httpMessage.getResponseHighlights()) {
+
+        // Highlight response highlights
+        for (ResponseHighlight h : httpMessage.getRes().getResponseHighlights()) {
             for (int index = response.indexOf(h.getStr()); index >= 0; index = response.indexOf(h.getStr(), index + 1)) {
                 if (index == -1) {
                     BurpCallbacks.getInstance().print("highlightResponse: index=-1, string not found. catch it damned!");
@@ -475,19 +475,6 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 }
             }
         }
-        /*
-        Highlighter.HighlightPainter painter;
-        try {
-            painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(0, 255, 0, 200));
-            textareaMessage.getHighlighter().addHighlight(0, 5, painter);
-            
-                        painter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 0, 0, 250));
-            textareaMessage.getHighlighter().addHighlight(2, 3, painter);
-            
-
-        } catch (BadLocationException ex) {
-            Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
     }
     
     

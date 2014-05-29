@@ -144,7 +144,7 @@ public class AttackXss extends AttackI {
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
-            httpMessage.addHighlight(h);
+            httpMessage.getRes().addHighlight(h);
         } else {
             data.setSuccess(false);
             
@@ -160,7 +160,7 @@ public class AttackXss extends AttackI {
         String indicator = XssIndicator.getInstance().getIndicator();
         if (! indicator.equals(data.getOutput())) {
             ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
-            httpMessage.addHighlight(h);
+            httpMessage.getRes().addHighlight(h);
         }
         
         return httpMessage;

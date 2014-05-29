@@ -122,7 +122,7 @@ public class AttackSql extends AttackI {
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(sqlResponseCategory.getIndicator(), failColor);
-            httpMessage.addHighlight(h);
+            httpMessage.getRes().addHighlight(h);
         } else {
             AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL" + state, httpMessage.getReq().getChangeParam(), false);
             httpMessage.addAttackResult(res);

@@ -127,15 +127,7 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
     public void setHttpService(IHttpService httpService) {
         this.httpService = new SentinelHttpService(httpService);
     }
-    private LinkedList<ResponseHighlight> responseHighlights = new LinkedList<ResponseHighlight>();
 
-    public void addHighlight(ResponseHighlight h) {
-        responseHighlights.add(h);
-    }
-
-    public Iterable<ResponseHighlight> getResponseHighlights() {
-        return responseHighlights;
-    }
 
     @Override
     public byte[] getRequest() {

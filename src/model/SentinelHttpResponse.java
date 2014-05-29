@@ -20,6 +20,8 @@ import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
 import gui.categorizer.CategorizerManager;
 import gui.categorizer.ResponseCategory;
+import gui.viewMessage.ResponseHighlight;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -38,6 +40,7 @@ public class SentinelHttpResponse implements Serializable {
     private int domCount = 0;
     
     private LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
+    private LinkedList<ResponseHighlight> responseHighlights = new LinkedList<ResponseHighlight>();
 
     SentinelHttpResponse() {
         // Deserializing Constructor
@@ -125,6 +128,10 @@ public class SentinelHttpResponse implements Serializable {
     public void categorizeResponse() {
         categories.clear();
         categories.addAll(CategorizerManager.getInstance().categorize(new String(response)));
+        for(ResponseCategory category: categories) {
+            ResponseHighlight highlight = new ResponseHighlight(category.getIndicator(), Color.orange);
+            addHighlight(highlight);
+        }
     }
     
     public LinkedList<ResponseCategory> getCategories() {
@@ -183,5 +190,15 @@ public class SentinelHttpResponse implements Serializable {
         byte[] body = Arrays.copyOfRange(response, responseInfo.getBodyOffset(), response.length);
         String s = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(body);
         return s;
+    }
+    
+        
+
+    public void addHighlight(ResponseHighlight h) {
+        responseHighlights.add(h);
+    }
+
+    public Iterable<ResponseHighlight> getResponseHighlights() {
+        return responseHighlights;
     }
 }

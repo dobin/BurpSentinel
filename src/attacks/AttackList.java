@@ -67,7 +67,7 @@ public class AttackList extends AttackI {
 
             ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
 
-            httpMessage.addHighlight(h);
+            httpMessage.getRes().addHighlight(h);
         } else {
             AttackResult res = new AttackResult(AttackData.AttackType.NONE, "LST" + attackWorkEntry.options + "." + state, httpMessage.getReq().getChangeParam(), false);
             httpMessage.addAttackResult(res);
