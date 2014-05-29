@@ -113,7 +113,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 10:
                 return "R";
             case 11:
-                return "C";
+                return "Info";
                 
             default:
                 return "hmm";

@@ -18,6 +18,7 @@ package gui.botRight;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JCheckBoxMenuItem;
@@ -43,6 +44,8 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         this.tableMessages = tableMessages;
         this.tableColumnModel = tableMessages.getColumnModel();
 
+            tableMessages.setTableHeader(new TableHeaderTooltip(tableMessages.getColumnModel()));
+        
         JMenuItem menuItem;
         menuItem = new JCheckBoxMenuItem("#", true);
         menuItem.addActionListener(this);
@@ -92,6 +95,7 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         menuItem.addActionListener(this);
         this.add(menuItem);
     }
+    
 
     @Override
     public void actionPerformed(ActionEvent e) {
