@@ -73,55 +73,37 @@ public class SentinelHttpResponse implements Serializable {
     }
     
     private void parseResponse() {
-        if (response == null || response.length< 1) {
+        if (response == null || response.length <= 0) {
             return;
         }
         
+        // Burp Analyze Response
         responseInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponse(response);
+        
+        // Populate domcount
         domCount = 0;
         for(int n=0; n<response.length; n++) {
-            if (response[n] == '/') {
+            if (response[n] == '<') {
                 domCount++;
             }
         }
         
         // Get response length
+        size = -1;
         for(String header: responseInfo.getHeaders()) {
             String a[] = header.split(": ");
             if (a[0].toLowerCase().equals("Content-Length".toLowerCase()) && a.length == 2) {
                 this.size = Integer.parseInt(a[1]);
             }
         }
+        // if no content-length is given (for example, HTTP1.0), use default
+        // response size. 
+        if (size == -1) {
+            size = response.length;
+        }
         
         // Categorize response
         categorizeResponse();
-        
-        /*
-        String res = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(response);
-        String parts[] = res.split("\r\n\r\n");
-        String lines[] = parts[0].split("\r\n");
-//        String header[] = lines[0].split(" ");
-        
-        for(String l: lines) {
-            String[] s = l.split(": ");
-            
-            if (s.length == 2) {
-                if (s[0].toLowerCase().equals("Content-Length".toLowerCase())) {
-                    this.size = Integer.parseInt(s[1]);
-                }
-            }
-        }
-        
-        if (parts.length == 2) {
-            Pattern pattern = Pattern.compile("<.*?>");
-            Matcher matcher = pattern.matcher(parts[1]);
-            int n = 0;
-            while(matcher.find()) {
-                n++;
-            }
-            
-            this.domCount = n;
-        }*/
     }
 
     
