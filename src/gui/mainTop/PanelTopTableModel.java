@@ -36,6 +36,9 @@ import util.BurpCallbacks;
  * PanelTopUi will display all HttpMessage from user/burp in a table
  * in the top part of the window.
  * 
+ * Observer:
+ * It observes changes in it's reference HttpMessages, to update UI accordingly
+ * 
  * @author unreal
  */
 public class PanelTopTableModel extends AbstractTableModel implements Observer {
@@ -233,6 +236,6 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         this.fireTableDataChanged();
-        //parent.setSelected();
+        parent.setUpdateCurrentSelected();
     }
 }

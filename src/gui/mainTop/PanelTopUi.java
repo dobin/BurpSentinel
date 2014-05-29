@@ -197,7 +197,7 @@ public class PanelTopUi extends javax.swing.JPanel {
                         
                         if (currentSelectedRow != oldSelected) {
                             //setSelected();
-                            SentinelMainUi.getMainUi().showMessage( tableTopModel.getMessageForRow(currentSelectedRow));
+                            SentinelMainUi.getMainUi().showMessage(tableTopModel.getMessageForRow(currentSelectedRow));
                         }
                     }
                 }});
@@ -252,6 +252,10 @@ public class PanelTopUi extends javax.swing.JPanel {
         msgIndex = tableTopModel.getRowForMessage(selectedMsg);
         tableAllMessages.getSelectionModel().setSelectionInterval(msgIndex, msgIndex);
         this.currentSelectedRow = msgIndex;
+    }
+    
+    public void setUpdateCurrentSelected() {
+        tableAllMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
     }    
             
     
