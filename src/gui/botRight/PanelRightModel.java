@@ -131,63 +131,80 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 3: return m.getReq().getOrigParam().getDecodedValue();
             case 4: return m.getReq().getChangeParam().getDecodedValue();
             case 5: return m.getRes().getHttpCode();
-            case 6: 
-                String r = "";
-                if (UiUtil.getEnableRelativeResponseSize()) {
-                    r = Integer.toString(m.getRes().getSize());
-                } else {
-                    r = Integer.toString(m.getRes().getSize() - m.getParentHttpMessage().getRes().getSize());
-                }
-                if (r.equals("0")) {
-                    r = "+0";
-                }
-                return r;
+            case 6: return getValueResponseSize(m);
             case 7: return m.getRes().getDom();
             case 8: return (int) m.getLoadTime();
-            case 9: 
-                if (m.getAttackResult() != null) {
-                    return m.getAttackResult().getAttackName();
-                } else {
-                    return "Null";
-                }
-            case 10:
-                if (m.getAttackResult() != null) {
-                    boolean successful = m.getAttackResult().getSuccess();
-                    if (successful) {
-                        String ret = "";
-                        switch(m.getAttackResult().getAttackType()) {
-                            case INFO:
-                                ret = "<html><b><font color=\"orange\">\u26A0</font></b></html>";
-                                break;
-                            case NONE:
-                                break;
-                            case VULN:
-                                ret = "<html><b><font color=\"red\">\u2620</font></b></html>";
-                                break;
-                        }
-                        return ret;
-                        //return m.getAttackResult().getAttackType() + "\u26A0";
-                    } else {
-                        return "-";
-                    }
-                } else {
-                    return "Null";
-                }
-            case 11:
-                StringBuilder res = new StringBuilder("<html>");
-                for(ResponseCategory resCategory: m.getRes().getCategories()) {
-                    res.append("<font color=\"");
-                    res.append(UiUtil.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
-                    res.append("\">");
-                    res.append(resCategory.getCategoryEntry().getTag());
-                    res.append(" </font>");
-                }
-                res.append("</html>");
-                return res;
+            case 9: return getValueAttackResult(m);
+            case 10: return getValueResult(m);
+            case 11: return getValueCategorizer(m);
             default: return "AAA";
         }
     }
+    
+    private String getValueResponseSize(SentinelHttpMessageAtk m) {
+        String r = "";
+        int size = 0;
+        
+        if (UiUtil.getEnableRelativeResponseSize()) {
+            r = Integer.toString(m.getRes().getSize());
+        } else {
+            size = m.getRes().getSize() - m.getParentHttpMessage().getRes().getSize();
+            r = Integer.toString(size);
+            if (size > 0) {
+                r = "+" + r;
+            } else if (size == 0) {
+                r = "+0";
+            }
+        }
+        return r;
+    }
+    
+    private String getValueAttackResult(SentinelHttpMessageAtk m) {
+        if (m.getAttackResult() != null) {
+            return m.getAttackResult().getAttackName();
+        } else {
+            return "Null";
+        }
+    }
 
+    private String getValueResult(SentinelHttpMessageAtk m) {
+        if (m.getAttackResult() != null) {
+            boolean successful = m.getAttackResult().getSuccess();
+            if (successful) {
+                String ret = "";
+                switch (m.getAttackResult().getAttackType()) {
+                    case INFO:
+                        ret = "<html><b><font color=\"orange\">\u2620</font></b></html>";
+                        break;
+                    case NONE:
+                        break;
+                    case VULN:
+                        ret = "<html><b><font color=\"red\">\u2620</font></b></html>";
+                        break;
+                }
+                return ret;
+                //return m.getAttackResult().getAttackType() + "\u26A0";
+            } else {
+                return "-";
+            }
+        } else {
+            return "Null";
+        }
+    }
+    
+    private String getValueCategorizer(SentinelHttpMessageAtk m) {
+        StringBuilder res = new StringBuilder("<html>");
+        for (ResponseCategory resCategory : m.getRes().getCategories()) {
+            res.append("<font color=\"");
+            res.append(UiUtil.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
+            res.append("\">");
+            res.append(resCategory.getCategoryEntry().getTag());
+            res.append(" </font>");
+        }
+        res.append("</html>");
+        return res.toString();
+    }
+    
     void addMessage(SentinelHttpMessageAtk httpMessage) {
         messages.add(httpMessage);
         httpMessage.setTableIndexAttack(messages.size() - 1);

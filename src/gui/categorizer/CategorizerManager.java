@@ -20,8 +20,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.regex.Matcher;
@@ -40,6 +42,23 @@ public class CategorizerManager extends Observable {
         }
 
         return categorizerManager;
+    }
+    
+    private class StaticCategoriesIndexEntries {
+        private String fileName;
+        private String tagName;
+        
+        public StaticCategoriesIndexEntries(String fileName, String tagName) {
+            this.fileName = fileName;
+            this.tagName = tagName;
+        }
+                
+        public String getFileName() {
+            return fileName;
+        }
+        public String getTagName() {
+            return tagName;
+        }
     }
 
     private CategorizerUi categorizerManagerUi;
@@ -105,23 +124,26 @@ public class CategorizerManager extends Observable {
         
             return categories;
     }
+
     
     
     private void loadStaticCategories() {
-        String[] fileNames = { "errors", "sqlerrors"  };
+        List<StaticCategoriesIndexEntries> staticCategoriesIndex = new ArrayList<StaticCategoriesIndexEntries>();
+        staticCategoriesIndex.add(new StaticCategoriesIndexEntries("errors.txt", "error"));
+        staticCategoriesIndex.add(new StaticCategoriesIndexEntries("sqlerrors.txt", "sqlerr"));
         
         LinkedList<CategoryEntry> staticCategoryList;
         
-        for(String fileName: fileNames) {
+        for(StaticCategoriesIndexEntries staticCategory: staticCategoriesIndex) {
             staticCategoryList = new LinkedList<CategoryEntry>();
-            InputStream is = getClass().getResourceAsStream("/resources/categories/" + fileName + ".txt");
+            InputStream is = getClass().getResourceAsStream("/resources/categories/" + staticCategory.getFileName());
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             
             String line;
             try {
                 while ((line = reader.readLine()) != null) {
                     String regex = line;
-                    CategoryEntry categoryEntry = new CategoryEntry(fileName, Pattern.quote(regex));
+                    CategoryEntry categoryEntry = new CategoryEntry(staticCategory.getTagName(), Pattern.quote(regex));
                     
                     staticCategoryList.add(categoryEntry);
                 }
@@ -129,7 +151,7 @@ public class CategorizerManager extends Observable {
                 BurpCallbacks.getInstance().print(ex.toString());
             } 
      
-            staticCategories.put(fileName, staticCategoryList);
+            staticCategories.put(staticCategory.getTagName(), staticCategoryList);
         }
     }
     
