@@ -21,8 +21,6 @@ import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;

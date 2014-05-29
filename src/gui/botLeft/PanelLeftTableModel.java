@@ -199,39 +199,40 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
         this.fireTableDataChanged();
     }
-
     
+
     public void createChangeParam(PanelLeftUi parent) {
         // Check all params of httpmessage if they should be attacked
         // This has been set by the UI
-        
-        for(PanelLeftTableUIEntry entry: uiEntries) {
+
+        for (PanelLeftTableUIEntry entry : uiEntries) {
             SentinelHttpParam param = entry.sourceHttpParam;
 
             if (entry.isSomethingEnabled()) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.ORIGINAL, null);
             }
-            
+
             if (entry.isXssEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.XSS, null);
             }
-            
+
             if (entry.isSqlEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.SQL, null);
             }
-            
+
             if (entry.isOtherEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.OTHER, null);
             }
-            
+
             if (entry.isAuthEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData);
             }
         }
     }
     
+
     public void intentInvertSelection(int column) {
-        for(PanelLeftTableUIEntry entry: uiEntries) {
+        for (PanelLeftTableUIEntry entry : uiEntries) {
             // UI: Skip path
             if (entry.sourceHttpParam.getTypeStr().equals("PATH") ) {
                 continue;
