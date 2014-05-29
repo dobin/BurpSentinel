@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.LinkedList;
+import java.util.List;
 import util.BurpCallbacks;
 
 /**
@@ -115,8 +116,6 @@ public class SentinelHttpRequest implements Serializable {
      */
     private void init2() {
         httpParams.clear();
-        //httpParams = new LinkedList<SentinelHttpParam>();
-
         LinkedList<SentinelHttpParam> httpParamsNew = new LinkedList<SentinelHttpParam>();
         
         // Add standard parameter
@@ -129,7 +128,6 @@ public class SentinelHttpRequest implements Serializable {
         }
         
         // Sort parameter
-        //Collections.sort(httpParams, new MyParamComparator());
         for(SentinelHttpParam sortParam: httpParamsNew) {
             if (sortParam.getType() == SentinelHttpParam.PARAM_URL) {
                 httpParams.add(sortParam);
@@ -217,9 +215,38 @@ public class SentinelHttpRequest implements Serializable {
         return requestInfo.getMethod();
     }
     
-   
-    /**************************** Param ***************************************/
+    
+    /**
+     * ************************** Getters*************************************
+     * 
+     * Note: the following functions are slow, as it extracts on the fly
+     * 
+     */
+    public String extractFirstLine() {
+        String http = getRequestStr().substring(0, getRequestStr().indexOf("\r\n"));
+        return http;
+    }
 
+    public List<String> extractHeaders() {
+        return requestInfo.getHeaders();
+    }
+
+    public String extractBody() {
+        String req = getRequestStr();
+
+        String body = getRequestStr().substring(requestInfo.getBodyOffset());
+
+        if (body.length() > 0) {
+            return body;
+        } else {
+            return "";
+        }
+    }
+
+    
+    /**
+     * ************************** Param **************************************
+     */
     public void setChangeParam(SentinelHttpParam changeParam) {
         this.changeParam = changeParam;
         // TODO: Set orig param
@@ -279,15 +306,6 @@ public class SentinelHttpRequest implements Serializable {
         return changeParam;
     }
     
-/*
-    public SentinelHttpParam getParam(int n) {
-        return httpParams.get(n);
-    }
-
-    public int getParamCount() {
-        return httpParams.size();
-    }*/
-
     public String getRequestStr() {
         return BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
     }
@@ -299,7 +317,6 @@ public class SentinelHttpRequest implements Serializable {
     public Iterable<SentinelHttpParam> getParams() {
         return httpParams;
     }
-
 
     public SentinelHttpParam getParam(String name, byte type) {
         for(SentinelHttpParam param: httpParams) {
@@ -320,8 +337,9 @@ public class SentinelHttpRequest implements Serializable {
     }
     
 
-    /**************************** Session *************************************/
-    
+    /**
+     * ************************** Session ************************************
+     */
     public void changeSession(String sessionVarName, String sessionVarValue) {
         SentinelHttpParam updateParam = null;
 

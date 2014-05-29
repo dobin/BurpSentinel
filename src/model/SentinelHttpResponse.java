@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import util.BurpCallbacks;
 
 /**
@@ -168,13 +169,37 @@ public class SentinelHttpResponse implements Serializable {
         }
     }
 
-    public String getBodyStr() {
+
+    
+    /**
+     * ************************** Getters*************************************
+     * 
+     * Note: the following functions are slow, as it extracts on the fly
+     * 
+     */
+    public String extractFirstLine() {
+        String http = getResponseStr().substring(0, getResponseStr().indexOf("\r\n"));
+        return http;
+    }
+
+    public List<String> extractHeaders() {
+        return responseInfo.getHeaders();
+    }
+
+    public String extractBody() {
         byte[] body = Arrays.copyOfRange(response, responseInfo.getBodyOffset(), response.length);
         String s = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(body);
+        
+        if (s == null) {
+            s = "";
+        }
         return s;
     }
+
     
-        
+    /**
+     * ************************** Highlights**********************************
+     */       
 
     public void addHighlight(ResponseHighlight h) {
         responseHighlights.add(h);

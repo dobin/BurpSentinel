@@ -328,16 +328,7 @@ public class PanelRightUi extends javax.swing.JPanel {
         httpMessage = panelRightModel.getHttpMessage(currentSelectedRow);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-        StringBuilder s = new StringBuilder();
-        s.append("Request:\n");
-        s.append(httpMessage.getReq().getRequestStr());
-        
-        s.append("\n\n");
-        
-        s.append("Response:\n");
-        s.append(httpMessage.getRes().getResponseStr());
-        
-        StringSelection ss = new StringSelection(s.toString());
+        StringSelection ss = new StringSelection(ClipboardCopyHelpers.copySmart(httpMessage));
         clipboard.setContents(ss, null);
     }
 

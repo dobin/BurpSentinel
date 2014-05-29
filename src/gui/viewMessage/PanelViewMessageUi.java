@@ -210,7 +210,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     private void showBeautifyView() {
         String viewBeautifyContent = null;
 
-        String res = httpMessage.getRes().getBodyStr();
+        String res = httpMessage.getRes().extractBody();
 
         InputStream is = new ByteArrayInputStream(res.getBytes());
         ByteArrayOutputStream os = new ByteArrayOutputStream();
