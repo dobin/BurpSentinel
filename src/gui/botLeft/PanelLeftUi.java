@@ -18,6 +18,7 @@ package gui.botLeft;
 
 import attacks.AttackMain;
 import gui.SentinelMainUi;
+import gui.botRight.TableHeaderTooltip;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
@@ -149,10 +150,10 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelViewMessage.setHttpMessage(origHttpMessage);
 
         //textfieldUrl.setText(message.getReq().getUrl().toString());
-        textfieldUrl.setText(message.getReq().getUrl().getHost());
+/*        textfieldUrl.setText(message.getReq().getUrl().getHost());
         textfieldUrl.setToolTipText(message.getReq().getUrl().toString());
         textfieldUrl.setBackground(Color.lightGray);
-        textfieldUrl.setCaretPosition(0);
+        textfieldUrl.setCaretPosition(0);*/
     }
 
     /*
@@ -225,8 +226,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelTop = new javax.swing.JPanel();
         panelTopHeader = new javax.swing.JPanel();
         buttonAttack = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        textfieldUrl = new javax.swing.JTextField();
         buttonOptions = new javax.swing.JButton();
         buttonPayload = new PanelLeftInsertions();
         panelTopBody = new javax.swing.JPanel();
@@ -250,12 +249,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
-
-        textfieldUrl.setEditable(false);
-        textfieldUrl.setText("jTextField1");
-        jPanel1.add(textfieldUrl, java.awt.BorderLayout.CENTER);
-
         buttonOptions.setText("Options");
         buttonOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -275,12 +268,10 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelTopHeaderLayout.setHorizontalGroup(
             panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonPayload)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonPayload)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -292,7 +283,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
                     .addComponent(buttonOptions)
                     .addComponent(buttonPayload))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         tableMessages.setModel(getTableModel());
@@ -358,19 +348,18 @@ public class PanelLeftUi extends javax.swing.JPanel {
 
     private void buttonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOptionsActionPerformed
         JPopupMenu menu = optionsPopup.getPopupMenu();
-        menu.show(buttonOptions, 0, buttonOptions.getBounds().y);
+        menu.show(buttonOptions, buttonOptions.getBounds().width, 0);
     }//GEN-LAST:event_buttonOptionsActionPerformed
 
     private void buttonPayloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadActionPerformed
         JPopupMenu menu = ((PanelLeftInsertions)buttonPayload).getPopupMenu();
-        menu.show(buttonOptions, 0, buttonPayload.getBounds().y);
+        menu.show(buttonPayload, buttonPayload.getBounds().width, 0);
     }//GEN-LAST:event_buttonPayloadActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
     private javax.swing.JButton buttonPayload;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -380,7 +369,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private javax.swing.JPanel panelTopHeader;
     private gui.viewMessage.PanelViewMessageUi panelViewMessage;
     private javax.swing.JTable tableMessages;
-    private javax.swing.JTextField textfieldUrl;
     // End of variables declaration//GEN-END:variables
 
     public void setPanelParent(PanelBotUi aThis) {
