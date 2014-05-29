@@ -20,7 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import model.SentinelHttpMessage;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -38,7 +38,7 @@ public class ComparerWindow extends javax.swing.JFrame implements WindowListener
         comparerUi = new ComparerUi();
         this.add(comparerUi , BorderLayout.CENTER);
 
-        UiUtil.restoreFrameDimensions(this, this);
+        SettingsManager.restoreFrameDimensions(this, this);
     }
 
     /**
@@ -70,7 +70,7 @@ public class ComparerWindow extends javax.swing.JFrame implements WindowListener
 
     @Override
     public void windowClosing(WindowEvent e) {
-        UiUtil.storeFrameDimensions(this, this);
+        SettingsManager.storeFrameDimensions(this, this);
     }
 
     @Override

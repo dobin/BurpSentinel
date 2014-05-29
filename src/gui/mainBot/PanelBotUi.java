@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
-import util.UiUtil;
+import util.SettingsManager;
  
 /**
  *
@@ -42,7 +42,7 @@ public class PanelBotUi extends javax.swing.JPanel {
     public PanelBotUi(SentinelHttpMessageOrig iHttpRequestResponse) {
         this();
                 
-        UiUtil.restoreSplitLocation(jSplitPane1, this);
+        SettingsManager.restoreSplitLocation(jSplitPane1, this);
         panelLeftUi.setMessage(iHttpRequestResponse);
         panelRightUi.setMessage(iHttpRequestResponse);
         
@@ -128,7 +128,7 @@ public class PanelBotUi extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void storeUiPrefs() {
-        UiUtil.storeSplitLocation(jSplitPane1, this);
+        SettingsManager.storeSplitLocation(jSplitPane1, this);
         
         panelLeftUi.storeUiPrefs();
         panelRightUi.storeUiPrefs();

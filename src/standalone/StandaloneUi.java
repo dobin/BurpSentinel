@@ -18,7 +18,7 @@ package standalone;
 
 import gui.SentinelMainUi;
 import java.awt.event.WindowEvent;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -76,14 +76,14 @@ public class StandaloneUi extends javax.swing.JFrame {
     }
 
     void init() {
-        UiUtil.restoreFrameDimensions(this, this);
+        SettingsManager.restoreFrameDimensions(this, this);
         
         final StandaloneUi me = this;
         
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
         public void windowClosing(WindowEvent winEvt) {
-            UiUtil.storeFrameDimensions(me, me);
+            SettingsManager.storeFrameDimensions(me, me);
         }
     });
     }

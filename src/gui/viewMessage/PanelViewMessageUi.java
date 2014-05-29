@@ -52,7 +52,7 @@ import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.w3c.tidy.Tidy;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 import util.diff.DiffPrint.UnifiedSmallPrint;
 import util.diff.GnuDiff;
 import util.diff.GnuDiff.change;
@@ -128,7 +128,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         textareaMessage.setAutoIndentEnabled(false);
         textareaMessage.setBracketMatchingEnabled(false);
         textareaMessage.setPopupMenu(messagePopup.getPopup());
-        UiUtil.getTheme().apply(textareaMessage);
+        SettingsManager.getTheme().apply(textareaMessage);
         textareaMessage.revalidate(); // TODO necessary?
         textareaMessage.requestFocusInWindow();
         textareaMessage.setMarkAllHighlightColor(new Color(0xff, 0xea, 0x00, 100));

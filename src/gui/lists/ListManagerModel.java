@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -57,11 +57,11 @@ public class ListManagerModel {
   
     
     void readConfig() {
-        UiUtil.restoreAttackLists(myLists);
+        SettingsManager.restoreAttackLists(myLists);
     }
 
     void writeConfig() {
-        UiUtil.storeAttackLists(myLists);
+        SettingsManager.storeAttackLists(myLists);
     }
 
     void delList(int currentSelectedRow) {
@@ -69,10 +69,10 @@ public class ListManagerModel {
     }
       
     public void initFuzzDB() {
-        if (UiUtil.getListInitState() == false) {
+        if (SettingsManager.getListInitState() == false) {
             BurpCallbacks.getInstance().print("Load Lists");
             loadFuzzDB();
-            UiUtil.setListInitState(true);
+            SettingsManager.setListInitState(true);
         } else {
             BurpCallbacks.getInstance().print("Do not Load Lists");
         }

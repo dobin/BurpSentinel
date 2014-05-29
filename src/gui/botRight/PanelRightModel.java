@@ -23,8 +23,8 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessageAtk;
-import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
+import util.Utility;
 
 /**
  *
@@ -145,7 +145,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         String r = "";
         int size = 0;
         
-        if (UiUtil.getEnableRelativeResponseSize()) {
+        if (SettingsManager.getEnableRelativeResponseSize()) {
             r = Integer.toString(m.getRes().getSize());
         } else {
             size = m.getRes().getSize() - m.getParentHttpMessage().getRes().getSize();
@@ -196,7 +196,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         StringBuilder res = new StringBuilder("<html>");
         for (ResponseCategory resCategory : m.getRes().getCategories()) {
             res.append("<font color=\"");
-            res.append(UiUtil.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
+            res.append(Utility.ColorToHtmlString(resCategory.getCategoryEntry().getColor()));
             res.append("\">");
             res.append(resCategory.getCategoryEntry().getTag());
             res.append(" </font>");

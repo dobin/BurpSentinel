@@ -42,7 +42,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  * Display all HttpMessage the user added to sentinel
@@ -95,7 +95,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.getColumnModel().getColumn(8).setMaxWidth(140);
         tableAllMessages.getColumnModel().getColumn(8).setMinWidth(140);
         
-        UiUtil.restoreTableDimensions(tableAllMessages, this);
+        SettingsManager.restoreTableDimensions(tableAllMessages, this);
     }
     
     private ComboBoxModel getComboBoxModelMain() {
@@ -517,7 +517,7 @@ public class PanelTopUi extends javax.swing.JPanel {
 
     
     public void storeUiPrefs() {
-        UiUtil.storeTableDimensions(tableAllMessages, this);
+        SettingsManager.storeTableDimensions(tableAllMessages, this);
     }
 
     public void reset() {

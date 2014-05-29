@@ -34,7 +34,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -88,8 +88,8 @@ public class PanelRightUi extends javax.swing.JPanel {
         
         tableMessages.setAutoCreateRowSorter(true);
 
-        UiUtil.restoreTableDimensions(tableMessages, this);
-        UiUtil.restoreSplitLocation(jSplitPane1, this);
+        SettingsManager.restoreTableDimensions(tableMessages, this);
+        SettingsManager.restoreSplitLocation(jSplitPane1, this);
         
         ListSelectionModel lsm = tableMessages.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
@@ -304,8 +304,8 @@ public class PanelRightUi extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void storeUiPrefs() {
-        UiUtil.storeSplitLocation(jSplitPane1, this);
-        UiUtil.storeTableDimensions(tableMessages, this);
+        SettingsManager.storeSplitLocation(jSplitPane1, this);
+        SettingsManager.storeTableDimensions(tableMessages, this);
     }
     
     public LinkedList<SentinelHttpMessageAtk> getAttackMessage() {
@@ -326,16 +326,18 @@ public class PanelRightUi extends javax.swing.JPanel {
         SentinelHttpMessage httpMessage;
         
         httpMessage = panelRightModel.getHttpMessage(currentSelectedRow);
-        
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-        String s = "Request:\n";
-        s += httpMessage.getReq().getRequestStr();
-        s += "\n\nResponse:\n";
-        s += httpMessage.getRes().getResponseStr();
+        StringBuilder s = new StringBuilder();
+        s.append("Request:\n");
+        s.append(httpMessage.getReq().getRequestStr());
         
-        StringSelection ss = new StringSelection(s);
+        s.append("\n\n");
         
+        s.append("Response:\n");
+        s.append(httpMessage.getRes().getResponseStr());
+        
+        StringSelection ss = new StringSelection(s.toString());
         clipboard.setContents(ss, null);
     }
 

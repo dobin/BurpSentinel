@@ -19,7 +19,7 @@ package gui.session;
 import java.util.Collections;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -30,7 +30,7 @@ public class SessionTableModel extends AbstractTableModel {
     private LinkedList<SessionUser> sessionUsers = new LinkedList<SessionUser>();
 
     public SessionTableModel() {
-        UiUtil.restoreSessions(sessionUsers);
+        SettingsManager.restoreSessions(sessionUsers);
     }
     
     @Override
@@ -151,7 +151,7 @@ public class SessionTableModel extends AbstractTableModel {
     }
 
     void storeUiPrefs() {
-        UiUtil.storeSessions(sessionUsers);
+        SettingsManager.storeSessions(sessionUsers);
     }
 
     void deleteEntry(int selectedRow) {

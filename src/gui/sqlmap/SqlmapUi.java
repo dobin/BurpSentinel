@@ -30,7 +30,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpParam;
 import org.apache.commons.lang3.StringUtils;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -47,7 +47,7 @@ public class SqlmapUi extends javax.swing.JPanel {
     public SqlmapUi() {
         initComponents();
         
-        SqlmapData data = UiUtil.getSqlmapConfig();
+        SqlmapData data = SettingsManager.getSqlmapConfig();
         textfieldSqlmap.setText(data.sqlmapPath);
         textfieldPython.setText(data.pythonPath);
         textfieldWorkingdir.setText(data.workingDir);
@@ -430,7 +430,7 @@ public class SqlmapUi extends javax.swing.JPanel {
                 textfieldWorkingdir.getText()
         );
         
-        UiUtil.storeSqlmapConfig(data);
+        SettingsManager.storeSqlmapConfig(data);
 
     
     }

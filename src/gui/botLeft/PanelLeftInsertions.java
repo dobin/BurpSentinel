@@ -23,7 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 
 /**
@@ -54,7 +54,7 @@ public class PanelLeftInsertions extends JButton implements ActionListener {
 
     public void init() {
         // Options
-        optionInsertPosition = UiUtil.restorePanelLeftOptionPosition();
+        optionInsertPosition = SettingsManager.restorePanelLeftOptionPosition();
 
         // Menu
         menuMain = new JPopupMenu("Options");
@@ -98,7 +98,7 @@ public class PanelLeftInsertions extends JButton implements ActionListener {
     }
 
     void storeUiPrefs() {
-        UiUtil.storePanelLeftOptionPosition(optionInsertPosition);
+        SettingsManager.storePanelLeftOptionPosition(optionInsertPosition);
     }
 
     public JPopupMenu getPopupMenu() {

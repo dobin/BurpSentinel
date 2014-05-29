@@ -18,7 +18,7 @@ package gui.session;
 
 import java.util.LinkedList;
 import javax.swing.table.TableModel;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -33,7 +33,7 @@ public class SessionManagerUi extends javax.swing.JFrame {
     public SessionManagerUi() {
         tableModel = new SessionTableModel();
         initComponents();
-        UiUtil.restoreSessionData(textfieldSessionVarName);
+        SettingsManager.restoreSessionData(textfieldSessionVarName);
     }
     
     public TableModel getTableModel() {
@@ -150,6 +150,6 @@ public class SessionManagerUi extends javax.swing.JFrame {
     }
 
     private void storeUiPrefs() {
-        UiUtil.storeSessionData(textfieldSessionVarName.getText());
+        SettingsManager.storeSessionData(textfieldSessionVarName.getText());
     }
 }

@@ -19,7 +19,7 @@ package gui.categorizer;
 import java.awt.Color;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -30,7 +30,7 @@ public class CategorizerTableModel extends AbstractTableModel {
     private LinkedList<CategoryEntry> categoryEntries = new LinkedList<CategoryEntry>();
         
     public CategorizerTableModel() {
-        UiUtil.restoreCategories(categoryEntries);
+        SettingsManager.restoreCategories(categoryEntries);
     }
     
     @Override
@@ -119,7 +119,7 @@ public class CategorizerTableModel extends AbstractTableModel {
     }
     
     void storeUiPrefs() {
-        UiUtil.storeCategories(categoryEntries);
+        SettingsManager.storeCategories(categoryEntries);
     }
 
     void addEmptyLine() {

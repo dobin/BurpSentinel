@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import replayer.gui.ReplayerMain.ReplayerMainUi;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /*
  * The main plugin class

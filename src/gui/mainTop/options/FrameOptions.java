@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import model.SentinelHttpMessageOrig;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -49,7 +49,7 @@ public class FrameOptions extends javax.swing.JFrame {
     }
     
     private void init() {
-        checkboxRelativeSize.setSelected(UiUtil.getEnableRelativeResponseSize());
+        checkboxRelativeSize.setSelected(SettingsManager.getEnableRelativeResponseSize());
 
     }
 
@@ -220,7 +220,7 @@ public class FrameOptions extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonRestoreActionPerformed
 
     private void checkboxRelativeSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkboxRelativeSizeActionPerformed
-        UiUtil.storeEnableRelativeResponseSize(checkboxRelativeSize.isSelected());
+        SettingsManager.storeEnableRelativeResponseSize(checkboxRelativeSize.isSelected());
     }//GEN-LAST:event_checkboxRelativeSizeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

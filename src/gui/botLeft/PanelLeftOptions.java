@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  * Provides Options submenu, and handles option details
@@ -51,7 +51,7 @@ public class PanelLeftOptions implements ActionListener {
 
     private void init() {
         // Options
-        optionEnableRedirect = UiUtil.restorePanelLeftOptionRedirect();
+        optionEnableRedirect = SettingsManager.restorePanelLeftOptionRedirect();
 
         // Menu
         menuMain = new JPopupMenu("Options");
@@ -81,7 +81,7 @@ public class PanelLeftOptions implements ActionListener {
     }
 
     void storeUiPrefs() {
-        UiUtil.storePanelLeftOptionRedirect(optionEnableRedirect);
+        SettingsManager.storePanelLeftOptionRedirect(optionEnableRedirect);
     }
 
     public JPopupMenu getPopupMenu() {

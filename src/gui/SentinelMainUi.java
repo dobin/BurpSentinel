@@ -27,7 +27,7 @@ import java.util.Observable;
 import java.util.Observer;
 import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  * The main GUI Window
@@ -68,7 +68,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         modelRoot.addObserver(this);
         
         // Has to be on top-top, or will not restore split location correclty
-        UiUtil.restoreSplitLocation(jSplitPane1, this);
+        SettingsManager.restoreSplitLocation(jSplitPane1, this);
         
         // Has to be on top, or it breaks panelTopUi init stuff
         //initTestMessages();
@@ -291,7 +291,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     
     public void storeUiPrefs() {
         // store this preferences
-        UiUtil.storeSplitLocation(jSplitPane1, this);
+        SettingsManager.storeSplitLocation(jSplitPane1, this);
         
         panelTopUi.storeUiPrefs();
 

@@ -34,7 +34,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
-import util.UiUtil;
+import util.SettingsManager;
 
 /**
  *
@@ -77,8 +77,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
 
 
         tableMessages.setAutoCreateRowSorter(true);
-        UiUtil.restoreSplitLocation(jSplitPane1, this);
-        UiUtil.restoreTableDimensions(tableMessages, this);
+        SettingsManager.restoreSplitLocation(jSplitPane1, this);
+        SettingsManager.restoreTableDimensions(tableMessages, this);
 
         // 
         TableColumn sportColumn = tableMessages.getColumnModel().getColumn(2);
@@ -377,8 +377,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }
 
     public void storeUiPrefs() {
-        UiUtil.storeSplitLocation(jSplitPane1, this);
-        UiUtil.storeTableDimensions(tableMessages, this);
+        SettingsManager.storeSplitLocation(jSplitPane1, this);
+        SettingsManager.storeTableDimensions(tableMessages, this);
 
         optionsPopup.storeUiPrefs();
     }
