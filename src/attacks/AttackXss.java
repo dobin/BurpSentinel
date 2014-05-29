@@ -127,13 +127,12 @@ public class AttackXss extends AttackI {
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
         
-        String response = httpMessage.getRes().getResponseStr();
-        if (response == null || response.length() == 0) {
+        if (! httpMessage.getRes().hasResponse()) {
             BurpCallbacks.getInstance().print("Response error");
             return httpMessage;
         }
         
-        if (response.contains(data.getOutput())) {
+        if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
             data.setSuccess(true);
             
             AttackResult res = new AttackResult(
