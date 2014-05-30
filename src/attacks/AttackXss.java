@@ -19,6 +19,7 @@ package attacks;
 import gui.networking.AttackWorkEntry;
 import gui.viewMessage.ResponseHighlight;
 import java.awt.Color;
+import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.XssIndicator;
@@ -36,20 +37,21 @@ public class AttackXss extends AttackI {
     
     private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private AttackData[] attackDataXss = {
-        new AttackData(0, 
-            XssIndicator.getInstance().getIndicator(), 
-            XssIndicator.getInstance().getIndicator(),
-            AttackData.AttackType.INFO),
-        new AttackData(1, XssIndicator.getInstance().getIndicator() + "%3Cp%3E%22", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
-        new AttackData(2, XssIndicator.getInstance().getIndicator() + "<p>\"", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
-        new AttackData(3, XssIndicator.getInstance().getIndicator() + "%22%3D", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
-        new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
-    };
+private LinkedList<AttackData> attackData;
     
     
     public AttackXss(AttackWorkEntry work) {
         super(work);
+        
+        attackData = new LinkedList<AttackData>();
+        String indicator;
+        
+        indicator = XssIndicator.getInstance().getIndicator();
+        attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
+        attackData.add(new AttackData(1, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(2, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(3, indicator+ "%22%3D", indicator + "\"=", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(4, indicator + "\"=", indicator + "\"=", AttackData.AttackType.VULN));
     }
     
     @Override
@@ -62,7 +64,7 @@ public class AttackXss extends AttackI {
     public boolean performNextAttack() {
         boolean doContinue = false;
         
-        AttackData data = attackDataXss[state];
+        AttackData data = attackData.get(state);
         SentinelHttpMessage httpMessage;
         try {
             httpMessage = attack(data);
@@ -80,7 +82,7 @@ public class AttackXss extends AttackI {
                     doContinue = false;
                 }
 
-                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getIndicator())) {
+                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator())) {
                     inputReflectedInTag = true;
                 } else {
                     inputReflectedInTag = false;
@@ -154,7 +156,7 @@ public class AttackXss extends AttackI {
         }
 
         // Highlight indicator anyway
-        String indicator = XssIndicator.getInstance().getIndicator();
+        String indicator = XssIndicator.getInstance().getBaseIndicator();
         if (! indicator.equals(data.getOutput())) {
             ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
             httpMessage.getRes().addHighlight(h);

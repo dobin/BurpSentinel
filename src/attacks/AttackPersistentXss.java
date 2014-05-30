@@ -18,12 +18,11 @@ package attacks;
 
 import gui.networking.AttackWorkEntry;
 import java.awt.Color;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
-import model.SentinelHttpMessageOrig;
-import model.SentinelHttpParam;
 import model.XssIndicator;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
@@ -33,39 +32,41 @@ import util.ConnectionTimeoutException;
  * @author unreal
  */
 public class AttackPersistentXss extends AttackI {
+
     private int state = 0;
     private boolean inputReflectedInTag = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
-    
     private Color failColor = new Color(0xffcccc);
-    
-    private AttackData[] attackData = {
-        new AttackData(0, XssIndicator.getInstance().getIndicator(), XssIndicator.getInstance().getIndicator(), AttackData.AttackType.INFO),
-        new AttackData(1, XssIndicator.getInstance().getIndicator() + "%3Cp%3E%22", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
-        new AttackData(2, XssIndicator.getInstance().getIndicator() + "<p>\"", XssIndicator.getInstance().getIndicator() + "<p>\"", AttackData.AttackType.VULN),
-        new AttackData(3, XssIndicator.getInstance().getIndicator() + "%22%3D", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
-        new AttackData(4, XssIndicator.getInstance().getIndicator() + "\"=", XssIndicator.getInstance().getIndicator() + "\"=", AttackData.AttackType.VULN),
-    };
-    
-       public AttackPersistentXss(AttackWorkEntry work) {
+    private LinkedList<AttackData> attackData;
+
+    public AttackPersistentXss(AttackWorkEntry work) {
         super(work);
+
+        attackData = new LinkedList<AttackData>();
+        String indicator;
+        
+        indicator = XssIndicator.getInstance().getIndicator();
+        attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
+        attackData.add(new AttackData(1, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(2, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(3, indicator+ "%22%3D", indicator + "\"=", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(4, indicator + "\"=", indicator + "\"=", AttackData.AttackType.VULN));
     }
-       
+
     @Override
     public boolean init() {
         return true;
     }
-    
 
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;
-        
+
         // Send next attack
-        AttackData data = attackData[state];
+        AttackData data = attackData.get(state);
         SentinelHttpMessage httpMessage = attack(data);
-        
- 
+
+
         switch (state) {
             case 0:
                 // Goon if: reflected
@@ -75,7 +76,7 @@ public class AttackPersistentXss extends AttackI {
                     doContinue = false;
                 }
 
-                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getIndicator())) {
+                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator())) {
                     inputReflectedInTag = true;
                 } else {
                     inputReflectedInTag = false;
@@ -110,11 +111,11 @@ public class AttackPersistentXss extends AttackI {
                 doContinue = false;
                 break;
         }
-        
+
         state++;
         return doContinue;
     }
-    
+
     private SentinelHttpMessage attack(AttackData data) {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
@@ -123,43 +124,43 @@ public class AttackPersistentXss extends AttackI {
         } catch (ConnectionTimeoutException ex) {
             Logger.getLogger(AttackPersistentXss.class.getName()).log(Level.SEVERE, null, ex);
         }
-    /*    
-        String response = httpMessage.getRes().getResponseStr();
-        if (response == null || response.length() == 0) {
-            BurpCallbacks.getInstance().print("Response error");
-            return httpMessage;
-        }
+        /*    
+         String response = httpMessage.getRes().getResponseStr();
+         if (response == null || response.length() == 0) {
+         BurpCallbacks.getInstance().print("Response error");
+         return httpMessage;
+         }
         
-        if (response.contains(data.getOutput())) {
-            data.setSuccess(true);
+         if (response.contains(data.getOutput())) {
+         data.setSuccess(true);
             
-            AttackResult res = new AttackResult(
-                    "XSS" + data.getIndex(), 
-                    "SUCCESS",
-                    httpMessage.getReq().getChangeParam(), 
-                    true);
-            httpMessage.addAttackResult(res);
+         AttackResult res = new AttackResult(
+         "XSS" + data.getIndex(), 
+         "SUCCESS",
+         httpMessage.getReq().getChangeParam(), 
+         true);
+         httpMessage.addAttackResult(res);
 
-            ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
-            httpMessage.addHighlight(h);
-        } else {
-            data.setSuccess(false);
+         ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
+         httpMessage.addHighlight(h);
+         } else {
+         data.setSuccess(false);
             
-            AttackResult res = new AttackResult(
-                    "XSS" + data.getIndex(), 
-                    "-", 
-                    httpMessage.getReq().getChangeParam(), 
-                    false);
-            httpMessage.addAttackResult(res);
-        }
+         AttackResult res = new AttackResult(
+         "XSS" + data.getIndex(), 
+         "-", 
+         httpMessage.getReq().getChangeParam(), 
+         false);
+         httpMessage.addAttackResult(res);
+         }
         
-        // Highlight indicator anyway
-        ResponseHighlight h = new ResponseHighlight(data.getOutput(), Color.green);
-        httpMessage.addHighlight(h);
-        */
+         // Highlight indicator anyway
+         ResponseHighlight h = new ResponseHighlight(data.getOutput(), Color.green);
+         httpMessage.addHighlight(h);
+         */
         return httpMessage;
     }
-    
+
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
         return lastHttpMessage;

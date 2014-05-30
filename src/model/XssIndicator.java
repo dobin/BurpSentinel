@@ -20,28 +20,64 @@ package model;
  *
  * @author unreal
  */
-public class XssIndicator  {
+public class XssIndicator {
 
     private String indicator = "";
     static private XssIndicator xssIndicator;
-            
+    private String base = "qQq";
+    private int count = 0;
+
     public static XssIndicator getInstance() {
         if (xssIndicator == null) {
             xssIndicator = new XssIndicator();
         }
-        
+
         return xssIndicator;
     }
-    
-    
-    
+
     public XssIndicator() {
-        this.indicator = "CSNC";
+        count = 0;
+    }
+    
+    public String getIndicatorRegex() {
+        return "";
+    }
+
+    public String getBaseIndicator() {
+        return base;
     }
     
     public String getIndicator() {
-        return indicator;
-                
+        String ret = "";
+        ret = base + getAsciiCount();
+        count++;
+
+        return ret;
     }
-    
+
+    public char getA(int n) {
+        char r;
+
+        if (n < 26) {
+            r = (char) (((int) 'a') + n);
+        } else {
+            n -= 26;
+            r = (char) (((int) 'A') + n);
+        }
+
+        return r;
+    }
+
+    public String getAsciiCount() {
+        String ret = "";
+        int number = count;
+
+        for (int x = 0; x < 3; x++) {
+            int remainder = number % 52;
+            ret = getA(remainder) + ret;
+            number = (int) Math.floor(number / 52f);
+        }
+
+        return ret;
+    }
 }

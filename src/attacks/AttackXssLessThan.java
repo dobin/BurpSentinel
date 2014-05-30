@@ -120,9 +120,10 @@ public class AttackXssLessThan extends AttackI {
     public boolean init() {
         int n = 0;
         for (String s : attackStrings) {
+            String indicator = XssIndicator.getInstance().getIndicator();
             AttackData atkData = new AttackData(n, 
-                    XssIndicator.getInstance().getIndicator() + s, 
-                    XssIndicator.getInstance().getIndicator() + "<", 
+                    indicator + s, 
+                    indicator + "<", 
                     AttackData.AttackType.VULN);
             attackDataXss.add(atkData);
         }       
@@ -184,7 +185,7 @@ public class AttackXssLessThan extends AttackI {
         }
 
         // Highlight indicator anyway
-        String indicator = XssIndicator.getInstance().getIndicator();
+        String indicator = XssIndicator.getInstance().getBaseIndicator();
         if (!indicator.equals(data.getOutput())) {
             ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
             httpMessage.getRes().addHighlight(h);
