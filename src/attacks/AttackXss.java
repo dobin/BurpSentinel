@@ -138,7 +138,8 @@ private LinkedList<AttackData> attackData;
                     data.getAttackType(),
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
-                    true);
+                    true,
+                    "Found: " + data.getOutput());
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
@@ -150,7 +151,8 @@ private LinkedList<AttackData> attackData;
                     AttackData.AttackType.NONE,
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
-                    false);
+                    false,
+                    null);
             httpMessage.addAttackResult(res);
         }
 

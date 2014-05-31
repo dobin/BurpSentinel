@@ -109,22 +109,21 @@ public class CategorizerManager extends Observable {
         
         return categories;
     }
-    
+
     
     private LinkedList<ResponseCategory> scanForRegex(CategoryEntry entry, String input) {
         LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
-        
-            Pattern pattern = Pattern.compile(entry.getRegex());
-            Matcher matcher = pattern.matcher(input);
-            
-            if (matcher.find()) {
-                ResponseCategory c = new ResponseCategory(entry, matcher.group());
-                categories.add(c);
-            }
-        
-            return categories;
-    }
 
+        Pattern pattern = Pattern.compile(entry.getRegex());
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            ResponseCategory c = new ResponseCategory(entry, matcher.group(), "Found: " + matcher.group());
+            categories.add(c);
+        }
+
+        return categories;
+    }
     
     
     private void loadStaticCategories() {

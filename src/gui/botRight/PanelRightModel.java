@@ -141,6 +141,41 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
     }
     
+    public String getTooltipAt(int rowIndex, int columnIndex) {
+        String ret = null;
+        
+        if (rowIndex >= messages.size()) {
+            return null;
+        }
+        SentinelHttpMessageAtk m = messages.get(rowIndex);
+        
+        switch(columnIndex) {
+            case 10: 
+                ret = getTooltipAttackResult(m);
+                break;
+            case 11: 
+                ret = getTooltipCategorizer(m);
+                break;
+        }
+        
+        return ret;
+    }
+    
+    private String getTooltipAttackResult(SentinelHttpMessageAtk m) {
+        return m.getAttackResult().getResultDescription();
+    }
+    
+        
+    private String getTooltipCategorizer(SentinelHttpMessageAtk m) {
+        String ret = "";
+        
+        for (ResponseCategory resCategory : m.getRes().getCategories()) {
+            ret += resCategory.getCategoryDescription() + "\n";
+        }
+
+        return ret;
+    }
+    
     private String getValueResponseSize(SentinelHttpMessageAtk m) {
         String r = "";
         int size = 0;
@@ -169,7 +204,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
 
     private String getValueResult(SentinelHttpMessageAtk m) {
         if (m.getAttackResult() != null) {
-            boolean successful = m.getAttackResult().getSuccess();
+            boolean successful = m.getAttackResult().isSuccess();
             if (successful) {
                 String ret = "";
                 switch (m.getAttackResult().getAttackType()) {

@@ -21,27 +21,34 @@ import java.io.Serializable;
 /**
  *
  * Is serializable, because it is used by model
- * 
+ *
  * @author DobinRutishauser@broken.ch
  */
 public class ResponseCategory implements Serializable {
+
     private CategoryEntry categoryEntry;
     private String indicator;
-    
+    private String categoryDescription;
+
     public ResponseCategory() {
         // Default constructor for deserializing
     }
-        
-    public ResponseCategory(CategoryEntry categoryEntry, String i) {
+
+    public ResponseCategory(CategoryEntry categoryEntry, String i, String categoryDescription) {
         this.categoryEntry = categoryEntry;
         this.indicator = i;
+        this.categoryDescription = categoryDescription;
     }
-    
+
     public CategoryEntry getCategoryEntry() {
         return categoryEntry;
     }
-    
+
     public String getIndicator() {
         return indicator;
+    }
+
+    public String getCategoryDescription() {
+        return categoryDescription;
     }
 }

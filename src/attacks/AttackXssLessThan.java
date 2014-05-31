@@ -168,7 +168,8 @@ public class AttackXssLessThan extends AttackI {
                     data.getAttackType(),
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
-                    true);
+                    true,
+                    "Found: " + data.getOutput());
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
@@ -180,7 +181,8 @@ public class AttackXssLessThan extends AttackI {
                     AttackData.AttackType.NONE,
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
-                    false);
+                    false,
+                    null);
             httpMessage.addAttackResult(res);
         }
 

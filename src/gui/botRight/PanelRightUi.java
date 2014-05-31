@@ -240,7 +240,7 @@ public class PanelRightUi extends javax.swing.JPanel {
         jSplitPane1 = new javax.swing.JSplitPane();
         panelTop = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tableMessages = new javax.swing.JTable();
+        tableMessages = new PanelRightCustomTable(panelRightModel);
         panelBot = new javax.swing.JPanel();
         panelViewMessage = new gui.viewMessage.PanelViewMessageUi();
 

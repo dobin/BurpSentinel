@@ -56,7 +56,8 @@ public class AttackOriginal extends AttackI {
                     AttackType.INFO,
                     "ORIG",
                     httpMessage.getReq().getChangeParam(),
-                    false);
+                    false,
+                    null);
             httpMessage.addAttackResult(res);
 
         } catch (ConnectionTimeoutException ex) {

@@ -62,14 +62,20 @@ public class AttackList extends AttackI {
                     AttackData.AttackType.INFO,
                     "LST" + attackWorkEntry.options + "." + state,
                     httpMessage.getReq().getChangeParam(),
-                    true);
+                    true,
+                    "Found: " + data);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
 
             httpMessage.getRes().addHighlight(h);
         } else {
-            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "LST" + attackWorkEntry.options + "." + state, httpMessage.getReq().getChangeParam(), false);
+            AttackResult res = new AttackResult(
+                    AttackData.AttackType.NONE, 
+                    "LST" + attackWorkEntry.options + "." + state, 
+                    httpMessage.getReq().getChangeParam(), 
+                    false,
+                    null);
             httpMessage.addAttackResult(res);
         }
 

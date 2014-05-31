@@ -29,12 +29,18 @@ public class AttackResult implements Serializable {
     private AttackData.AttackType attackType = null;
     private SentinelHttpParam attackParam = null;
     private boolean success;
+    private String resultDescription;
 
-    AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success) {
+    /*
+     * ResultDescription can be null
+     */
+    AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription) {
+//        AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success) {
         this.attackName = attackName;
         this.attackType = attackType;
         this.attackParam = attackParam;
         this.success = success;
+        this.resultDescription = resultDescription;
     }
     
     public boolean isSuccess() {
@@ -52,9 +58,8 @@ public class AttackResult implements Serializable {
     public AttackData.AttackType getAttackType() {
         return attackType;
     }
-    
-    public boolean getSuccess() {
-        return success;
+
+    public String getResultDescription() {
+        return resultDescription;
     }
-    
 }

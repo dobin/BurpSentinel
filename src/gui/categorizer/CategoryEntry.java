@@ -25,14 +25,14 @@ import java.awt.Color;
 public class CategoryEntry {
     private String name;
     private String regex;
-        
+
     private Boolean isEnabled;
     private Color myColor = Color.black;
     
     public CategoryEntry(String name, String regex) {
         this.name = name;
         this.regex = regex;
-        
+ 
         isEnabled = true;
         myColor = Color.black;
     }
@@ -43,13 +43,9 @@ public class CategoryEntry {
         this.myColor = c;
         this.isEnabled = isEnabled;
     }
-    
+        
     public String getTag() {
         return name;
-    }
-    
-    public String getRegex() {
-        return regex;
     }
     
     public void setTag(String tag) {
@@ -59,19 +55,21 @@ public class CategoryEntry {
     public void setRegex(String regex) {
         this.regex = regex;
     }
-
+    
+    public String getRegex() {
+        return regex;
+    }
 
     public boolean isEnabled() {
         return isEnabled;
     }
 
-
-    public Color getColor() {
-        return myColor;
-    }
-
     public void setEnabled(Boolean aBoolean) {
         this.isEnabled = aBoolean;
+    }
+    
+    public Color getColor() {
+        return myColor;
     }
 
     public void setColor(Color color) {

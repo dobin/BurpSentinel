@@ -109,8 +109,7 @@ public class AttackSql extends AttackI {
         boolean hasError = false;
         ResponseCategory sqlResponseCategory = null;
         for(ResponseCategory rc: httpMessage.getRes().getCategories()) {
-            
-            if (rc.getCategoryEntry().getTag().equals("sqlerrors")) {
+            if (rc.getCategoryEntry().getTag().equals("sqlerr")) {
                 hasError = true;
                 sqlResponseCategory = rc;
                 break;
@@ -118,13 +117,23 @@ public class AttackSql extends AttackI {
         }
         
         if (hasError) {
-            AttackResult res = new AttackResult(AttackData.AttackType.VULN, "SQL" + state, httpMessage.getReq().getChangeParam(), true);
+            AttackResult res = new AttackResult(
+                    AttackData.AttackType.VULN, 
+                    "SQL" + state, 
+                    httpMessage.getReq().getChangeParam(), 
+                    true,
+                    "Error message: " + sqlResponseCategory.getIndicator());
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(sqlResponseCategory.getIndicator(), failColor);
             httpMessage.getRes().addHighlight(h);
         } else {
-            AttackResult res = new AttackResult(AttackData.AttackType.NONE, "SQL" + state, httpMessage.getReq().getChangeParam(), false);
+            AttackResult res = new AttackResult(
+                    AttackData.AttackType.NONE, 
+                    "SQL" + state, 
+                    httpMessage.getReq().getChangeParam(), 
+                    false,
+                    null);
             httpMessage.addAttackResult(res);
         }
         
