@@ -16,15 +16,15 @@
  */
 package gui.reporter;
 
-import gui.SentinelMainUi;
-import java.util.HashMap;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import model.ModelRoot;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
-import util.BurpCallbacks;
+import model.SentinelHttpMessageOrig;
 
 /**
  *
@@ -38,33 +38,47 @@ public class ReporterUi extends javax.swing.JFrame {
     public ReporterUi() {
         initComponents();
     }
+    
+    private void viewReport() {
+        String report = generateReport();
+        jTextArea1.setText(report);
+    }
+    
+    private void storeReport() {
+        PrintWriter out = null;
+        try {
+            String report = generateReport();
+            out = new PrintWriter(textfieldPath.getText());
+            out.println(report);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReporterUi.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            out.close();
+        }
+    }
 
-    private void generateReport() {
+    private String generateReport() {
         StringBuilder out = new StringBuilder();
-/*
-        HashMap<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> map = ModelRoot.getInstance().getAllMessageList();
 
-        
+        LinkedList<SentinelHttpMessageOrig> messagesOrig = ModelRoot.getInstance().getMessageList();
         
         out.append("<html><body>\n");
         out.append("<table>\n");
         
-        for (Map.Entry<SentinelHttpMessage, LinkedList<SentinelHttpMessageAtk>> entry : map.entrySet()) {
-            SentinelHttpMessage key = entry.getKey();
-            LinkedList<SentinelHttpMessageAtk> value = entry.getValue();
-            
+        for (SentinelHttpMessageOrig origMsg : messagesOrig) {
+            LinkedList<SentinelHttpMessageAtk> atkMsgs = origMsg.getHttpMessageChildren();
             out.append("<tr>\n");
             
             out.append("<td>\n");
-            out.append(key.getReq().getUrl());
+            out.append(origMsg.getReq().getUrl());
             out.append("</td>\n");
 
-            for(SentinelHttpMessageAtk m: value) {
-                out.append("<td>\n");
-                BurpCallbacks.getInstance().print(m.getAttackResult().getAttackName());
+            out.append("<td>\n");
+            for(SentinelHttpMessageAtk m: atkMsgs) {
                 out.append(m.getAttackResult().getAttackName());
-                out.append("</td>\n");
+                out.append(" ");
             }
+            out.append("</td>\n");
             
             out.append("</tr>\n");
         }
@@ -72,8 +86,9 @@ public class ReporterUi extends javax.swing.JFrame {
         out.append("</table>\n");
         out.append("</body></html>\n");
 
-        jTextArea1.setText(out.toString());
-*/    }
+        return out.toString();
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -91,6 +106,7 @@ public class ReporterUi extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        buttonStore = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -118,12 +134,20 @@ public class ReporterUi extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
+        buttonStore.setText("Store to File");
+        buttonStore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStoreActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(buttonStore)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGenerate))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -152,7 +176,9 @@ public class ReporterUi extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnGenerate))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGenerate)
+                    .addComponent(buttonStore)))
         );
 
         pack();
@@ -170,12 +196,17 @@ public class ReporterUi extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSelectFileActionPerformed
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
-        generateReport();
+        viewReport();
     }//GEN-LAST:event_btnGenerateActionPerformed
+
+    private void buttonStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStoreActionPerformed
+        storeReport();
+    }//GEN-LAST:event_buttonStoreActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnSelectFile;
+    private javax.swing.JButton buttonStore;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
