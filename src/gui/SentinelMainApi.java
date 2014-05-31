@@ -17,12 +17,14 @@
 package gui;
 
 import burp.IHttpRequestResponse;
+import burp.IMessageEditorTabFactory;
 import burp.IProxyListener;
 import burp.IScannerCheck;
 import model.ModelRoot;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import service.SentinelEditorFactoryInfo;
 import service.SentinelPassiveScanner;
 import service.SentinelProxyListener;
 
@@ -35,6 +37,7 @@ public class SentinelMainApi {
     private SentinelMainUi sentinelMainUi;
     private SentinelProxyListener proxyListener;
     private SentinelPassiveScanner passiveScanner;
+    private SentinelEditorFactoryInfo editorFactory;
     private ModelRoot modelRoot;
     
     static private SentinelMainApi sentinelMainApi;
@@ -71,8 +74,14 @@ public class SentinelMainApi {
         if (proxyListener == null) {
             proxyListener = new SentinelProxyListener();
         }
-        
         return proxyListener;
+    }
+    
+    public IMessageEditorTabFactory getEditorFactoryInfo() {
+        if (editorFactory == null) {
+            editorFactory = new SentinelEditorFactoryInfo();
+        }
+        return editorFactory;
     }
 
     
