@@ -16,14 +16,15 @@
  */
 package gui;
 
-import model.ModelRoot;
 import burp.IHttpRequestResponse;
 import burp.IProxyListener;
+import burp.IScannerCheck;
+import model.ModelRoot;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
+import service.SentinelPassiveScanner;
 import service.SentinelProxyListener;
-import util.BurpCallbacks;
 
 /**
  *
@@ -33,6 +34,7 @@ public class SentinelMainApi {
     
     private SentinelMainUi sentinelMainUi;
     private SentinelProxyListener proxyListener;
+    private SentinelPassiveScanner passiveScanner;
     private ModelRoot modelRoot;
     
     static private SentinelMainApi sentinelMainApi;
@@ -57,6 +59,13 @@ public class SentinelMainApi {
         return sentinelMainUi;
     }
     
+    
+    public IScannerCheck getPassiveScanner() {
+        if (passiveScanner == null) {
+            passiveScanner = new SentinelPassiveScanner();
+        }
+        return passiveScanner;
+    }
 
     public IProxyListener getProxyListener() {
         if (proxyListener == null) {

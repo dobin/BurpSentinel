@@ -19,10 +19,8 @@ package service;
 import burp.IInterceptedProxyMessage;
 import burp.IProxyListener;
 import gui.SentinelMainApi;
-import java.util.regex.Matcher;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
-import model.XssIndicator;
 import util.BurpCallbacks;
 
 /**
@@ -44,36 +42,6 @@ public class SentinelProxyListener implements IProxyListener {
     }
 
     private void processResponse(IInterceptedProxyMessage message) {
-        xssCheck(message);
-    }
-
-    /*
-     * Check for persistant XSS
-     * 
-     * Note: This will convert every reponse seen in proxy. May do a performance
-     * penalty.
-     */
-    private void xssCheck(IInterceptedProxyMessage message) {
-        // return if we did not yet send any xss attacks
-        if (XssIndicator.getInstance().getCount() <= 0) {
-            return;
-        }
-        
-        byte[] response = message.getMessageInfo().getResponse();
-        if (response == null || response.length <= 0) {
-            return;
-        }
-        
-        String res = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(response);
-        
-        // Check first for base indicator string  ("XSS")
-        if (res.indexOf(XssIndicator.getInstance().getBaseIndicator()) > 0) {
-            // Now check it again with regex ("XSS??")
-            Matcher matcher = XssIndicator.getInstance().getPattern().matcher(res);
-            if (matcher.find()) {
-                message.getMessageInfo().setComment("Sentinel: XSS identified");
-            }
-        }
     }
 
     private void processRequest(IInterceptedProxyMessage message) {

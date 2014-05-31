@@ -21,12 +21,9 @@ import gui.SentinelMainApi;
 import gui.SentinelMainUi;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import replayer.gui.ReplayerMain.ReplayerMainUi;
 import util.BurpCallbacks;
-import util.SettingsManager;
 
 /*
  * The main plugin class
@@ -61,16 +58,13 @@ public class BurpExtender implements IExtensionStateListener {
             @Override
             public void run() {
                 // Init Burp Helper functions
-                
                 BurpCallbacks.getInstance().init(mCallbacks);
-                
                 
                 PrintStream errStream;
                 try {
                     errStream = new PrintStream("/tmp/sentinel-debug.log");
                     System.setErr(errStream);
                     System.setOut(errStream);
-                    
                 } catch (FileNotFoundException ex) {
                     BurpCallbacks.getInstance().print("Could not create debug log");
                 }
@@ -91,10 +85,11 @@ public class BurpExtender implements IExtensionStateListener {
                 //replayerMenuItem = new CustomMenuItem(replayerMain);
                 
                 callbacks.registerMenuItem("Send to sentinel", sentinelMenuItem);
-                //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
+                callbacks.registerScannerCheck(sentinelApi.getPassiveScanner());
+                //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.3.4 - 26.03.2014");
+                BurpCallbacks.getInstance().print("Sentinel v0.4 - 01.06.2014");
                 
             }
         });
