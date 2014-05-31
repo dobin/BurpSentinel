@@ -19,7 +19,7 @@ package attacks;
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
 import gui.networking.AttackWorkEntry;
-import gui.viewMessage.ResponseHighlight;
+import model.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;

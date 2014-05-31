@@ -18,7 +18,6 @@ package model;
 
 import burp.IHttpRequestResponse;
 import burp.IHttpService;
-import gui.viewMessage.ResponseHighlight;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;

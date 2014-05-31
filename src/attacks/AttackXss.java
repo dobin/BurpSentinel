@@ -17,7 +17,7 @@
 package attacks;
 
 import gui.networking.AttackWorkEntry;
-import gui.viewMessage.ResponseHighlight;
+import model.ResponseHighlight;
 import java.awt.Color;
 import java.util.LinkedList;
 import model.SentinelHttpMessage;

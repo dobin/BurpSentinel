@@ -18,7 +18,7 @@ package attacks;
 
 import gui.categorizer.ResponseCategory;
 import gui.networking.AttackWorkEntry;
-import gui.viewMessage.ResponseHighlight;
+import model.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;

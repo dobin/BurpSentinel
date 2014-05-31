@@ -16,6 +16,7 @@
  */
 package gui.viewMessage;
 
+import model.ResponseHighlight;
 import gui.session.SessionManager;
 import gui.session.SessionUser;
 import java.awt.BorderLayout;
