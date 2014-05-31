@@ -20,7 +20,6 @@ import burp.IInterceptedProxyMessage;
 import burp.IProxyListener;
 import gui.SentinelMainApi;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
 import model.XssIndicator;

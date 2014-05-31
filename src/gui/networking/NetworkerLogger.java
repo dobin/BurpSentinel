@@ -46,8 +46,8 @@ public class NetworkerLogger extends Observable {
     }
 
     void newWork() {
-        //log = new StringBuffer();
-        log.append("\n");
+        log = new StringBuffer();
+        //log.append("\n");
     }
 
     String getText() {

@@ -46,7 +46,6 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
         while (true) {
             synchronized (workEntryList) {
                 if (isCanceled) {
-                    BurpCallbacks.getInstance().print("[A.1] doInBackground Canceling in while - clear queue");
                     isCanceled = false;
                     if (workEntryList.size() > 0) {
                         workEntryList.clear();
@@ -62,23 +61,16 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
                 }
 
                 work = (AttackWorkEntry) workEntryList.remove();
-
-                BurpCallbacks.getInstance().print("\n[A.1] doInBackground Got new work! Doing it");
             }
 
             if (networkerSender.init(work) == true) {
-                BurpCallbacks.getInstance().print("[A.2] doInBackground Init ok");
-
                 goon = true;
                 while(goon) {
                     goon = networkerSender.sendRequest();
-                    BurpCallbacks.getInstance().print("[A.3] doInBackground Publishing");
-                    
                     
                     if (isCanceled) {
                         getLogger().giveSignal(NetworkerLogger.Signal.CANCEL);
                         getLogger().append("\n\nCanceling ok");
-                        BurpCallbacks.getInstance().print("[B.4] doInBackground Canceled... ! (inloop)");
                         goon = false;
                     } else {
                         if (networkerSender.getResult() != null) {
@@ -94,7 +86,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
     
     @Override
     public void done() {
-        BurpCallbacks.getInstance().print("[A.5] Done!");
+        
     }
 
     void addAttack(AttackWorkEntry entry) {
@@ -106,26 +98,20 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
 
     @Override
     protected void process(List<AttackWorkResult> pairs) {
-        BurpCallbacks.getInstance().print("[A.4] process Handle publish");
         for (AttackWorkResult work : pairs) {
-            BurpCallbacks.getInstance().print("[A.4] process publish 1: " + pairs);
-            BurpCallbacks.getInstance().print("[A.4] process publish 2: " + work.result);
             work.attackWorkEntry.panelParent.addAttackMessage(work.result);
         }
     }
 
-
     public NetworkerLogger getLogger() {
-        return networkerSender.getLog();
+        return networkerSender.getLogger();
     }
 
     void cancelAll() {
-        BurpCallbacks.getInstance().print("[B.6] cancelAll Canceling!");
         getLogger().giveSignal(NetworkerLogger.Signal.CANCEL);
         getLogger().append("\n\nCanceling, please wait... ");
         
         isCanceled = true;
-
     }
 
 }

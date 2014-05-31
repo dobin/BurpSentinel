@@ -33,31 +33,30 @@ import util.BurpCallbacks;
  * @author DobinRutishauser@broken.ch
  */
 public class NetworkerSender {
-    private NetworkerLogger log = new NetworkerLogger();
+    private NetworkerLogger log;
     
     private AttackI attack = null;
     private AttackWorkEntry workEntry;
 
+    public NetworkerSender() {
+        log = new NetworkerLogger();
+    }
+    
     public boolean init(AttackWorkEntry work) {
         workEntry = work;
 
-        BurpCallbacks.getInstance().print("[B.1] Init");
-        
-        log.append("New requests\n");
+        log.append("\nNew requests\n");
         
         log.newWork();
         log.giveSignal(NetworkerLogger.Signal.START);
 
         AttackMain.AttackTypes attackType = work.attackType;
         
-        
         // Some basic integrity checks
         if (work.origHttpMessage == null || work.origHttpMessage.getRequest() == null) {
             BurpCallbacks.getInstance().print("initialmessage broken");
             return false;
         }
-        
-        BurpCallbacks.getInstance().print("[B.2] doAttack: " + work.attackType);
         
         switch (attackType) {
             case ORIGINAL:
@@ -101,35 +100,31 @@ public class NetworkerSender {
     }
     
     public boolean sendRequest() {
-        BurpCallbacks.getInstance().print("[B.3] sendRequest");
-        
         SentinelHttpMessageAtk attackMessage = null;
         boolean goon = false;
         result = null;
 
-        log.append(workEntry.origHttpMessage.getReq().getUrl() + " (" + workEntry.attackHttpParam.getName() + "=" + workEntry.attackHttpParam.getValue() + ") ...");
+        log.append("Send request:\n");
+        log.append("     URL  : " + workEntry.origHttpMessage.getReq().getUrl().toString() + "\n");
+        log.append("     Param: " + workEntry.attackHttpParam.getName() + "\n");
         log.giveSignal(NetworkerLogger.Signal.SEND);
         goon = attack.performNextAttack();
         log.giveSignal(NetworkerLogger.Signal.RECV);
-        log.append(" ok\n");
+        log.append("     ok, done\n");
+        log.append("     continue: " + goon + "\n");
 
         attackMessage = attack.getLastAttackMessage();
 
         if (attackMessage != null) {
             result = new AttackWorkResult(workEntry, attackMessage);
-            
-            //workEntry.result = attackMessage;
-            //publish(workEntry);
-            //result = workEntry;
         } else {
             BurpCallbacks.getInstance().print("performAttack: attackMessage is null");
         }
 
-        BurpCallbacks.getInstance().print("[B.5] sendRequest: " + goon);
         return goon;
     }
 
-    NetworkerLogger getLog() {
+    NetworkerLogger getLogger() {
         return log;
     }
 }

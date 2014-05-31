@@ -52,7 +52,6 @@ public class NetworkerInfoUi extends javax.swing.JFrame implements Observer {
             String log = (String) arg;
             this.jTextArea1.setText(log);
             this.jTextArea1.setCaretPosition(log.length());
-            jTextArea1.updateUI();
         }
     }
 
