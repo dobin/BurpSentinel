@@ -19,9 +19,11 @@ package service;
 import burp.IInterceptedProxyMessage;
 import burp.IProxyListener;
 import gui.SentinelMainApi;
-import gui.SentinelMainUi;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
+import model.XssIndicator;
 import util.BurpCallbacks;
 
 /**
@@ -32,13 +34,50 @@ public class SentinelProxyListener implements IProxyListener {
 
     private Boolean next2Repeater = false;
     private Boolean next2Sentinel = false;
-    
+
     @Override
     public void processProxyMessage(boolean messageIsRequest, IInterceptedProxyMessage message) {
-        if (! messageIsRequest) {
+        if (messageIsRequest) {
+            processRequest(message);
+        } else {
+            processResponse(message);
+        }
+    }
+
+    private void processResponse(IInterceptedProxyMessage message) {
+        xssCheck(message);
+    }
+
+    /*
+     * Check for persistant XSS
+     * 
+     * Note: This will convert every reponse seen in proxy. May do a performance
+     * penalty.
+     */
+    private void xssCheck(IInterceptedProxyMessage message) {
+        // return if we did not yet send any xss attacks
+        if (XssIndicator.getInstance().getCount() <= 0) {
             return;
         }
         
+        byte[] response = message.getMessageInfo().getResponse();
+        if (response == null || response.length <= 0) {
+            return;
+        }
+        
+        String res = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(response);
+        
+        // Check first for base indicator string  ("XSS")
+        if (res.indexOf(XssIndicator.getInstance().getBaseIndicator()) > 0) {
+            // Now check it again with regex ("XSS??")
+            Matcher matcher = XssIndicator.getInstance().getPattern().matcher(res);
+            if (matcher.find()) {
+                message.getMessageInfo().setComment("Sentinel: XSS identified");
+            }
+        }
+    }
+
+    private void processRequest(IInterceptedProxyMessage message) {
         if (next2Repeater) {
             SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(message.getMessageInfo());
             BurpCallbacks.getInstance().getBurp().sendToRepeater(
@@ -55,16 +94,15 @@ public class SentinelProxyListener implements IProxyListener {
             SentinelMainApi.getInstance().addNewMessage(httpMessage);
             next2Sentinel = false;
         }
-        
+
         sentinelCheck(message);
     }
-    
+
     private void sentinelCheck(IInterceptedProxyMessage message) {
         SentinelHttpMessage msg = new SentinelHttpMessageOrig(message.getMessageInfo());
-        
+
         String url = msg.getReq().getUrl().toString();
-        BurpCallbacks.getInstance().print(url);
-        
+
         if (url.startsWith("http://sentinel")) {
             if (url.contains("nextToRepeater")) {
                 next2Repeater = true;
@@ -72,18 +110,17 @@ public class SentinelProxyListener implements IProxyListener {
             if (url.contains("nextToSentinel")) {
                 next2Sentinel = true;
             }
-            
+
             if (url.contains("enableIntercept")) {
                 BurpCallbacks.getInstance().getBurp().setProxyInterceptionEnabled(true);
             }
             if (url.contains("disableIntercept")) {
                 BurpCallbacks.getInstance().getBurp().setProxyInterceptionEnabled(false);
             }
-            
-//            BurpCallbacks.getInstance().print(url);
-            message.getMessageInfo().setRequest("GET http://burp/ HTTP1.1\r\nHost: burp\r\n\r\n".getBytes());
+
+            // Removed, because did not really remove request
+//            message.getMessageInfo().setRequest("GET http://burp/ HTTP1.1\r\nHost: burp\r\n\r\n".getBytes());
             message.setInterceptAction(IInterceptedProxyMessage.ACTION_DROP);
         }
     }
-    
 }

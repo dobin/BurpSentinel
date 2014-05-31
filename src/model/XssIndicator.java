@@ -16,17 +16,20 @@
  */
 package model;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author unreal
  */
 public class XssIndicator {
 
-    private String indicator = "";
     static private XssIndicator xssIndicator;
-    private String base = "qQq";
+    
+    private String base = "Xss";
     private int count = 0;
-
+    private Pattern pattern;
+        
     public static XssIndicator getInstance() {
         if (xssIndicator == null) {
             xssIndicator = new XssIndicator();
@@ -37,6 +40,8 @@ public class XssIndicator {
 
     public XssIndicator() {
         count = 0;
+        
+        pattern = Pattern.compile("Xss\\w\\w");
     }
     
     public String getIndicatorRegex() {
@@ -54,25 +59,43 @@ public class XssIndicator {
 
         return ret;
     }
-
-    public char getA(int n) {
+    
+    public int getCount() {
+        return count;
+    }
+    
+    public Pattern getPattern() {
+        return pattern;
+    }
+    
+    /*
+     * Return a-z A-z for 0<n<52
+     */
+    private char getA(int n) {
         char r;
 
         if (n < 26) {
             r = (char) (((int) 'a') + n);
-        } else {
+        } else if (n < 52) {
             n -= 26;
             r = (char) (((int) 'A') + n);
+        } else {
+            r = '0';
         }
 
         return r;
     }
 
+    /*
+     * Converts a number into base 52 (a-zA-z)
+     * 
+     * Currently two letters (aa-ZZ)
+     */
     public String getAsciiCount() {
         String ret = "";
         int number = count;
 
-        for (int x = 0; x < 3; x++) {
+        for (int x = 0; x < 2; x++) {
             int remainder = number % 52;
             ret = getA(remainder) + ret;
             number = (int) Math.floor(number / 52f);
@@ -80,4 +103,5 @@ public class XssIndicator {
 
         return ret;
     }
+
 }
