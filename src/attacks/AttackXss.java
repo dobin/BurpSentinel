@@ -59,7 +59,6 @@ private LinkedList<AttackData> attackData;
         return true;
     }
 
-    
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;

@@ -29,7 +29,14 @@ import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 
 /**
+ * NetworkerSender
+ * 
+ * Used to send requests
+ * As it is used by SwingWorker NetworkerWorker, it will be sent asyncronously
+ * of the main UI thread.
  *
+ * It will log actions into NetworkerLogger
+ * 
  * @author DobinRutishauser@broken.ch
  */
 public class NetworkerSender {

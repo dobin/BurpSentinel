@@ -17,7 +17,14 @@
 package gui.networking;
 
 /**
- *
+ * Networker
+ * 
+ * A singleton to attack resources
+ * This will initiate sending of the requests upon attack
+ * 
+ * The actual work is performed by NetworkerWorker, a swingworker
+ * This is just the interface to the worker
+ * 
  * @author dobin
  */
 public class Networker {
@@ -29,7 +36,6 @@ public class Networker {
         }
         return myself;
     }
-
 
     private NetworkerWorker worker = null;
     

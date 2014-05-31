@@ -19,7 +19,14 @@ package gui.networking;
 import java.util.Observable;
 
 /**
- *
+ * NetworkerLogger
+ * 
+ * Logs some strings from by NetworkerSender and NetworkerWorker, which
+ * indicate the current status of request sending and receiving.
+ * 
+ * Observable:
+ * Observed by NetworkInfoUi, as it displays the data stored here.
+ * 
  * @author dobin
  */
 public class NetworkerLogger extends Observable {
@@ -47,10 +54,9 @@ public class NetworkerLogger extends Observable {
 
     void newWork() {
         log = new StringBuffer();
-        //log.append("\n");
     }
 
-    String getText() {
+    String getLog() {
         return log.toString();
     }
 }

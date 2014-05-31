@@ -21,7 +21,14 @@ import java.util.Observer;
 import javax.swing.text.DefaultCaret;
 
 /**
- *
+ * NetworkerInfoUi
+ * 
+ * Displays Log messages of sending and receiving requests
+ * Displayed from button in paneltop
+ * 
+ * Observes:
+ * NetworkerLogger, as it has all log messages (source of data of this class)
+ * 
  * @author dobin
  */
 public class NetworkerInfoUi extends javax.swing.JFrame implements Observer {
@@ -38,7 +45,7 @@ public class NetworkerInfoUi extends javax.swing.JFrame implements Observer {
     
     public void start() {
         Networker.getInstance().getLogger().addObserver(this);
-        this.jTextArea1.setText (Networker.getInstance().getLogger().getText());
+        this.jTextArea1.setText (Networker.getInstance().getLogger().getLog());
     }
     
     public void stop() {

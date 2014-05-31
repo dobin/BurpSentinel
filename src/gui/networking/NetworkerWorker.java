@@ -24,7 +24,12 @@ import javax.swing.SwingWorker;
 import util.BurpCallbacks;
 
 /**
- *
+ * Networker Worker
+ * 
+ * This is a permanently running SwingWorker, used by singleton Networker
+ * Attacks can be added with addAttack()
+ * The actual sending of attacks in implemented in NetworkerSender
+ * 
  * @author dobin
  */
 public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
@@ -34,10 +39,13 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
     
     public NetworkerWorker() {
         networkerSender = new NetworkerSender();
-        
         isCanceled = false;
     }
 
+    /*
+     * Worker thread
+     * handles attacks added by addAttacks()
+     */
     @Override
     protected String doInBackground() {
         AttackWorkEntry work = null;
@@ -74,6 +82,7 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
                         goon = false;
                     } else {
                         if (networkerSender.getResult() != null) {
+                            // Publish intermediate results (calls process())
                             publish(networkerSender.getResult());
                         }
                     }
@@ -86,9 +95,12 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
     
     @Override
     public void done() {
-        
+        // Never called, as this is long-running thread
     }
 
+    /*
+     * The public interface to add attacks
+     */
     void addAttack(AttackWorkEntry entry) {
         synchronized (workEntryList) {
             workEntryList.add(entry);
@@ -96,6 +108,14 @@ public class NetworkerWorker extends SwingWorker<String, AttackWorkResult> {
         }
     }
 
+    /*
+     * Process intermediate results
+     * 
+     * After each successfull send of request (networkerSender.sendRequest()),
+     * handle result here
+     * 
+     * This will run in the main thread (not in the SwingWorker thread)
+     */
     @Override
     protected void process(List<AttackWorkResult> pairs) {
         for (AttackWorkResult work : pairs) {

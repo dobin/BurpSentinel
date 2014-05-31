@@ -19,7 +19,6 @@ package gui.networking;
 import attacks.AttackMain;
 import gui.botLeft.PanelLeftInsertions;
 import gui.botLeft.PanelLeftUi;
-import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 
@@ -36,8 +35,6 @@ public class AttackWorkEntry {
     public boolean followRedirect;
     public PanelLeftInsertions.InsertPositions insertPosition;
     public String mainSessionName;
-    
-    //SentinelHttpMessageAtk result;
     
     public AttackWorkEntry(SentinelHttpParam attackHttpParam, 
             AttackMain.AttackTypes attackType,
