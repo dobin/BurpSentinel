@@ -74,17 +74,15 @@ public class SentinelHttpRequest implements Serializable {
     public SentinelHttpRequest(String r, IHttpService httpService) {
         this.httpService = new SentinelHttpService(httpService);
         this.request = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(r);
-        
         init();
     }
     
     public SentinelHttpRequest(byte[] request, IHttpService httpService) {
         this.httpService = new SentinelHttpService(httpService);
         this.request = request;
-        
         init();
     }
-
+    
     /* IHttpPequestResponse has httpService
      * therefor it is able to set URL correctly
      */

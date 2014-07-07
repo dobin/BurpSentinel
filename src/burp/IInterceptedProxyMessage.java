@@ -9,6 +9,8 @@ package burp;
  * and Burp Suite Professional, provided that this usage does not violate the
  * license terms for those products.
  */
+import java.net.InetAddress;
+
 /**
  * This interface is used to represent an HTTP message that has been intercepted
  * by Burp Proxy. Extensions can register an
@@ -67,9 +69,8 @@ public interface IInterceptedProxyMessage
     /**
      * This method retrieves details of the intercepted message.
      *
-     * @return An
-     * <code>IHttpRequestResponse</code> object containing details of the
-     * intercepted message.
+     * @return An <code>IHttpRequestResponse</code> object containing details of
+     * the intercepted message.
      */
     IHttpRequestResponse getMessageInfo();
 
@@ -93,4 +94,23 @@ public interface IInterceptedProxyMessage
      * defined within this interface.
      */
     void setInterceptAction(int interceptAction);
+
+    /**
+     * This method retrieves the name of the Burp Proxy listener that is
+     * processing the intercepted message.
+     *
+     * @return The name of the Burp Proxy listener that is processing the
+     * intercepted message. The format is the same as that shown in the Proxy
+     * Listeners UI - for example, "127.0.0.1:8080".
+     */
+    String getListenerInterface();
+
+    /**
+     * This method retrieves the client IP address from which the request for
+     * the intercepted message was received.
+     *
+     * @return The client IP address from which the request for the intercepted
+     * message was received.
+     */
+    InetAddress getClientIpAddress();
 }

@@ -157,11 +157,10 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
                 return httpMessage.getReq().getMethod();
             case 2:
                 URL url = null;
-                try {
-                    url = httpMessage.getReq().getUrl();
-                } catch (Exception ex) {
-                    BurpCallbacks.getInstance().print("getValueAt(): getUrl() failed on index: " + rowIndex);
-                    return "<error getting url>";
+                
+                url = httpMessage.getReq().getUrl();
+                if (url == null) {
+                    return "";
                 }
                 return url.toString();
             case 3:

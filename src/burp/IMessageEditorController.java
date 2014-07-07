@@ -1,7 +1,5 @@
 package burp;
 
-import model.SentinelHttpMessage;
-
 /*
  * @(#)IMessageEditorController.java
  *

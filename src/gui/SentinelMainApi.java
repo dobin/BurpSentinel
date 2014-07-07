@@ -98,6 +98,11 @@ public class SentinelMainApi {
         modelRoot.addNewMessage(myHttpMessage);
     }
     
+     // ZAP
+     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
+        modelRoot.addNewMessage(myHttpMessage);
+    }
+    
     /* Add new HttpRequestResponse from Attack Message
      * 
      * This gets called from panel right popup, where we already have attack message

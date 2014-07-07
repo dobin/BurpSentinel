@@ -29,9 +29,12 @@ public interface IIntruderPayloadGeneratorFactory
      * This method is used by Burp when the user starts an Intruder attack that
      * uses this payload generator.
      *
+     * @param attack An
+     * <code>IIntruderAttack</code> object that can be queried to obtain details
+     * about the attack in which the payload generator will be used.
      * @return A new instance of
      * <code>IIntruderPayloadGenerator</code> that will be used to generate
      * payloads for the attack.
      */
-    IIntruderPayloadGenerator createNewInstance();
+    IIntruderPayloadGenerator createNewInstance(IIntruderAttack attack);
 }

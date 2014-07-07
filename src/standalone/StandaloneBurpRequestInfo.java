@@ -53,6 +53,7 @@ public class StandaloneBurpRequestInfo implements IRequestInfo {
     private List<String> headers;
     private List<IParameter> parameters;
     private int bodyoffset;
+    private byte contenttype;
     
     private void init() {
         bodyoffset = request.indexOf("\r\n\r\n");
@@ -104,6 +105,11 @@ public class StandaloneBurpRequestInfo implements IRequestInfo {
     @Override
     public int getBodyOffset() {
         return bodyoffset;
+    }
+
+    @Override
+    public byte getContentType() {
+        return contenttype;
     }
     
 }

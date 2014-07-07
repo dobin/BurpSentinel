@@ -37,7 +37,7 @@ public class SentinelHttpMessageOrig extends SentinelHttpMessage implements Seri
     public SentinelHttpMessageOrig(String s, String host, int port, boolean https) {
         super(s, host, port, https);
     }
-
+    
     public void addChildren(SentinelHttpMessageAtk aThis) {
         this.httpMessageChildren.add(aThis);
     }

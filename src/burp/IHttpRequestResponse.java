@@ -98,4 +98,5 @@ public interface IHttpRequestResponse
      * service.
      */
     void setHttpService(IHttpService httpService);
+
 }

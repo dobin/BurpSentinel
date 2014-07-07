@@ -18,6 +18,7 @@ package standalone;
 
 import burp.IBurpExtenderCallbacks;
 import burp.IContextMenuFactory;
+import burp.ICookie;
 import burp.IExtensionHelpers;
 import burp.IExtensionStateListener;
 import burp.IHttpListener;
@@ -37,6 +38,7 @@ import burp.IScanQueueItem;
 import burp.IScannerCheck;
 import burp.IScannerInsertionPointProvider;
 import burp.IScannerListener;
+import burp.IScopeChangeListener;
 import burp.ISessionHandlingAction;
 import burp.ITab;
 import burp.ITempFile;
@@ -318,6 +320,46 @@ public class StandaloneBurpCallbacks implements IBurpExtenderCallbacks {
 
     @Override
     public void registerMenuItem(String menuItemCaption, IMenuItemHandler menuItemHandler) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void registerScopeChangeListener(IScopeChangeListener listener) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void unloadExtension() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String[] getCommandLineArguments() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void saveExtensionSetting(String name, String value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String loadExtensionSetting(String name) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void generateScanReport(String format, IScanIssue[] issues, File file) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<ICookie> getCookieJarContents() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void updateCookieJar(ICookie cookie) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

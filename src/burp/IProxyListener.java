@@ -11,7 +11,7 @@ package burp;
  */
 /**
  * Extensions can implement this interface and then call
- * <code>IBurpExtenderCallbacks.registerHttpListener()</code> to register a
+ * <code>IBurpExtenderCallbacks.registerProxyListener()</code> to register a
  * Proxy listener. The listener will be notified of requests and responses being
  * processed by the Proxy tool. Extensions can perform custom analysis or
  * modification of these messages, and control in-UI message interception, by

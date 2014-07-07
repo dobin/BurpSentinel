@@ -80,9 +80,8 @@ public interface IContextMenuInvocation
      * This method can be used to retrieve the native Java input event that was
      * the trigger for the context menu invocation.
      *
-     * @return The
-     * <code>InputEvent</code> that was the trigger for the context menu
-     * invocation.
+     * @return The <code>InputEvent</code> that was the trigger for the context
+     * menu invocation.
      */
     InputEvent getInputEvent();
 
@@ -113,8 +112,7 @@ public interface IContextMenuInvocation
      * user's selection in the current message. If the user has not made any
      * selection in the current message, both offsets indicate the position of
      * the caret within the editor. If the menu is not being invoked from a
-     * message editor, the method returns
-     * <code>null</code>.
+     * message editor, the method returns <code>null</code>.
      */
     int[] getSelectionBounds();
 
@@ -123,11 +121,25 @@ public interface IContextMenuInvocation
      * responses that were shown or selected by the user when the context menu
      * was invoked.
      *
-     * @return An array of
-     * <code>IHttpRequestResponse</code> objects representing the items that
-     * were shown or selected by the user when the context menu was invoked.
-     * This method returns
-     * <code>null</code> if no messages are applicable to the invocation.
+     * <b>Note:</b> For performance reasons, the objects returned from this
+     * method are tied to the originating context of the messages within the
+     * Burp UI. For example, if a context menu is invoked on the Proxy intercept
+     * panel, then the
+     * <code>IHttpRequestResponse</code> returned by this method will reflect
+     * the current contents of the interception panel, and this will change when
+     * the current message has been forwarded or dropped. If your extension
+     * needs to store details of the message for which the context menu has been
+     * invoked, then you should query those details from the
+     * <code>IHttpRequestResponse</code> at the time of invocation, or you
+     * should use
+     * <code>IBurpExtenderCallbacks.saveBuffersToTempFiles()</code> to create a
+     * persistent read-only copy of the
+     * <code>IHttpRequestResponse</code>.
+     *
+     * @return An array of <code>IHttpRequestResponse</code> objects
+     * representing the items that were shown or selected by the user when the
+     * context menu was invoked. This method returns <code>null</code> if no
+     * messages are applicable to the invocation.
      */
     IHttpRequestResponse[] getSelectedMessages();
 
@@ -135,11 +147,10 @@ public interface IContextMenuInvocation
      * This method can be used to retrieve details of the Scanner issues that
      * were selected by the user when the context menu was invoked.
      *
-     * @return An array of
-     * <code>IScanIssue</code> objects representing the issues that were
-     * selected by the user when the context menu was invoked. This method
-     * returns
-     * <code>null</code> if no Scanner issues are applicable to the invocation.
+     * @return An array of <code>IScanIssue</code> objects representing the
+     * issues that were selected by the user when the context menu was invoked.
+     * This method returns <code>null</code> if no Scanner issues are applicable
+     * to the invocation.
      */
     IScanIssue[] getSelectedIssues();
 }

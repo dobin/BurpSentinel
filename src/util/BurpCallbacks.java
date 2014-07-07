@@ -178,6 +178,7 @@ public class BurpCallbacks {
     
     private URL followRedirectUrl(String redirStr, IHttpRequestResponse message) {
         // get old url
+        System.out.println("FOLLOW!");
         IRequestInfo requestInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeRequest(message);
         URL origUrl = requestInfo.getUrl();
         
