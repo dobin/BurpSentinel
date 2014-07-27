@@ -88,38 +88,34 @@ public class BurpCallbacks {
             BurpCallbacks.getInstance().print("sendRessource: Void data! Abort.");
             return;
         }
-        
-//        try {
-            IHttpRequestResponse r = null;
-            long timeStart = System.currentTimeMillis();
-            r = getBurp().makeHttpRequest(httpMessage.getHttpService(), httpMessage.getRequest());
-            long time = System.currentTimeMillis() - timeStart;
-            httpMessage.setLoadTime(time);
 
-            
-            if (r.getResponse() == null) {
-                throw new ConnectionTimeoutException();
+        IHttpRequestResponse r = null;
+        long timeStart = System.currentTimeMillis();
+        r = getBurp().makeHttpRequest(httpMessage.getHttpService(), httpMessage.getRequest());
+        long time = System.currentTimeMillis() - timeStart;
+        httpMessage.setLoadTime(time);
+
+
+        if (r.getResponse() == null) {
+            throw new ConnectionTimeoutException();
+        }
+
+        if (followRedirect) {
+            int n = 0;
+            while (isRedirect(r.getResponse()) && ++n <= 10) {
+                BurpCallbacks.getInstance().print("Is redir, following...");
+                httpMessage.setRedirected(true);
+                r = followRedirect(r);
             }
-            
-            if (followRedirect) {
-                int n = 0;
-                while (isRedirect(r.getResponse()) && ++n <= 10) {
-                    BurpCallbacks.getInstance().print("Is redir, following...");
-                    httpMessage.setRedirected(true);
-                    r = followRedirect(r);
-                }
-                if (n >= 10) {
-                    String s = "Redirected 10 times, aborting...";
-                    httpMessage.setResponse(s.getBytes());
-                } else {
-                    httpMessage.setResponse(r.getResponse());
-                }
+            if (n >= 10) {
+                String s = "Redirected 10 times, aborting...";
+                httpMessage.setResponse(s.getBytes());
             } else {
                 httpMessage.setResponse(r.getResponse());
             }
-  //      } catch (Exception ex) {
-   //         BurpCallbacks.getInstance().print("sendRessource(): " + ex.getLocalizedMessage());
-    //    }
+        } else {
+            httpMessage.setResponse(r.getResponse());
+        }
     }
 
     private boolean isRedirect(byte[] response) {

@@ -74,6 +74,7 @@ public class SentinelHttpResponse implements Serializable {
     
     private void parseResponse() {
         if (response == null || response.length <= 0) {
+            BurpCallbacks.getInstance().print("SentinelHttpResponse constructor: response 0");
             return;
         }
         

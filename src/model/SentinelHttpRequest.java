@@ -89,7 +89,7 @@ public class SentinelHttpRequest implements Serializable {
     private void init(IHttpRequestResponse httpMessage) {
         requestInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeRequest(httpMessage);
         if (requestInfo == null) {
-            BurpCallbacks.getInstance().print("Requestinfo null!!!");
+            System.out.println("Requestinfo null!!!");
             return;
         }        
         
