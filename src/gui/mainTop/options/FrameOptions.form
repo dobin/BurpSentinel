@@ -136,7 +136,7 @@
       <SubComponents>
         <Component class="javax.swing.JCheckBox" name="checkboxRelativeSize">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Disable Relative response size"/>
+            <Property name="text" type="java.lang.String" value="Enable Relative response size"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="checkboxRelativeSizeActionPerformed"/>

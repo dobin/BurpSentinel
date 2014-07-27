@@ -167,11 +167,13 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
     
         
     private String getTooltipCategorizer(SentinelHttpMessageAtk m) {
-        String ret = "";
+        String ret = "<html>";
         
         for (ResponseCategory resCategory : m.getRes().getCategories()) {
-            ret += resCategory.getCategoryDescription() + "\n";
+            ret += resCategory.getIndicator() + "<br>\n";
         }
+        
+        ret += "</html>";
 
         return ret;
     }
@@ -181,15 +183,15 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         int size = 0;
         
         if (SettingsManager.getEnableRelativeResponseSize()) {
-            r = Integer.toString(m.getRes().getSize());
-        } else {
             size = m.getRes().getSize() - m.getParentHttpMessage().getRes().getSize();
             r = Integer.toString(size);
             if (size > 0) {
                 r = "+" + r;
             } else if (size == 0) {
                 r = "+0";
-            }
+            }            
+        } else {
+            r = Integer.toString(m.getRes().getSize());
         }
         return r;
     }
