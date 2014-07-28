@@ -34,13 +34,16 @@ public class CategorizerUi extends JFrame {
     private CategorizerManager parentCategorizerManager;
     
     public CategorizerUi(CategorizerManager parentCategorizerManager) {
-        tableModel = new CategorizerTableModel();
         this.parentCategorizerManager = parentCategorizerManager;
+        this.tableModel = new CategorizerTableModel();
         initComponents();
         
         // Set up renderer and editor for the Color column.
         tableMain.setDefaultRenderer(Color.class, new CategorizerColorRenderer(true));
         tableMain.setDefaultEditor(Color.class, new CategorizerCellEditor());
+        
+        // Default is user
+        loadCategory("user");
     }
 
     
@@ -60,6 +63,11 @@ public class CategorizerUi extends JFrame {
         parentCategorizerManager.signalModelUpdate();       
     }
     
+    private void loadCategory(String categoryName) {
+        tableModel.loadCategory(parentCategorizerManager.getCategoryList(categoryName));
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,6 +84,10 @@ public class CategorizerUi extends JFrame {
         buttonApply = new javax.swing.JButton();
         buttonAddLine = new javax.swing.JButton();
         buttonDelSelected = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnUser = new javax.swing.JButton();
+        btnSqlErr = new javax.swing.JButton();
+        btnErr = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -91,9 +103,7 @@ public class CategorizerUi extends JFrame {
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
         );
 
         buttonApply.setText("Apply");
@@ -138,16 +148,60 @@ public class CategorizerUi extends JFrame {
                     .addComponent(buttonDelSelected)))
         );
 
+        btnUser.setText("User-Defined");
+        btnUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserActionPerformed(evt);
+            }
+        });
+
+        btnSqlErr.setText("SQL Errors");
+        btnSqlErr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSqlErrActionPerformed(evt);
+            }
+        });
+
+        btnErr.setText("Errors");
+        btnErr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnErrActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(btnUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSqlErr)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnErr)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnUser)
+                .addComponent(btnSqlErr)
+                .addComponent(btnErr))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -161,9 +215,7 @@ public class CategorizerUi extends JFrame {
     }//GEN-LAST:event_buttonAddLineActionPerformed
 
     private void buttonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonApplyActionPerformed
-        // Store current window in config
         save();
-        
         updateAllMessages();
     }//GEN-LAST:event_buttonApplyActionPerformed
 
@@ -171,21 +223,36 @@ public class CategorizerUi extends JFrame {
         tableModel.removeRow(tableMain.getSelectedRow());
     }//GEN-LAST:event_buttonDelSelectedActionPerformed
 
+    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+        save();
+        loadCategory("user");
+    }//GEN-LAST:event_btnUserActionPerformed
+
+    private void btnSqlErrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSqlErrActionPerformed
+        save();
+        loadCategory("sqlerr");
+    }//GEN-LAST:event_btnSqlErrActionPerformed
+
+    private void btnErrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnErrActionPerformed
+        save();
+        loadCategory("error");
+    }//GEN-LAST:event_btnErrActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnErr;
+    private javax.swing.JButton btnSqlErr;
+    private javax.swing.JButton btnUser;
     private javax.swing.JButton buttonAddLine;
     private javax.swing.JButton buttonApply;
     private javax.swing.JButton buttonDelSelected;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableMain;
     // End of variables declaration//GEN-END:variables
 
-    public LinkedList<CategoryEntry> getCategories() {
-        return tableModel.getCategories();
-    }
-
     public void save() {
-        tableModel.storeUiPrefs();
+        parentCategorizerManager.saveCategory(tableModel.getCurrentCategory());
     }
 }

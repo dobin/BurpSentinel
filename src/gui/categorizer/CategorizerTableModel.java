@@ -16,6 +16,8 @@
  */
 package gui.categorizer;
 
+import gui.categorizer.model.Category;
+import gui.categorizer.model.CategoryEntry;
 import java.awt.Color;
 import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
@@ -26,16 +28,23 @@ import util.SettingsManager;
  * @author dobin
  */
 public class CategorizerTableModel extends AbstractTableModel {
-
-    private LinkedList<CategoryEntry> categoryEntries = new LinkedList<CategoryEntry>();
+    private Category category;
         
     public CategorizerTableModel() {
-        SettingsManager.restoreCategories(categoryEntries);
+        // Fake init
+        category = new Category();
     }
+    
+    
+    public void loadCategory(Category category) {
+        this.category = category;
+        this.fireTableDataChanged();
+    }
+    
     
     @Override
     public int getRowCount() {
-        return categoryEntries.size();
+        return category.getCategoryEntries().size();
     }
 
     @Override
@@ -63,13 +72,13 @@ public class CategorizerTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return categoryEntries.get(rowIndex).isEnabled();
+                return category.getCategoryEntries().get(rowIndex).isEnabled();
             case 1:
-                return categoryEntries.get(rowIndex).getColor();
+                return category.getCategoryEntries().get(rowIndex).getColor();
             case 2:
-                return categoryEntries.get(rowIndex).getTag();
+                return category.getCategoryEntries().get(rowIndex).getTag();
             case 3:
-                return categoryEntries.get(rowIndex).getRegex();
+                return category.getCategoryEntries().get(rowIndex).getRegex();
             default:
                 return "";
         }
@@ -95,16 +104,16 @@ public class CategorizerTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                categoryEntries.get(rowIndex).setEnabled( (Boolean) aValue);
+                category.getCategoryEntries().get(rowIndex).setEnabled( (Boolean) aValue);
                 break;
             case 1:
-                categoryEntries.get(rowIndex).setColor( (Color) aValue);
+                category.getCategoryEntries().get(rowIndex).setColor( (Color) aValue);
                 break;
             case 2:
-                categoryEntries.get(rowIndex).setTag((String) aValue);
+                category.getCategoryEntries().get(rowIndex).setTag((String) aValue);
                 break;
             case 3:
-                categoryEntries.get(rowIndex).setRegex((String) aValue);
+                category.getCategoryEntries().get(rowIndex).setRegex((String) aValue);
                 break;
             default:
                 break;
@@ -118,24 +127,22 @@ public class CategorizerTableModel extends AbstractTableModel {
         return true;
     }
     
-    void storeUiPrefs() {
-        SettingsManager.storeCategories(categoryEntries);
-    }
 
     void addEmptyLine() {
         char c = (char) (65 + getRowCount());
         String res = Character.toString(c) +Character.toString(c);
         
-        categoryEntries.add( new CategoryEntry(res, ".*XXX.*"));
+        category.getCategoryEntries().add( new CategoryEntry(res, ".*XXX.*"));
         this.fireTableDataChanged();
     }
 
-    LinkedList<CategoryEntry> getCategories() {
-        return categoryEntries;
+    Category getCurrentCategory() {
+        return category;
     }
-
+    
     void removeRow(int selectedRow) {
-        categoryEntries.remove(selectedRow);
+        category.getCategoryEntries().remove(selectedRow);
         this.fireTableDataChanged();
     }
+
 }

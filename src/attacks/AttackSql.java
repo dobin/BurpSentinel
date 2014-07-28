@@ -16,7 +16,7 @@
  */
 package attacks;
 
-import gui.categorizer.ResponseCategory;
+import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;
 import model.ResponseHighlight;
 import java.awt.Color;

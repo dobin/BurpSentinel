@@ -17,8 +17,9 @@
 package util;
 
 import gui.botLeft.PanelLeftInsertions.InsertPositions;
+import gui.categorizer.model.Category;
 import gui.session.SessionUser;
-import gui.categorizer.CategoryEntry;
+import gui.categorizer.model.CategoryEntry;
 import gui.lists.ListManagerList;
 import gui.sqlmap.SqlmapData;
 import java.awt.Color;
@@ -190,11 +191,24 @@ public class SettingsManager {
         textfieldSession.setText(s);
     }
 
-    public static void restoreCategories(LinkedList<CategoryEntry> categoryEntries) {
-        Preferences pref = Preferences.userRoot().node("CategoryEntries");
+    
+    public static boolean getCategoryInitState() {
+        Preferences pref = Preferences.userRoot().node("Initialization");
+        return pref.getBoolean("CategoryLoading", false);
+    }
+    
+    public static void setCategoryInitState(boolean b) {
+        Preferences pref = Preferences.userRoot().node("Initialization");
+        pref.putBoolean("CategoryLoading", b);
+    }
+    
+    public static void restoreCategories(Category category) {
+        Preferences pref = Preferences.userRoot().node("CategoryEntries" + category.getName());
     
         int n=0;
         int last = pref.getInt("numbers", 0);
+        
+        LinkedList<CategoryEntry> categoryEntries = new LinkedList<CategoryEntry>();
         
         for(n=0; n<last; n++) {
             String tag = pref.get(Integer.toString(n) + "_tag", "");
@@ -203,10 +217,11 @@ public class SettingsManager {
             boolean enabled = pref.getBoolean(Integer.toString(n) + "_enabled", true);
             categoryEntries.add( new CategoryEntry (tag, regex, c, enabled));
         }
+        category.setCategoryEntries(categoryEntries);
     }
 
-    public static void storeCategories(LinkedList<CategoryEntry> categoryEntries) {
-        Preferences pref = Preferences.userRoot().node("CategoryEntries");
+    public static void storeCategory(Category category) {
+        Preferences pref = Preferences.userRoot().node("CategoryEntries" + category.getName());
         try {
             pref.clear();
         } catch (BackingStoreException ex) {
@@ -214,7 +229,7 @@ public class SettingsManager {
         }
         
         int n = 0;
-        for(CategoryEntry c: categoryEntries) {
+        for(CategoryEntry c: category.getCategoryEntries()) {
             pref.put(Integer.toString(n) + "_tag", c.getTag());
             pref.put(Integer.toString(n) + "_regex", c.getRegex());
             pref.putInt(Integer.toString(n) + "_color", c.getColor().getRGB());
@@ -256,16 +271,11 @@ public class SettingsManager {
     public static boolean getListInitState() {
         Preferences pref = Preferences.userRoot().node("Initialization");
         
-        return pref.getBoolean("FuzzDb", true);
+        return pref.getBoolean("FuzzDb", false);
     }
     
     public static void setListInitState(boolean b) {
         Preferences pref = Preferences.userRoot().node("Initialization");
-        try {
-            pref.clear();
-        } catch (BackingStoreException ex) {
-            Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
         pref.putBoolean("FuzzDb", b);
     }
 

@@ -19,7 +19,7 @@ package model;
 import burp.IHttpRequestResponse;
 import burp.IResponseInfo;
 import gui.categorizer.CategorizerManager;
-import gui.categorizer.ResponseCategory;
+import gui.categorizer.model.ResponseCategory;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.Serializable;

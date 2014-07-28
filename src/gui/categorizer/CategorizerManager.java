@@ -16,19 +16,21 @@
  */
 package gui.categorizer;
 
+import gui.categorizer.model.Category;
+import gui.categorizer.model.CategoryEntry;
+import gui.categorizer.model.ResponseCategory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import util.BurpCallbacks;
+import util.SettingsManager;
 
 /**
  *
@@ -62,12 +64,15 @@ public class CategorizerManager extends Observable {
     }
 
     private CategorizerUi categorizerManagerUi;
-    private HashMap<String, LinkedList<CategoryEntry>> staticCategories = new HashMap<String, LinkedList<CategoryEntry>>();
-
+    private LinkedList<Category> categories;
+    
     public CategorizerManager() {
-        categorizerManagerUi = new CategorizerUi(this);
+        categories = new LinkedList<Category>();
         
-        loadStaticCategories();
+        initFileCategories();
+        loadCategories();
+        
+        categorizerManagerUi = new CategorizerUi(this);
     }
     
     public CategorizerUi getCategorizerUi() {
@@ -79,35 +84,29 @@ public class CategorizerManager extends Observable {
     }
     
     
-    public LinkedList<CategoryEntry> getStaticList(String name) {
-        if (staticCategories.containsKey(name)) {
-            return staticCategories.get(name);
-        } else {
-            return null;
+    public Category getCategoryList(String name) {
+        for(Category c: categories) {
+            if (c.getName().equals(name)) {
+                return c;
+            }
         }
+        return null;
     }
     
-        
     public LinkedList<ResponseCategory> categorize(String input) {
-        LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
+        LinkedList<ResponseCategory> newCategories = new LinkedList<ResponseCategory>();
         
         if (input == null || input.length() <= 0) {
-            return categories;
+            return newCategories;
         }
     
-        for(CategoryEntry entry: categorizerManagerUi.getCategories()) {
-            categories.addAll(scanForRegex(entry, input));
-        }
-
-        for(Map.Entry entry: staticCategories.entrySet()) {
-            LinkedList<CategoryEntry> staticCategoriesEntry = (LinkedList<CategoryEntry>) entry.getValue();
-            
-            for(CategoryEntry e: staticCategoriesEntry) {
-                categories.addAll(scanForRegex(e, input));
+        for(Category c: categories) {
+            for(CategoryEntry entry: c.getCategoryEntries()) {
+                newCategories.addAll(scanForRegex(entry, input));
             }
-        }    
-        
-        return categories;
+        }
+      
+        return newCategories;
     }
 
     
@@ -125,16 +124,39 @@ public class CategorizerManager extends Observable {
         return categories;
     }
     
+    public void saveCategory(Category c) {
+        SettingsManager.storeCategory(c);
+    }
     
-    private void loadStaticCategories() {
+    private void loadCategories() {
+        LinkedList<String> categoryNames = new LinkedList<String>();
+        categoryNames.push("user");
+        categoryNames.push("error");
+        categoryNames.push("sqlerr");
+        
+        for (String categoryName: categoryNames) {
+            Category category = new Category(categoryName);
+            SettingsManager.restoreCategories(category);
+            categories.push(category);
+        }
+        
+    }
+    
+    private void initFileCategories() {
+        if (SettingsManager.getListInitState()) {
+            return;
+        }
+        
         List<StaticCategoriesIndexEntries> staticCategoriesIndex = new ArrayList<StaticCategoriesIndexEntries>();
         staticCategoriesIndex.add(new StaticCategoriesIndexEntries("errors.txt", "error"));
         staticCategoriesIndex.add(new StaticCategoriesIndexEntries("sqlerrors.txt", "sqlerr"));
         
-        LinkedList<CategoryEntry> staticCategoryList;
+        Category uc = new Category("user");
+        SettingsManager.storeCategory(uc);
         
         for(StaticCategoriesIndexEntries staticCategory: staticCategoriesIndex) {
-            staticCategoryList = new LinkedList<CategoryEntry>();
+            Category c = new Category(staticCategory.tagName);
+            LinkedList<CategoryEntry> staticCategoryList = new LinkedList<CategoryEntry>();
             InputStream is = getClass().getResourceAsStream("/resources/categories/" + staticCategory.getFileName());
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             
@@ -150,7 +172,8 @@ public class CategorizerManager extends Observable {
                 BurpCallbacks.getInstance().print(ex.toString());
             } 
      
-            staticCategories.put(staticCategory.getTagName(), staticCategoryList);
+            c.setCategoryEntries(staticCategoryList);
+            SettingsManager.storeCategory(c);
         }
     }
     

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gui.categorizer;
+package gui.categorizer.model;
 
 import java.awt.Color;
 

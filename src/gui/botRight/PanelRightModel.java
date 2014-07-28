@@ -17,7 +17,7 @@
 package gui.botRight;
 
 import gui.categorizer.CategorizerManager;
-import gui.categorizer.ResponseCategory;
+import gui.categorizer.model.ResponseCategory;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
