@@ -1,11 +1,70 @@
+<img src=z onerror=alert(document.domain)>
+https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-discovery.appspot.com/_ah/api#p/admin/reports_v1/
+
+-------------------
+
+- add categorizer / error indicators to normal requests?
+
+- panelleft: color scanned params?
+- panelright popup:
+  - attack vector
+  - categorizer / error details
+  - attack result: show popup with details - jump to issue when clicked?
+  - categorizer: show popup with details - jump to issue when clicked?
+  - result: add and show result in attackresult
+  - info: add and show result in categoryentry
+
+- export:
+  - copy paste csnc style
+  - interoperability style
+
+- implement file list scanner
+- implement existing file "fuzzer"
+
+- add version information on passive scanner? 
+
+
+
+-------------------
+
+
+
+- add additional window to burp responses:
+  - indicator: show a bit of error messages
+  - version: show versions
+- add param option: attack with sentinel
+- test and identify multipart problems
+- test and identify copy paste problems
+
+
+- always highlight parameter string?
+- scanning is pretty slow if original request is 30kb
+- for slow scanns: indicate which requests are scanned in toppanel
+- possible to color things in panelright
+- apply regex on categorizer takes very long. UI indicator or speedup?
+- quick attack: attack each parameter once, to try to identify params which have any influence on the output
+- does disable/enable relative sizes even work?
+  - make it apply all requests (also previous, not only new)
+- implement the "interesting" param
+  - on top on panelright?
+- follow scan option
+- show only "diff" of parameters in panelright? !!!
+- double sql detection -> aggregate
+
+-------------------
+
+- empty go: just send it again
+- HTTP 1.0 response without content-length -> nach body in hex
+
+- want from portswigger:
+  - send to sentinel should include text highlights
+  - store stuff in session
+  - if user selects text in repeater, it should be accessible from extension
+
 - A2 authentication
   - set session name
   - identify session id in non-usual places
   - session attacks
-  - 
-
-- integration in burp:
-  - button in FF "attack with sentinel" ?
 
 - Parameter Pollution
   - add arbitrary param
@@ -15,26 +74,39 @@
   - test if its type is really JSON?
 
 - standalone sentinel version
+  - fix params in testmessages not showing up
+  - create repeater implementation
 
 - lists:
   ? should be possible to add decoded string for attack lists (xss)
   - list entries are usually not encoded - need to encode if sent in GET?
+  - in GET - encode as + or %20?
   - or not?
 
-+ "add to sentinel" in panelright popup
 
-- attacklists "Test" and "Result" in panelright are "Null"
+- XSS placeholder in AttackList etc. ok?
+
 - make decoder indicator better (no string)
   - also in panelright (attack)
 - insert fucked up json delimiter on attackother };
-- export:
-  - copy paste csnc style
-  - interoperability style
-- allow multiple changeParam in HttpParam
-- remove changeparam from httpMessage.getReq()
-- create repeater implementation
+
+- allow multiple changeParam in HttpParam?
+- remove changeparam from httpMessage.getReq()?
+
 - remove old selections in PanelLeftPopup.decodeIt()
-- delete virtparam in panelleft
+- possibility to delete virtparam in panelleft for the user
+
+
+
+- fix sql2 attack? 1'' -> fail -> 1' || '
+  + updates sql with comments
+  - attack options for sql injection?
+  - lists; per db, per query
+  - export to sqlmap
+- do different sql attacks based on:
+  - replace
+  - insert right
+  - insert left?
 
 Overall:
 - generate report
@@ -47,7 +119,7 @@ Overall:
 - manually follow 302 with button
 
 Feature:
-+ fast diff two responses from panelright (to check difference between SQLi)
+
 - copy-paste should be colorful! (and working...)
 - implement session manager for burp
 
@@ -64,7 +136,7 @@ Todo CSNC:
 - make session ui more usable
   + remove a session
   - session from burp
-+ save/restore messages
+
 - color backgrounds of buttons according to vuln (red, yellow)
 ? make go button in table
 
@@ -79,7 +151,7 @@ Main usability features:
 - make color choosable
   - fix selection color
 - select part of response to indicate stuff
-+ implement html beautifier
+
 - color attack backgrounds
   - (new)
   - tested          green
@@ -105,20 +177,16 @@ Sunday test 0:
 Monday test 0:
 - row width für attack/retlen: automatisch berechnen (minimal)
 - make load time relative to initial?
-- XSS vuln should only check in body, not in header? (Location: blablabla&a=<p>"
 - when resizing bot split pane - how keep it for next requests?
 - burp: on parameters, only on click will combobox be available - make this too?
 - request: for ?a&b&c, abc are not names, but values!
 
+
 Internal test 0:
 - move vulns to params, not messages (to cleanup hasVulns in panelleftui)
-- integrate scan dialog into ui, not seperate window
-- omfg, redo attack shizzle
-  - PanelLeftTableModel: createChangeParam should NOT change original message
 
 
 Big features:
-  + diff between 2 window - highlighted only?
   - important param
   - generate overall report
   - only view tags/content/all
@@ -140,6 +208,51 @@ Questions:
   - invokelater for sendtosentinel?
 
 --------------------------------------------------------------------------------
+
++ fix report generator
++ nullpointerexception when network window is open
++ send dialog status is also not really useful
++ save sessions does not work :-(
++ move persistent identification to passive scanner!
+
++ panelright: rename "errors" to "error"
++ panelleft: remove host info
++ panelright: highlight "error": show error details (string)
+  + panelright: errors should be jumpable in panelright?
++ when scanning: clicking on paneltop resets selection
++ size when no content length = 0!! take real length
++ implement compass copy
++ categorizer display: colored buttons, empty one by default, increasing numbers
++ re-introduce original resend
++ fast diff two responses from panelright (to check difference between SQLi)
++ add + in positive length sizes again
++ remove "Attack with: SQL, XSS", as it is already with checkboxes
++ XSS vuln should only check in body, not in header? (Location: blablabla&a=<p>"
++ identify stored XSS with unique ID!
+
++ show insert position on panelleft
++ buttons on top(right) are broken (too width, right ones)
++ click in panelright while scan and it gets "reseted" (not possible to view messages)
++ panelright: mini-diff to previous?
++ rename panelright category "errors" to something meaningful (error? internal error?)
++ diff between 2 window - highlighted only?
++ save/restore messages
++ integrate scan dialog into ui, not seperate window
++ omfg, redo attack shizzle
+  + PanelLeftTableModel: createChangeParam should NOT change original message
+
++ fix cancel all
++ select all: do not select path's
++ reset also xss checkboxes
++ own button for insert payload
++ implement html beautifier
+
++ in-editor colored differences?
++ show relative sizes in panelleft
++ "add to sentinel" in panelright popup
++ attacklists "Test" and "Result" in panelright are "Null"
++ fix categorizer update in panelright?
+
 
 + should be possible to store and restore messages
 + make "options" popup menu in panel right and panel left
