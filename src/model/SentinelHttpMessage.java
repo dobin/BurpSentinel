@@ -146,7 +146,16 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
     @Override
     public void setResponse(byte[] message) {
         httpResponse = new SentinelHttpResponse(message);
+        notifyResponseContentChange();
     }
+    
+        
+    void notifyResponseContentChange() {
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
+
 
     @Override
     public String getComment() {

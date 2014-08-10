@@ -28,10 +28,13 @@ import util.Utility;
 
 /**
  *
+ * Observes:
+ * - httpMessages
+ * - Categorizer
+ * 
  * @author Dobin
  */
 public class PanelRightModel extends AbstractTableModel implements Observer {
-
     private LinkedList<SentinelHttpMessageAtk> messages;
     private PanelRightUi parent;
     
@@ -44,18 +47,15 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
     /*
      * We observe 2 things:
      * - httpmessages 
-     *   - currently ignored
+     *   - update httpmessage if orighttpmsg changes (size etc)
      * - categorizer
      *   - used to update the httpmessages if categories change
      */
     @Override
     public void update(Observable o, Object arg) {
-//        System.out.println("--- AAA");
-//        if (o.getClass().equals(SentinelHttpMessage.ObserveResult.ATTACKRESULT)) {
-//            System.out.println("--- BBB");
-//            this.fireTableDataChanged();
-//        }
         if (o.getClass().equals(CategorizerManager.class)) {
+            this.fireTableDataChanged();
+        } else {
             this.fireTableDataChanged();
         }
     }
@@ -246,6 +246,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         messages.add(httpMessage);
         httpMessage.setTableIndexAttack(messages.size() - 1);
         httpMessage.addObserver(this);
+        httpMessage.getParentHttpMessage().addObserver(this);
         
         this.fireTableDataChanged();
     }
