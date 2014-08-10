@@ -297,7 +297,7 @@ public class SettingsManager {
     
     public static InsertPositions restorePanelLeftOptionPosition() {
         Preferences pref = Preferences.userRoot().node("PanelLeftOptions");
-        String res = pref.get("InsertPosition", "REPLACE");
+        String res = pref.get("InsertPosition", "RIGHT");
         
         return InsertPositions.valueOf(res);
     }
