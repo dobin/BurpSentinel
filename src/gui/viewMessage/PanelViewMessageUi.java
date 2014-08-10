@@ -16,6 +16,7 @@
  */
 package gui.viewMessage;
 
+import gui.botRight.ClipboardCopyHelpers;
 import model.ResponseHighlight;
 import gui.session.SessionManager;
 import gui.session.SessionUser;
@@ -503,12 +504,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     public void c_copySmart() {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-        String s = "Request:\n";
-        s += httpMessage.getReq().getRequestStr();
-        s += "\n\nResponse:\n";
-        s += httpMessage.getRes().getResponseStr();
-        
-        StringSelection ss = new StringSelection(s);
+        StringSelection ss = new StringSelection(ClipboardCopyHelpers.copySmart(httpMessage));
         
         clipboard.setContents(ss, null);
     }
