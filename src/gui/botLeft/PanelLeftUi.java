@@ -18,11 +18,9 @@ package gui.botLeft;
 
 import attacks.AttackMain;
 import gui.SentinelMainUi;
-import gui.botRight.TableHeaderTooltip;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JComboBox;
@@ -381,6 +379,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         SettingsManager.storeTableDimensions(tableMessages, this);
 
         optionsPopup.storeUiPrefs();
+        ((PanelLeftInsertions)buttonPayload).storeUiPrefs();
     }
 
     public SentinelHttpMessage getOrigHttpMessage() {
