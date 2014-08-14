@@ -25,6 +25,7 @@ public class AttackMain {
     public enum AttackTypes  {
         XSS,
         SQL,
+        SQLE,
         OTHER,
         AUTHORISATION,
         ORIGINAL,

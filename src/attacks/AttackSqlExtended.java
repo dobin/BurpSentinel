@@ -16,12 +16,14 @@
  */
 package attacks;
 
+import gui.botLeft.PanelLeftInsertions;
 import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;
 import model.ResponseHighlight;
 import java.awt.Color;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
+import org.apache.commons.lang3.StringUtils;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
@@ -40,6 +42,8 @@ public class AttackSqlExtended extends AttackI {
     private String attackSqlInt(int state, String value) {
         String ret = "";
         
+        int val = Integer.parseInt(value);
+        
         switch (state) {
             case 0:
                 ret = value + "a";
@@ -48,7 +52,8 @@ public class AttackSqlExtended extends AttackI {
                 ret = value + "+1";
                 break;
             case 2:
-                ret = value + "+1-1";
+                String newValue = Integer.toString(val + 1);
+                ret = newValue + "-1";
         }
         
         return ret;
@@ -58,9 +63,11 @@ public class AttackSqlExtended extends AttackI {
     private String attackSqlStr(int state, String value) {
         String ret = "";
         
+        
+        
         // origstr: aaa
         switch(state) {
-            case 0:
+            case 0: // a'aa
                 ret = value.substring(0, 1) + "'" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
@@ -113,19 +120,24 @@ public class AttackSqlExtended extends AttackI {
     public boolean performNextAttack() {
         boolean doContinue = false;
         
+        String origParamValue = attackWorkEntry.attackHttpParam.getDecodedValue();
         String data;
-        if (/* str*/) {
-            data = attackSqlStr(state);
+        
+        // Overwrite insert position, as we will always overwrite here
+        attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;        
+        
+        if (StringUtils.isNumeric(origParamValue)) {
+            data = attackSqlInt(state, origParamValue);
             
-            if (state < atkSqlStrMax - 1) {
+            if (state < atkSqlIntMax) {
                 doContinue = true;
             } else {
                 doContinue = false;
             }
-        } else {
-            data = attackSqlInt(state);
+        } else {            
+            data = attackSqlStr(state, origParamValue);
             
-            if (state < atkSqlIntMax - 1) {
+            if (state < atkSqlStrMax) {
                 doContinue = true;
             } else {
                 doContinue = false;

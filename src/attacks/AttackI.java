@@ -109,6 +109,7 @@ public abstract class AttackI {
                 return null;
         }
 
+        // Apply changeparam
         newHttpMessage.getReq().setChangeParam(changeParam);
         boolean ret = newHttpMessage.getReq().applyChangeParam();
         if (ret == false) {
@@ -124,13 +125,11 @@ public abstract class AttackI {
 
                 // Dont do it if we already modified the session parameter
                 if (!sessionVarName.equals(changeParam.getName())) {
-//                BurpCallbacks.getInstance().print("Change session: " + sessionVarName + " " + sessionVarValue);
                     newHttpMessage.getReq().changeSession(sessionVarName, sessionVarValue);
                 }
             }
         }
-        
-        //BurpCallbacks.getInstance().print("\n\nAfter: \n" + newHttpMessage.getReq().getRequestStr());
+
         return newHttpMessage;
     }
     
