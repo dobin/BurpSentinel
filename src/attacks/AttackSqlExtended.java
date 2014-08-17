@@ -38,34 +38,58 @@ public class AttackSqlExtended extends AttackI {
 
     final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private int atkSqlIntMax = 2;
+    private final int atkSqlIntMax = 6;
     private String attackSqlInt(int state, String value) {
         String ret = "";
         
         int val = Integer.parseInt(value);
         
+        String newValue;
+        
         switch (state) {
+            // break test
             case 0:
-                ret = value + "a";
+                ret = value + "'%20 break";
                 break;
+                
+            // pure int based (no quotes)
+            // ID = INT
+            // select ... WHERE id = 1
             case 1:   
                 ret = value + "+1";
                 break;
-            case 2:
-                String newValue = Integer.toString(val + 1);
+            case 2:   
+                ret = value + "%2b1";
+                break;
+            case 3:
+                newValue = Integer.toString(val + 1);
                 ret = newValue + "-1";
+                break;
+                
+            // integer in db, but string in params
+            // ID = INT
+            // select ... WHERE id = '1'
+            case 4: // 1'+'1
+                ret = value + "'+'1";
+                break;    
+            case 5: // 1'%2b'1
+                ret = value + "'%2b'1";
+                break;
+            case 6: // 2'-'1
+                newValue = Integer.toString(val + 1);
+                ret = newValue + "'-'1";
+                break;    
         }
         
         return ret;
     }
 
-    private int atkSqlStrMax = 5;
+    private final int atkSqlStrMax = 5;
     private String attackSqlStr(int state, String value) {
         String ret = "";
         
-        
-        
         // origstr: aaa
+        // SELECT ... WHERE name = 'aaa'
         switch(state) {
             case 0: // a'aa
                 ret = value.substring(0, 1) + "'" + value.substring(1, value.length());
@@ -85,25 +109,19 @@ public class AttackSqlExtended extends AttackI {
             case 5: // a'/**/'aa
                 ret = value.substring(0, 1) + "'/**/'" + value.substring(1, value.length());
                 break;
+            case 6: // a/**/aa
+                ret = value.substring(0, 1) + "/**/" + value.substring(1, value.length());
+                break;
         }
-        
         
         return ret;
     }
     
-    /*
-        // INT SELECT exists
-        " OR 1=1",
-        " OR 1=2",
-        " OR 1=1 -- ",
-        " OR 1=1 #",
-        " OR 1=1 /*",
-        ") OR 1=1",
-        ") OR 1=2",
-        ") OR 1=1 -- ",
-        ") OR 1=1 #",
-        ") OR 1=1 /*",
-*/
+    private String attackSqlBoolean(String value) {
+        String ret = null;
+        
+        return ret;
+    }
 
     
      public AttackSqlExtended(AttackWorkEntry work) {
@@ -151,6 +169,8 @@ public class AttackSqlExtended extends AttackI {
             return false;
         }
         
+        analyzeResponse();
+        
         state++;
         return doContinue;
     }
@@ -158,6 +178,34 @@ public class AttackSqlExtended extends AttackI {
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
         return lastHttpMessage;
+    }
+    
+    private int responseOnErrorSizeChange = 0;
+    private void analyzeResponse() {
+        if (state == 0) {
+            // First request is the "generate error" request
+            int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
+            int newResponseSize = lastHttpMessage.getRes().getSize();
+            
+            responseOnErrorSizeChange = origResponseSize - newResponseSize;
+        } else {
+            // Check if first (test) request did produce a change
+            if (responseOnErrorSizeChange != 0) {
+                // Check if size differs now
+                int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
+                int newResponseSize = lastHttpMessage.getRes().getSize();
+                if (newResponseSize == origResponseSize) {
+                    // Same size as original request!
+                    AttackResult res = new AttackResult(
+                            AttackData.AttackType.INFO,
+                            "SQLE" + state,
+                            lastHttpMessage.getReq().getChangeParam(),
+                            true,
+                            "Same size as original request: " + origResponseSize);
+                    lastHttpMessage.addAttackResult(res);
+                }
+            }
+        }
     }
 
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
@@ -178,7 +226,7 @@ public class AttackSqlExtended extends AttackI {
         if (hasError) {
             AttackResult res = new AttackResult(
                     AttackData.AttackType.VULN, 
-                    "SQL" + state, 
+                    "SQLE" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     true,
                     "Error message: " + sqlResponseCategory.getIndicator());
@@ -189,7 +237,7 @@ public class AttackSqlExtended extends AttackI {
         } else {
             AttackResult res = new AttackResult(
                     AttackData.AttackType.NONE, 
-                    "SQL" + state, 
+                    "SQLE" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     false,
                     null);

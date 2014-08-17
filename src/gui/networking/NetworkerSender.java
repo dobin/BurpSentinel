@@ -23,6 +23,7 @@ import attacks.AttackMain;
 import attacks.AttackOriginal;
 import attacks.AttackPersistentXss;
 import attacks.AttackSql;
+import attacks.AttackSqlExtended;
 import attacks.AttackXss;
 import attacks.AttackXssLessThan;
 import model.SentinelHttpMessageAtk;
@@ -77,6 +78,9 @@ public class NetworkerSender {
                 break;
             case SQL:
                 attack = new AttackSql(work);
+                break;
+            case SQLE:
+                attack = new AttackSqlExtended(work);
                 break;
             case AUTHORISATION:
                 attack = new AttackAuthorisation(work);

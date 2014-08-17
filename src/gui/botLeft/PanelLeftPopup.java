@@ -149,6 +149,7 @@ public class PanelLeftPopup implements ActionListener {
             // Removed following two, as they are already available with checkboxes
 //            AttackMain.AttackTypes.SQL, 
 //            AttackMain.AttackTypes.XSS,
+            AttackMain.AttackTypes.SQLE,
             AttackMain.AttackTypes.XSSLESSTHAN,
             AttackMain.AttackTypes.OTHER,
             AttackMain.AttackTypes.AUTHORISATION,
