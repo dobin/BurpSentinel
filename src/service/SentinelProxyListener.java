@@ -19,6 +19,7 @@ package service;
 import burp.IInterceptedProxyMessage;
 import burp.IProxyListener;
 import gui.SentinelMainApi;
+import java.util.Arrays;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageOrig;
 import util.BurpCallbacks;
@@ -66,10 +67,8 @@ public class SentinelProxyListener implements IProxyListener {
     }
 
     private void sentinelCheck(IInterceptedProxyMessage message) {
-        SentinelHttpMessage msg = new SentinelHttpMessageOrig(message.getMessageInfo());
-
-        String url = msg.getReq().getUrl().toString();
-
+        String url = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(Arrays.copyOfRange(message.getMessageInfo().getRequest(), 0, 32));
+     
         if (url.startsWith("http://sentinel")) {
             if (url.contains("nextToRepeater")) {
                 next2Repeater = true;
