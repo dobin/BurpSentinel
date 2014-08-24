@@ -43,13 +43,16 @@ public class AttackSql extends AttackI {
         "%27",
         "%27%27",
         "%27%27%27",
-
+        
+        "\\'",
+        "\\'\\'",
+        "\\\"",
+        "\\\"\\\"",
+        
         "'-- ",
         "''-- ",
-        "'''-- ",
         "%27--%20",
         "%27%27--%20",
-        "%27%27%27--%20",
         
         "\"",
         "\"\"",
@@ -60,7 +63,6 @@ public class AttackSql extends AttackI {
         "\"\"-- ",
         "%22--%20",
         "%22%22--%20",
-
     };
     
      public AttackSql(AttackWorkEntry work) {
