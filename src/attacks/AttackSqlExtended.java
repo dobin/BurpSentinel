@@ -48,7 +48,7 @@ public class AttackSqlExtended extends AttackI {
         switch (state) {
             // break test
             case 0:
-                ret = value + "'%20 break";
+                ret = value + "'%20 BREAK";
                 break;
                 
             // pure int based (no quotes)
@@ -77,7 +77,9 @@ public class AttackSqlExtended extends AttackI {
             case 6: // 2'-'1
                 newValue = Integer.toString(val + 1);
                 ret = newValue + "'-'1";
-                break;    
+                break;
+            case 7: 
+                ret = "/**/" + value;
         }
         
         return ret;
@@ -90,8 +92,8 @@ public class AttackSqlExtended extends AttackI {
         // origstr: aaa
         // SELECT ... WHERE name = 'aaa'
         switch(state) {
-            case 0: // a'aa
-                ret = value.substring(0, 1) + "'" + value.substring(1, value.length());
+            case 0: // a'BREAK"aa
+                ret = value.substring(0, 1) + "'BREAK\"" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
                 ret = value.substring(0, 1) + "'||'" + value.substring(1, value.length());
@@ -108,8 +110,8 @@ public class AttackSqlExtended extends AttackI {
             case 5: // a'/**/'aa
                 ret = value.substring(0, 1) + "'/**/'" + value.substring(1, value.length());
                 break;
-            case 6: // a/**/aa
-                ret = value.substring(0, 1) + "/**/" + value.substring(1, value.length());
+            case 6: // /**/aaa
+                ret = "/**/" + value;
                 break;
         }
         
