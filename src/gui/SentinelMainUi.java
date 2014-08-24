@@ -42,7 +42,9 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
 
     // A list of Panels of the added HttpMessages
     private LinkedList<PanelBotUi> panelBotUiList = new LinkedList<PanelBotUi>();
-    private ModelRoot modelRoot;
+    private int lastMessageNr = 0;
+    
+    private final ModelRoot modelRoot;
     
     static void setMainUi(SentinelMainUi ui) {
         mainUi = ui;
@@ -55,6 +57,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     
     /**
      * Creates new form MainGuiFrame
+     * @param modelRoot
      */
     public SentinelMainUi(ModelRoot modelRoot) {
         SentinelMainUi.setMainUi(this);
@@ -112,8 +115,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         panelBotUiList = new LinkedList<PanelBotUi>();
     }
     
-
-    private int lastMessageNr = 0;
     
     public void addNewMessage(SentinelHttpMessageOrig myHttpMessage) {
         // Save ui preferences
@@ -181,7 +182,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     /*
      * Init testcase messages
      */
-    private void initTestMessages() {
+    public void initTestMessages() {
         SentinelMainApi.getInstance().initTestMessages();
     }
 
@@ -189,6 +190,11 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
         return panelTopUi;
     }
     
+    private void resetAll() {
+        panelTopUi.reset();
+        panelBotUiList = new LinkedList<PanelBotUi>();
+        panelCard.removeAll();
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -263,12 +269,7 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        //this.dispose();
-        //initComponents();
-        //init();
-        panelTopUi.reset();
-        panelBotUiList = new LinkedList<PanelBotUi>();
-        panelCard.removeAll();
+        resetAll();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -312,7 +313,6 @@ public class SentinelMainUi extends javax.swing.JPanel implements ITab, Observer
     public Component getUiComponent() {
         return this;
     }
-
 
 
 }

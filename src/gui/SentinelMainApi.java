@@ -132,22 +132,24 @@ public class SentinelMainApi {
      * Init testcase messages
      */
     public void initTestMessages() {
+        String dest = "www.dobin.ch";
+        
         String a = "";
         a += "GET /vulnerable/test1.php?testparam=test%27 HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
         a += "\r\n";
-        SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
+        SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
 
 
         a = "";
         a += "GET /vulnerable/test1.php?abcdefgh HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
@@ -155,13 +157,13 @@ public class SentinelMainApi {
         a += "Accept-Encoding: gzip, deflate\r\n";
         a += "Proxy-Connection: keep-alive\r\n";
         a += "\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
 
 
         a = "";
         a += "POST /vulnerable/test2.php HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
@@ -172,13 +174,13 @@ public class SentinelMainApi {
         a += "Content-Length: 26\r\n";
         a += "\r\n";
         a += "bla=blaaa&testparam=teeest";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
 
 
         a = "";
         a += "GET /vulnerable/test3.php?name=test1&testparam=test2 HTTP/1.1\r\n";
-        a += "Host: www.dobin.ch\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
@@ -186,13 +188,13 @@ public class SentinelMainApi {
         a += "Proxy-Connection: keep-alive\r\n";
         a += "Cookie: jsessionid=useraaaa; bbbbb=ddddd\r\n";
         a += "\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "www.dobin.ch", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
 
 
         a = "";
-        a += "POST http://192.168.140.134/vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
-        a += "Host: 192.168.140.134\r\n";
+        a += "POST /vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
@@ -202,13 +204,13 @@ public class SentinelMainApi {
         a += "\r\n";
         a += "lll1=aaa1\r\n";
         a += "lll2=aaa2\r\n";
-        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
 
 
         a = "";
-        a += "POST http://192.168.140.134/vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
-        a += "Host: 192.168.140.134\r\n";
+        a += "POST /vulnerable/testing.php?name=test1&testparam=&aaa= HTTP/1.1\r\n";
+        a += "Host: " + dest + "\r\n";
         a += "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0\r\n";
         a += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n";
         a += "Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3\r\n";
@@ -239,7 +241,7 @@ public class SentinelMainApi {
         a += "Snb5\r\n";
         a += "-----------------------------1645864822313206347576655232\r\n";
 
-        httpMessage = new SentinelHttpMessageOrig(a, "192.168.140.134", 80, false);
+        httpMessage = new SentinelHttpMessageOrig(a, dest, 80, false);
         addNewMessage(httpMessage);
     }
 

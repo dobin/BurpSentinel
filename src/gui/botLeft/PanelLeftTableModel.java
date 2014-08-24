@@ -31,8 +31,8 @@ import util.BurpCallbacks;
 /**
  * The table model for panel left.
  * 
- * This also acts as model for the params of the httpmessage a little.
- * 
+ * Observes:
+ *   HttpMessage for changes. Will update its content when change is observed.
  * 
  * @author unreal
  */
@@ -43,7 +43,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     // the table data itself 
     //   rows in a linked list
     //   list entry object data are columns
-    private LinkedList<PanelLeftTableUIEntry> uiEntries = new LinkedList<PanelLeftTableUIEntry>();
+    private final LinkedList<PanelLeftTableUIEntry> uiEntries = new LinkedList<PanelLeftTableUIEntry>();
 
     public PanelLeftTableModel() {
     }
@@ -52,7 +52,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     @Override
     public boolean isCellEditable(int row, int column) {
         // For checkboxes
-        if (column == 3 || column == 4 || column == 5) {
+        if (column == 3 || column == 4 || column == 5 || column == 6) {
             return true;
         }
         
@@ -77,7 +77,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     @Override
     public int getColumnCount() {
-        return 6;
+        return 7;
     }
     
 
@@ -96,7 +96,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return Boolean.class;
             case 4: // SQL
                 return Boolean.class;
-            case 5: // Other
+            case 5: // SQLE
+                return Boolean.class;
+            case 6: // Other
                 return Boolean.class;
 
             default:
@@ -120,6 +122,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 4:
                 return "SQL";
             case 5:
+                return "SQLE";
+            case 6:
                 return "Misc";
 
             default:
@@ -138,6 +142,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 uiEntries.get(row).isSqlEnabled = !uiEntries.get(row).isSqlEnabled;
                 break;
             case 5:
+                uiEntries.get(row).isSqleEnabled = !uiEntries.get(row).isSqleEnabled;
+                break;
+            case 6:
                 uiEntries.get(row).isOtherEnabled = !uiEntries.get(row).isOtherEnabled;
                 break;
         }
@@ -160,6 +167,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 4:
                 return uiEntries.get(rowIndex).isSqlEnabled;
             case 5:
+                return uiEntries.get(rowIndex).isSqleEnabled;
+            case 6:
                 return uiEntries.get(rowIndex).isOtherEnabled;
             default:
                 return "";
@@ -219,6 +228,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             if (entry.isSqlEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.SQL, null);
             }
+            
+            if (entry.isSqleEnabled) {
+                parent.attackSelectedParam(param, AttackMain.AttackTypes.SQLE, null);
+            }
 
             if (entry.isOtherEnabled) {
                 parent.attackSelectedParam(param, AttackMain.AttackTypes.OTHER, null);
@@ -247,6 +260,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                     entry.isSqlEnabled = ! entry.isSqlEnabled;
                     break;
                 case 5:
+                    entry.isSqleEnabled = ! entry.isSqleEnabled;
+                    break;
+                case 6:
                     entry.isOtherEnabled = ! entry.isOtherEnabled;
                     break;
             }
@@ -270,6 +286,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                     entry.isSqlEnabled = true;
                     break;
                 case 5:
+                    entry.isSqleEnabled = true;
+                    break;
+                case 6:
                     entry.isOtherEnabled = true;
                     break;
             }
@@ -288,6 +307,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         for(PanelLeftTableUIEntry entry: uiEntries) {
             entry.isXssEnabled = false;
             entry.isSqlEnabled = false;
+            entry.isSqleEnabled = false;
             entry.isOtherEnabled = false;
 
             entry.isAuthEnabled = false;

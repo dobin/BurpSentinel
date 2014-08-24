@@ -32,7 +32,6 @@ import util.ConnectionTimeoutException;
  * @author unreal
  */
 public class AttackSqlExtended extends AttackI {
-
     private int state = 0;
     private SentinelHttpMessageAtk lastHttpMessage = null;
 
@@ -182,6 +181,8 @@ public class AttackSqlExtended extends AttackI {
     
     private int responseOnErrorSizeChange = 0;
     private void analyzeResponse() {
+        
+        // Test: Response size
         if (state == 0) {
             // First request is the "generate error" request
             int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();

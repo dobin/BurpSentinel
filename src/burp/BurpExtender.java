@@ -56,7 +56,7 @@ public class BurpExtender implements IExtensionStateListener {
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void run() {
+            public void run() {                
                 // Init Burp Helper functions
                 BurpCallbacks.getInstance().init(mCallbacks);
                 
@@ -84,14 +84,16 @@ public class BurpExtender implements IExtensionStateListener {
                 sentinelMenuItem = new CustomMenuItem(sentinelApi);
                 //replayerMenuItem = new CustomMenuItem(replayerMain);
                 
-                callbacks.registerMenuItem("Send to sentinel", sentinelMenuItem);
+                callbacks.registerMenuItem("Send to Sentinel", sentinelMenuItem);
+                ///callbacks.registerContextMenuFactory(null);
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 callbacks.registerScannerCheck(sentinelApi.getPassiveScanner());
                 //callbacks.registerMessageEditorTabFactory(sentinelApi.getEditorFactoryInfo());
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.4 - 01.06.2014");
+                sentinelMainUi.initTestMessages();
                 
+                BurpCallbacks.getInstance().print("Sentinel v0.5 - August 2014");
             }
         });
     }

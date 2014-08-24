@@ -35,21 +35,22 @@ import model.SentinelHttpParam;
 import util.SettingsManager;
 
 /**
- *
+ * UI Element of panel left
+ * 
  * @author unreal
  */
 public class PanelLeftUi extends javax.swing.JPanel {
 
     private PanelBotUi panelParent;
     private SentinelHttpMessageOrig origHttpMessage;
-    private PanelLeftTableModel tableModel;
-    private PanelLeftComboBoxModel sessionComboBoxModel;
-    private JComboBox comboBoxSession;
-    private PanelLeftPopup paramPopup;
     private int selectedRow = -1;
-    private PanelLeftOptions optionsPopup;
-    //private PanelLeftInsertions insertionsPopup;
-    private PopupTableHeaderLeft popupTableHeaderLeft;
+    
+    private final PanelLeftTableModel tableModel;
+    private final PanelLeftComboBoxModel sessionComboBoxModel;
+    private final JComboBox comboBoxSession;
+    private final PanelLeftPopup paramPopup;
+    private final PanelLeftOptions optionsPopup;
+    private final PopupTableHeaderLeft popupTableHeaderLeft;
 
     /**
      * Creates new form RequestConfigForm
@@ -62,7 +63,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
 
         initComponents();
 
-        int width = 48;
+        int width = 42;
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
         tableMessages.getColumnModel().getColumn(0).setMinWidth(64);
 
@@ -72,6 +73,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
         tableMessages.getColumnModel().getColumn(4).setMinWidth(width);
         tableMessages.getColumnModel().getColumn(5).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(5).setMinWidth(width);
+        tableMessages.getColumnModel().getColumn(6).setMaxWidth(width);
+        tableMessages.getColumnModel().getColumn(6).setMinWidth(width);
 
 
         tableMessages.setAutoCreateRowSorter(true);
@@ -146,12 +149,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
-
-        //textfieldUrl.setText(message.getReq().getUrl().toString());
-/*        textfieldUrl.setText(message.getReq().getUrl().getHost());
-        textfieldUrl.setToolTipText(message.getReq().getUrl().toString());
-        textfieldUrl.setBackground(Color.lightGray);
-        textfieldUrl.setCaretPosition(0);*/
     }
 
     /*
