@@ -34,35 +34,32 @@ public class AttackSql extends AttackI {
     private int state = 0;
     private SentinelHttpMessageAtk lastHttpMessage = null;
 
-    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
+    private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private String[] attackDataSql = {
-        "'",
-        "''",
-        "'''",
-        "%27",
-        "%27%27",
-        "%27%27%27",
+    private final String[] attackDataSql = {
+        // Break
+        "'%27",
+        "\"%22",
         
-        "\\'",
-        "\\'\\'",
-        "\\\"",
-        "\\\"\\\"",
+        // Should return Original Value - variant 1
+        " OR 1=2",
+        "' OR '1'='2",
+        "\" OR \"1\"=\"2",
+        "/**/",
         
-        "'-- ",
-        "''-- ",
-        "%27--%20",
-        "%27%27--%20",
+        "%20OR%201=2",
+        "%27%20OR%20%271%27=%272",
+        "%22%20OR%20%221%22=%222",
+        "%2f%2a%2a%2f",  
+
+        // Should return original value - variant 2
+        ") OR (1=2",
+        "') OR ('1'='2",
+        "\") OR (\"1\"=\"2",
         
-        "\"",
-        "\"\"",
-        "%22",
-        "%22%22",
-        
-        "\"-- ",
-        "\"\"-- ",
-        "%22--%20",
-        "%22%22--%20",
+        "%28%20OR%20%281=2",
+        "%27%28%20OR%20%28%271%27=%272",
+        "%22%28%20OR%20%28%221%22=%222",        
     };
     
      public AttackSql(AttackWorkEntry work) {
