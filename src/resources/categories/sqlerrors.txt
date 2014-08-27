@@ -60,3 +60,5 @@ SQLServer JDBC Driver
 java.sql.SQLException:
 [SQLServer JDBC Driver]
 [SQLServer]
+Unexpected end of command in statement
+Unexpected token:
