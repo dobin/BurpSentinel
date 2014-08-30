@@ -37,7 +37,7 @@ public class AttackSqlExtended extends AttackI {
 
     final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private final int atkSqlIntMax = 6;
+    private final int atkSqlIntMax = 5;
     private String attackSqlInt(int state, String value) {
         String ret = "";
         
@@ -55,31 +55,25 @@ public class AttackSqlExtended extends AttackI {
             // ID = INT
             // select ... WHERE id = 1
             case 1:   
-                ret = value + "+1";
+                ret = value + "+1-1";
                 break;
             case 2:   
-                ret = value + "%2b1";
-                break;
-            case 3:
-                newValue = Integer.toString(val + 1);
-                ret = newValue + "-1";
+                ret = value + "%2b1-1";
                 break;
                 
             // integer in db, but string in params
             // ID = INT
             // select ... WHERE id = '1'
-            case 4: // 1'+'1
-                ret = value + "'+'1";
-                break;    
-            case 5: // 1'%2b'1
-                ret = value + "'%2b'1";
-                break;
-            case 6: // 2'-'1
+            case 3: // '2'
                 newValue = Integer.toString(val + 1);
-                ret = newValue + "'-'1";
+                ret = newValue + "2";
+                break; 
+            case 4: // 
+                ret = value + "' + 0 + '0";
                 break;
-            case 7: 
-                ret = "/**/" + value;
+            case 5: // 
+                ret = value + "'%20%2b%200%20+%20'0";
+                break;
         }
         
         return ret;
@@ -96,21 +90,18 @@ public class AttackSqlExtended extends AttackI {
                 ret = value.substring(0, 1) + "'BREAK\"" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
-                ret = value.substring(0, 1) + "'||'" + value.substring(1, value.length());
+                ret = value.substring(0, 1) + "' || '" + value.substring(1, value.length());
                 break;
-            case 2: // concat('a', 'aa')
-                ret = "concat('" + value.substring(0, 1) + "', '" + value.substring(1, value.length()) + "')";
+            case 2: // a' + 'aa
+                ret = value.substring(0, 1) + "' + '" + value.substring(1, value.length());
                 break;
-            case 3: // a'+'aa
-                ret = value.substring(0, 1) + "'+'" + value.substring(1, value.length());
+            case 3: // a'%20%2b%20'aa
+                ret = value.substring(0, 1) + "'%20%2b%20'" + value.substring(1, value.length());
                 break;
-            case 4: // a'%2b'aa
-                ret = value.substring(0, 1) + "'%2b'" + value.substring(1, value.length());
+            case 4: // a' 'aa
+                ret = value.substring(0, 1) + "' '" + value.substring(1, value.length());
                 break;
-            case 5: // a'/**/'aa
-                ret = value.substring(0, 1) + "'/**/'" + value.substring(1, value.length());
-                break;
-            case 6: // /**/aaa
+            case 5: // /**/aaa
                 ret = "/**/" + value;
                 break;
         }
@@ -166,6 +157,7 @@ public class AttackSqlExtended extends AttackI {
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
+            BurpCallbacks.getInstance().print("Connection timeout");
             state++;
             return false;
         }

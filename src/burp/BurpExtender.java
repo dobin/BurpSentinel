@@ -91,7 +91,7 @@ public class BurpExtender implements IExtensionStateListener {
                 //callbacks.registerMessageEditorTabFactory(sentinelApi.getEditorFactoryInfo());
                 //callbacks.registerMenuItem("Send to replayer", replayerMenuItem);
                 
-                sentinelMainUi.initTestMessages();
+                //sentinelMainUi.initTestMessages();
                 
                 BurpCallbacks.getInstance().print("Sentinel v0.5 - August 2014");
             }

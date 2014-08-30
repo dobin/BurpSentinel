@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import gui.botLeft.PanelLeftInsertions;
 import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;
 import model.ResponseHighlight;
@@ -78,9 +79,13 @@ public class AttackSql extends AttackI {
         
         String data = attackDataSql[state];
         
+        // Overwrite insert position, as we will always append
+        attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;     
+        
         try {
             SentinelHttpMessage httpMessage = attack(data);
         } catch (ConnectionTimeoutException ex) {
+            BurpCallbacks.getInstance().print("Connection timeout");
             state++;
             return false;
         }
