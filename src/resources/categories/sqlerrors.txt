@@ -62,3 +62,18 @@ java.sql.SQLException:
 [SQLServer]
 Unexpected end of command in statement
 Unexpected token:
+ODBC Microsoft Access Driver
+ODBC SQL Server Driver
+OLE DB Provider for ODBC Drivers
+Syntax error or access violation
+java.sql.SQLException:
+PostgreSQL query failed: ERROR: parser:
+XPathException
+Warning: SimpleXMLElement::xpath():
+supplied argument is not a valid ldap
+DB2 SQL error:
+Dynamic SQL Error
+Sybase message:
+Unclosed quotation mark after the character string
+error '80040e14'" in data and "Incorrect syntax near
+ORA-
