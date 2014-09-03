@@ -77,3 +77,4 @@ Sybase message:
 Unclosed quotation mark after the character string
 error '80040e14'" in data and "Incorrect syntax near
 ORA-
+Warning: mysql_fetch_array()

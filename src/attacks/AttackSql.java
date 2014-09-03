@@ -43,24 +43,24 @@ public class AttackSql extends AttackI {
         "\"%22",
         
         // Should return Original Value - variant 1
-        " OR 1=2",
-        "' OR '1'='2",
-        "\" OR \"1\"=\"2",
+        " OR 41=42",
+        "' OR '41'='42",
+        "\" OR \"41\"=\"42",
         "/**/",
         
-        "%20OR%201=2",
-        "%27%20OR%20%271%27=%272",
-        "%22%20OR%20%221%22=%222",
+        "%20OR%2041=42",
+        "%27%20OR%20%2741%27=%2742",
+        "%22%20OR%20%2241%22=%2242",
         "%2f%2a%2a%2f",  
 
         // Should return original value - variant 2
-        ") OR (1=2",
-        "') OR ('1'='2",
-        "\") OR (\"1\"=\"2",
+        ") OR (41=42",
+        "') OR ('41'='42",
+        "\") OR (\"41\"=\"42",
         
-        "%28%20OR%20%281=2",
-        "%27%28%20OR%20%28%271%27=%272",
-        "%22%28%20OR%20%28%221%22=%222",        
+        "%28%20OR%20%2841=42",
+        "%27%28%20OR%20%28%2741%27=%2742",
+        "%22%28%20OR%20%28%2241%22=%2242",        
     };
     
      public AttackSql(AttackWorkEntry work) {
@@ -96,6 +96,9 @@ public class AttackSql extends AttackI {
             doContinue = false;
         }
         
+        analyzeResponse();
+
+        
         state++;
         return doContinue;
     }
@@ -105,6 +108,37 @@ public class AttackSql extends AttackI {
         return lastHttpMessage;
     }
 
+        
+    private int responseOnErrorSizeChange = 0;
+    private void analyzeResponse() {
+        
+        // Test: Response size
+        if (state == 0) {
+            // First request is the "generate error" request
+            int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
+            int newResponseSize = lastHttpMessage.getRes().getSize();
+            
+            responseOnErrorSizeChange = origResponseSize - newResponseSize;
+        } else {
+            // Check if first (test) request did produce a change
+            if (responseOnErrorSizeChange != 0) {
+                // Check if size differs now
+                int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
+                int newResponseSize = lastHttpMessage.getRes().getSize();
+                if (newResponseSize == origResponseSize) {
+                    // Same size as original request!
+                    AttackResult res = new AttackResult(
+                            AttackData.AttackType.INFO,
+                            "SQLE" + state,
+                            lastHttpMessage.getReq().getChangeParam(),
+                            true,
+                            "Same size as original request: " + origResponseSize);
+                    lastHttpMessage.addAttackResult(res);
+                }
+            }
+        }
+    }
+    
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
         lastHttpMessage = httpMessage;

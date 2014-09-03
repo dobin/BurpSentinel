@@ -37,7 +37,7 @@ public class AttackSqlExtended extends AttackI {
 
     final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private final int atkSqlIntMax = 5;
+    private final int atkSqlIntMax = 4;
     private String attackSqlInt(int state, String value) {
         String ret = "";
         
@@ -64,15 +64,11 @@ public class AttackSqlExtended extends AttackI {
             // integer in db, but string in params
             // ID = INT
             // select ... WHERE id = '1'
-            case 3: // '2'
-                newValue = Integer.toString(val + 1);
-                ret = newValue + "2";
-                break; 
             case 4: // 
                 ret = value + "' + 0 + '0";
                 break;
             case 5: // 
-                ret = value + "'%20%2b%200%20+%20'0";
+                ret = value + "'%20%2b%200%20%2b%20'0";
                 break;
         }
         
@@ -90,10 +86,10 @@ public class AttackSqlExtended extends AttackI {
                 ret = value.substring(0, 1) + "'BREAK\"" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
-                ret = value.substring(0, 1) + "' || '" + value.substring(1, value.length());
+                ret = value.substring(0, 1) + "'||'" + value.substring(1, value.length());
                 break;
             case 2: // a' + 'aa
-                ret = value.substring(0, 1) + "' + '" + value.substring(1, value.length());
+                ret = value.substring(0, 1) + "'+'" + value.substring(1, value.length());
                 break;
             case 3: // a'%20%2b%20'aa
                 ret = value.substring(0, 1) + "'%20%2b%20'" + value.substring(1, value.length());
@@ -101,7 +97,10 @@ public class AttackSqlExtended extends AttackI {
             case 4: // a' 'aa
                 ret = value.substring(0, 1) + "' '" + value.substring(1, value.length());
                 break;
-            case 5: // /**/aaa
+            case 5: // a'%20'aa
+                ret = value.substring(0, 1) + "'%20'" + value.substring(1, value.length());
+                break;
+            case 6: // /**/aaa
                 ret = "/**/" + value;
                 break;
         }
