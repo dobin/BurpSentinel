@@ -37,18 +37,14 @@ public class AttackSqlExtended extends AttackI {
 
     final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
-    private final int atkSqlIntMax = 4;
+    private final int attackSqlIntSize = 3;
     private String attackSqlInt(int state, String value) {
         String ret = "";
-        
-        int val = Integer.parseInt(value);
-        
-        String newValue;
         
         switch (state) {
             // break test
             case 0:
-                ret = value + "'%20 BREAK";
+                ret = value + "'%20BREAK";
                 break;
                 
             // pure int based (no quotes)
@@ -57,25 +53,19 @@ public class AttackSqlExtended extends AttackI {
             case 1:   
                 ret = value + "+1-1";
                 break;
-            case 2:   
-                ret = value + "%2b1-1";
-                break;
                 
             // integer in db, but string in params
             // ID = INT
             // select ... WHERE id = '1'
-            case 4: // 
+            case 2: // 
                 ret = value + "' + 0 + '0";
-                break;
-            case 5: // 
-                ret = value + "'%20%2b%200%20%2b%20'0";
                 break;
         }
         
         return ret;
     }
 
-    private final int atkSqlStrMax = 5;
+    private final int attackSqlStrSize = 5;
     private String attackSqlStr(int state, String value) {
         String ret = "";
         
@@ -86,21 +76,15 @@ public class AttackSqlExtended extends AttackI {
                 ret = value.substring(0, 1) + "'BREAK\"" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
-                ret = value.substring(0, 1) + "'||'" + value.substring(1, value.length());
+                ret = value.substring(0, 1) + "' || '" + value.substring(1, value.length());
                 break;
             case 2: // a' + 'aa
-                ret = value.substring(0, 1) + "'+'" + value.substring(1, value.length());
+                ret = value.substring(0, 1) + "' + '" + value.substring(1, value.length());
                 break;
-            case 3: // a'%20%2b%20'aa
-                ret = value.substring(0, 1) + "'%20%2b%20'" + value.substring(1, value.length());
-                break;
-            case 4: // a' 'aa
+            case 3: // a' 'aa
                 ret = value.substring(0, 1) + "' '" + value.substring(1, value.length());
                 break;
-            case 5: // a'%20'aa
-                ret = value.substring(0, 1) + "'%20'" + value.substring(1, value.length());
-                break;
-            case 6: // /**/aaa
+            case 4: // /**/aaa
                 ret = "/**/" + value;
                 break;
         }
@@ -108,12 +92,95 @@ public class AttackSqlExtended extends AttackI {
         return ret;
     }
     
-    private String attackSqlBoolean(String value) {
-        String ret = null;
-        
-        return ret;
-    }
+    private boolean doContinue = false;
+    
+    // return attack string
+    // Also sets "doContinue"
+    // Oh my god this is ugly
+    private String getDataInt(AttackWorkEntry attackWorkEntry, String data) {
+        boolean onlyUrlencoded;
+        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
+                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
+        {
+            onlyUrlencoded = true;
+        } else {
+            onlyUrlencoded = false;
+        }
 
+        if (onlyUrlencoded) {
+            data = attackSqlInt(state, data);
+            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                
+            if (state < attackSqlIntSize - 1) {
+                doContinue = true;
+            } else {
+                doContinue = false;
+            }
+        } else {
+            if (state < attackSqlIntSize) {                
+            data = attackSqlInt(state, data);
+                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            
+                doContinue = true;
+            } else {
+                int newState = state - attackSqlIntSize;
+                            
+                data = attackSqlInt(newState, data);
+                
+                if (newState < attackSqlIntSize - 1) {
+                    doContinue = true;
+                } else {
+                    doContinue = false;
+                }
+            }
+        }
+        
+        return data;
+    }
+    
+        // return attack string
+    // Also sets "doContinue"
+    // Oh my god this is ugly
+    private String getDataStr(AttackWorkEntry attackWorkEntry, String data) {
+        boolean onlyUrlencoded;
+        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
+                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
+        {
+            onlyUrlencoded = true;
+        } else {
+            onlyUrlencoded = false;
+        }
+
+        if (onlyUrlencoded) {
+            data = attackSqlStr(state, data);
+            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                
+            if (state < attackSqlStrSize - 1) {
+                doContinue = true;
+            } else {
+                doContinue = false;
+            }
+        } else {
+            if (state < attackSqlStrSize) {                
+                data = attackSqlStr(state, data);
+                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            
+                doContinue = true;
+            } else {
+                int newState = state - attackSqlStrSize;
+                            
+                data = attackSqlStr(newState, data);
+                
+                if (newState < attackSqlStrSize - 1) {
+                    doContinue = true;
+                } else {
+                    doContinue = false;
+                }
+            }
+        }
+        
+        return data;
+    }
     
      public AttackSqlExtended(AttackWorkEntry work) {
         super(work);
@@ -126,9 +193,7 @@ public class AttackSqlExtended extends AttackI {
     }
      
     @Override
-    public boolean performNextAttack() {
-        boolean doContinue = false;
-        
+    public boolean performNextAttack() {        
         String origParamValue = attackWorkEntry.attackHttpParam.getDecodedValue();
         String data;
         
@@ -136,21 +201,9 @@ public class AttackSqlExtended extends AttackI {
         attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;        
         
         if (StringUtils.isNumeric(origParamValue)) {
-            data = attackSqlInt(state, origParamValue);
-            
-            if (state < atkSqlIntMax) {
-                doContinue = true;
-            } else {
-                doContinue = false;
-            }
+            data = getDataInt(attackWorkEntry, origParamValue);
         } else {            
-            data = attackSqlStr(state, origParamValue);
-            
-            if (state < atkSqlStrMax) {
-                doContinue = true;
-            } else {
-                doContinue = false;
-            }
+            data = getDataStr(attackWorkEntry, origParamValue);
         }
         
         try {

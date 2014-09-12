@@ -33,34 +33,25 @@ import util.ConnectionTimeoutException;
 public class AttackSql extends AttackI {
 
     private int state = 0;
+    private boolean doContinue = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
 
     private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
     private final String[] attackDataSql = {
         // Break
-        "'%27",
-        "\"%22",
+        "\"'BREAK",
         
         // Should return Original Value - variant 1
         " OR 41=42",
         "' OR '41'='42",
         "\" OR \"41\"=\"42",
         "/**/",
-        
-        "%20OR%2041=42",
-        "%27%20OR%20%2741%27=%2742",
-        "%22%20OR%20%2241%22=%2242",
-        "%2f%2a%2a%2f",  
 
         // Should return original value - variant 2
         ") OR (41=42",
         "') OR ('41'='42",
-        "\") OR (\"41\"=\"42",
-        
-        "%28%20OR%20%2841=42",
-        "%27%28%20OR%20%28%2741%27=%2742",
-        "%22%28%20OR%20%28%2241%22=%2242",        
+        "\") OR (\"41\"=\"42",       
     };
     
      public AttackSql(AttackWorkEntry work) {
@@ -72,15 +63,62 @@ public class AttackSql extends AttackI {
     public boolean init() {
         return true;
     }
-     
+    
+    // return attack string
+    // Also sets "doContinue"
+    // Oh my god this is ugly
+    private String getData(AttackWorkEntry attackWorkEntry) {
+        String data;
+
+        boolean onlyUrlencoded;
+        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
+                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
+        {
+            onlyUrlencoded = true;
+        } else {
+            onlyUrlencoded = false;
+        }
+
+        if (onlyUrlencoded) {
+            data = attackDataSql[state];
+            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                
+            if (state < attackDataSql.length - 1) {
+                doContinue = true;
+            } else {
+                doContinue = false;
+            }
+        } else {
+            if (state < attackDataSql.length) {                
+                data = attackDataSql[state];
+                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            
+                doContinue = true;
+            } else {
+                int newState = state - attackDataSql.length;
+                            
+                data = attackDataSql[newState];
+                
+                if (newState < attackDataSql.length - 1) {
+                    doContinue = true;
+                } else {
+                    doContinue = false;
+                }
+            }
+        }
+        
+        return data;
+    }
+    
+    
     @Override
     public boolean performNextAttack() {
-        boolean doContinue = false;
-        
-        String data = attackDataSql[state];
+        String data;
         
         // Overwrite insert position, as we will always append
         attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;     
+        
+        data = getData(attackWorkEntry);
         
         try {
             SentinelHttpMessage httpMessage = attack(data);
@@ -89,15 +127,8 @@ public class AttackSql extends AttackI {
             state++;
             return false;
         }
-        
-        if (state < attackDataSql.length - 1) {
-            doContinue = true;
-        } else {
-            doContinue = false;
-        }
-        
-        analyzeResponse();
 
+        analyzeResponse();
         
         state++;
         return doContinue;
