@@ -235,6 +235,13 @@ public class AttackSqlExtended extends AttackI {
             int newResponseSize = lastHttpMessage.getRes().getSize();
             
             responseOnErrorSizeChange = origResponseSize - newResponseSize;
+            
+            // Whaaat, no difference on error? Check content, and stop if equal
+            if (responseOnErrorSizeChange == 0) {
+                if (attackWorkEntry.origHttpMessage.getRes().getResponseStrBody().equals(lastHttpMessage.getRes().getResponseStrBody())) {
+                    doContinue = false;
+                }
+            }
         } else {
             // Check if first (test) request did produce a change
             if (responseOnErrorSizeChange != 0) {
