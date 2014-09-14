@@ -172,13 +172,9 @@ private LinkedList<AttackData> attackData;
     }
 
     private boolean checkTag(String str, String findStr) {
-        //String str = response;
-        //String findStr = xssIndicatorStr + "\"=";
         int lastIndex = 0;
-//        boolean isInTag = false;
 
         while (lastIndex != -1) {
-
             lastIndex = str.indexOf(findStr, lastIndex);
 
             if (lastIndex != -1) {
