@@ -17,12 +17,13 @@
 package gui.categorizer.model;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  *
  * @author dobin
  */
-public class CategoryEntry {
+public class CategoryEntry implements Serializable {
     private String name;
     private String regex;
 
