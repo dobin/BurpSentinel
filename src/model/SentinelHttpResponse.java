@@ -35,6 +35,8 @@ import util.BurpCallbacks;
 public class SentinelHttpResponse implements Serializable {
     transient private IResponseInfo responseInfo; // re-init upon deserializing in readObject()
     private byte[] response;
+    private String responseStr = null;
+    private String responseBodyStr = null;
     
     private int size = 0;
     private int domCount = 0;
@@ -121,7 +123,7 @@ public class SentinelHttpResponse implements Serializable {
         return categories;
     }
         
-    public int getDom() {
+    public int getDomCount() {
         return domCount;
     }
     
@@ -130,8 +132,7 @@ public class SentinelHttpResponse implements Serializable {
             return false;
         }
 
-        String s = new String(response);
-        if (s.contains(value)) {
+        if (this.getResponseStr().contains(value)) {
             return true;
         } else {
             return false;
@@ -139,14 +140,27 @@ public class SentinelHttpResponse implements Serializable {
     }
 
     public String getResponseStr() {
-        String s;
-
-        if (response != null) {
-            s = new String(response);
-        } else {
-            s = "Sentinel: Response does not exist";
+        if (responseStr == null) {
+            if (response == null) {
+                responseStr = "Sentinel: Response does not exist";
+            } else {
+                responseStr = new String(response);
+            }
         }
-        return s;
+        
+        return responseStr;
+    }
+    
+    public String getResponseStrBody() {
+        if (responseBodyStr == null) {
+            if (response == null) {
+                responseBodyStr = "Sentinel: Response does not exist";
+            } else {
+                responseBodyStr = getResponseStr().substring(responseInfo.getBodyOffset());
+            }
+        }
+        
+        return responseBodyStr;
     }
 
     public boolean hasResponse() {

@@ -132,7 +132,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 4: return m.getReq().getChangeParam().getDecodedValue();
             case 5: return m.getRes().getHttpCode();
             case 6: return getValueResponseSize(m);
-            case 7: return m.getRes().getDom();
+            case 7: return m.getRes().getDomCount();
             case 8: return (int) m.getLoadTime();
             case 9: return getValueAttackResult(m);
             case 10: return getValueResult(m);
