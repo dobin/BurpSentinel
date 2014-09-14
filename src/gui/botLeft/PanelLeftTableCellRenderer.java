@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
+import util.BurpCallbacks;
 
 /**
  * Individual cell rednderer for panel left param table.
@@ -41,29 +42,24 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         // Check if we should set tooltip
-        if (column == 2) {
+        if (column == 1 || column == 2) {
             TableModel model = table.getModel();
         
-            // Those columns (2, 3) are always string
+            // Those columns (1, 2) are always string
             String s = (String) model.getValueAt(row, column);
-            /*try {
-                //s = BurpCallbacks.getInstance().getBurp().getHelpers().urlDecode(s);
-                s = URLDecoder.decode(s, "UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(PanelLeftTableCellRenderer.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-            //setToolTipText(s);
+            //s = BurpCallbacks.getInstance().getBurp().getHelpers().urlDecode(s);
+            setToolTipText(s);
+            //BurpCallbacks.getInstance().print("Tooltip: " + s);
         }
-                
+        
+        
+        // Cookie selector
         if (column != 2) {
             return this;
         }
-
-        if (!(table.getModel() instanceof PanelLeftTableModel)) {
-            System.out.println("NO: ");
-        }
-
-
+        //if (!(table.getModel() instanceof PanelLeftTableModel)) {
+        //    System.out.println("NO: ");
+        //}
         PanelLeftTableModel m = (PanelLeftTableModel) table.getModel();
         if (m.isCookieRow(row)) {
             return myComboBox;

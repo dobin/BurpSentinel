@@ -81,13 +81,14 @@ public class PanelLeftUi extends javax.swing.JPanel {
         SettingsManager.restoreSplitLocation(jSplitPane1, this);
         SettingsManager.restoreTableDimensions(tableMessages, this);
 
-        // 
-        TableColumn sportColumn = tableMessages.getColumnModel().getColumn(2);
+        // column 2
+        TableColumn column2 = tableMessages.getColumnModel().getColumn(2);
+        TableColumn column1 = tableMessages.getColumnModel().getColumn(1);
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
-        sportColumn.setCellRenderer(renderer);
-        sportColumn.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
+        column2.setCellRenderer(renderer);
+        column2.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
+        //column1.setCellRenderer(renderer);
 
-        
         // Param Popup
         paramPopup = new PanelLeftPopup(this);
         tableMessages.addMouseListener(new MouseAdapter() {
