@@ -40,7 +40,7 @@ public class AttackSql extends AttackI {
     
     private final String[] attackDataSql = {
         // Break
-        "\"'BREAK",
+        "'BREAK\"",
         
         // Should return Original Value - variant 1
         " OR 41=42",

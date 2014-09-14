@@ -44,7 +44,7 @@ public class AttackSqlExtended extends AttackI {
         switch (state) {
             // break test
             case 0:
-                ret = value + "'%20BREAK";
+                ret = value + "'BREAK\"";
                 break;
                 
             // pure int based (no quotes)
