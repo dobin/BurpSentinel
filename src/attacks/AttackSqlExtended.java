@@ -240,6 +240,15 @@ public class AttackSqlExtended extends AttackI {
             if (responseOnErrorSizeChange == 0) {
                 if (attackWorkEntry.origHttpMessage.getRes().getResponseStrBody().equals(lastHttpMessage.getRes().getResponseStrBody())) {
                     doContinue = false;
+                    
+                    // Same size as original request!
+                    AttackResult res = new AttackResult(
+                            AttackData.AttackType.INFO,
+                            "SQLE" + state,
+                            lastHttpMessage.getReq().getChangeParam(),
+                            true,
+                            "break request identical to original. no chance to identify SQL.");
+                    lastHttpMessage.addAttackResult(res);
                 }
             }
         } else {
