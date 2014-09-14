@@ -1,9 +1,52 @@
 <img src=z onerror=alert(document.domain)>
 https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-discovery.appspot.com/_ah/api#p/admin/reports_v1/
 
+------------------------------
+
+csnc test:
+- file path traversal shizzle
+- show "end" of param attacks in palenright
+
+ 
++ SQL INT: 3 missing...
++ if GET/PATH: dont send " " ... (encode to +?)
+  + also: = and &
++ user-defined regexes not working?
++ save: does not work?
+  + CategoryEntry
++ when BREAK same size as original CANCEL
++ use only response size to compare (without header)
++ rename SQL0,1 break or something like this
+- XSS in tag is somewhat broken?
+  <a id="ctl84_ContactsGridView_ctl11_lkbGVRow" href="javascript:__doPostBack('ctl84$ContactsGridView$ctl11$lkbGVRow','')">testXssaf"=&nbsp;test</a>
++ break request has to be GET/PATH safe
+- add \' test?
+- highlight name/value in panelleft should show it completely (overlong strings...)
+
+
+
 -------------------
 
+at defcon:
+- autoscroll feature? (upon sending request, always select newest one)
+- how to identify blind sql?
+  -> send 1 = 1 ...
+  - filter uninteresting ones?
+- attack misc:
+  - integer <-> string
+  - integer++
+  - host: header
+
+
+-------------------
+
+burp xtension itself:
 - add categorizer / error indicators to normal requests?
+- add additional window to burp responses:
+  - indicator: show a bit of error messages
+  - version: show versions
+
+-------------------
 
 - panelleft: color scanned params?
 - panelright popup:
@@ -23,17 +66,10 @@ https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-dis
 
 - add version information on passive scanner? 
 
-
-
 -------------------
 
-
-
-- add additional window to burp responses:
-  - indicator: show a bit of error messages
-  - version: show versions
 - add param option: attack with sentinel
-- test and identify multipart problems
+- test and identify multipart problems?
 - test and identify copy paste problems
 
 
@@ -43,7 +79,7 @@ https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-dis
 - possible to color things in panelright
 - apply regex on categorizer takes very long. UI indicator or speedup?
 - quick attack: attack each parameter once, to try to identify params which have any influence on the output
-- does disable/enable relative sizes even work?
++ does disable/enable relative sizes even work?
   - make it apply all requests (also previous, not only new)
 - implement the "interesting" param
   - on top on panelright?

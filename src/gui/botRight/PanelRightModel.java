@@ -53,6 +53,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
+        // We dont know what changed FIXME
         if (o.getClass().equals(CategorizerManager.class)) {
             this.fireTableDataChanged();
         } else {
@@ -248,7 +249,8 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         httpMessage.addObserver(this);
         httpMessage.getParentHttpMessage().addObserver(this);
         
-        this.fireTableDataChanged();
+        // last entry changed
+        this.fireTableRowsInserted(messages.size()-1, messages.size());
     }
 
     public SentinelHttpMessageAtk getHttpMessage(int n) {

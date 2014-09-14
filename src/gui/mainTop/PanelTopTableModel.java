@@ -61,6 +61,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
         message.setTableIndexMain(myMessages.size() - 1);
         
         // TODO
+        // Wont work with the following line... :(
         //this.fireTableRowsInserted(myMessages.size() - 1, myMessages.size());
         this.fireTableDataChanged();
         //parent.setSelected(myMessages.size() - 1);

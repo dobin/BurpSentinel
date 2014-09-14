@@ -149,7 +149,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 break;
         }
 
-        this.fireTableDataChanged();
+        // Just a single cell updated
+        this.fireTableCellUpdated(row, column);
     }
 
     
@@ -206,6 +207,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             uiEntries.add(entry);
         }
 
+        // complete table new
         this.fireTableDataChanged();
     }
     
@@ -268,6 +270,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             }
         }
         
+        // Can affect several rows... just update all of them
         this.fireTableDataChanged();
     }
     
@@ -293,12 +296,15 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                     break;
             }
         }
+
+        // Can affect several rows... just update all of them
         this.fireTableDataChanged();
     }
 
     
     @Override
     public void update(Observable o, Object arg) {
+        // We dont know what changed FIXME
         this.fireTableDataChanged();
     }
     
@@ -313,6 +319,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             entry.isAuthEnabled = false;
             entry.authData = null;
         }
+        
+        // Can affect several rows... just update all of them
         this.fireTableDataChanged();
     }
 
