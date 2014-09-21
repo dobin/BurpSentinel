@@ -150,6 +150,22 @@ public class AttackSql extends AttackI {
             int newResponseSize = lastHttpMessage.getRes().getSize();
             
             responseOnErrorSizeChange = origResponseSize - newResponseSize;
+            
+            // Whaaat, no difference on error? Check content, and stop if equal
+            if (responseOnErrorSizeChange == 0) {
+                if (attackWorkEntry.origHttpMessage.getRes().getResponseStrBody().equals(lastHttpMessage.getRes().getResponseStrBody())) {
+                    doContinue = false;
+                    
+                    // Same size as original request!
+                    AttackResult res = new AttackResult(
+                            AttackData.AttackType.INFO,
+                            "SQLE" + state,
+                            lastHttpMessage.getReq().getChangeParam(),
+                            true,
+                            "break request identical to original. no chance to identify SQL.");
+                    lastHttpMessage.addAttackResult(res);
+                }
+            }
         } else {
             // Check if first (test) request did produce a change
             if (responseOnErrorSizeChange != 0) {
