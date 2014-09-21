@@ -31,6 +31,15 @@ import javax.swing.table.TableModel;
  */
 public class Utility {
     
+    public static String realUrlEncode(String s) {
+        s = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(s);
+        
+        s = s.replace("/", "%2f");
+        
+        return s;
+    }
+    
+    
     // http://www.chka.de/swing/table/cell-sizes.html
     public static void calcColumnWidths(JTable table) {
         JTableHeader header = table.getTableHeader();

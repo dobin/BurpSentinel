@@ -26,6 +26,7 @@ import model.SentinelHttpMessageAtk;
 import org.apache.commons.lang3.StringUtils;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
+import util.Utility;
 
 /**
  *
@@ -109,7 +110,7 @@ public class AttackSqlExtended extends AttackI {
 
         if (onlyUrlencoded) {
             data = attackSqlInt(state, data);
-            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            data = Utility.realUrlEncode(data);
                 
             if (state < attackSqlIntSize - 1) {
                 doContinue = true;
@@ -118,8 +119,8 @@ public class AttackSqlExtended extends AttackI {
             }
         } else {
             if (state < attackSqlIntSize) {                
-            data = attackSqlInt(state, data);
-                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                data = attackSqlInt(state, data);
+                data = Utility.realUrlEncode(data);
             
                 doContinue = true;
             } else {
@@ -153,7 +154,7 @@ public class AttackSqlExtended extends AttackI {
 
         if (onlyUrlencoded) {
             data = attackSqlStr(state, data);
-            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            data = Utility.realUrlEncode(data);
                 
             if (state < attackSqlStrSize - 1) {
                 doContinue = true;
@@ -163,7 +164,7 @@ public class AttackSqlExtended extends AttackI {
         } else {
             if (state < attackSqlStrSize) {                
                 data = attackSqlStr(state, data);
-                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                data = Utility.realUrlEncode(data);
             
                 doContinue = true;
             } else {

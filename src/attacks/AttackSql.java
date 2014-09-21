@@ -25,6 +25,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
+import util.Utility;
 
 /**
  *
@@ -81,7 +82,7 @@ public class AttackSql extends AttackI {
 
         if (onlyUrlencoded) {
             data = attackDataSql[state];
-            data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+            data = Utility.realUrlEncode(data);
                 
             if (state < attackDataSql.length - 1) {
                 doContinue = true;
@@ -91,7 +92,7 @@ public class AttackSql extends AttackI {
         } else {
             if (state < attackDataSql.length) {                
                 data = attackDataSql[state];
-                data = BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(data);
+                data = Utility.realUrlEncode(data);
             
                 doContinue = true;
             } else {
@@ -159,7 +160,7 @@ public class AttackSql extends AttackI {
                     // Same size as original request!
                     AttackResult res = new AttackResult(
                             AttackData.AttackType.INFO,
-                            "SQLE" + state,
+                            "SQL" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
                             "break request identical to original. no chance to identify SQL.");

@@ -249,8 +249,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         httpMessage.addObserver(this);
         httpMessage.getParentHttpMessage().addObserver(this);
         
-        // last entry changed
-        this.fireTableRowsInserted(messages.size()-1, messages.size());
+        // last entry changed - but if we do this the reselecting does not work :(
+        //this.fireTableRowsInserted(messages.size(), messages.size());
+        this.fireTableDataChanged();
     }
 
     public SentinelHttpMessageAtk getHttpMessage(int n) {
