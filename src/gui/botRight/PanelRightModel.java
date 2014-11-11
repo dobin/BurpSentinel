@@ -151,6 +151,15 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         SentinelHttpMessageAtk m = messages.get(rowIndex);
         
         switch(columnIndex) {
+            case 2:
+                ret = getTooltipOriginalName(m);
+                break;
+            case 3:
+                ret = getTooltipOriginalValue(m);
+                break;
+            case 4:
+                ret = getTooltipAttack(m);
+                break;
             case 10: 
                 ret = getTooltipAttackResult(m);
                 break;
@@ -162,10 +171,24 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         return ret;
     }
     
+    
+    /*** Tooltips ***/
+    
+    private String getTooltipOriginalName(SentinelHttpMessageAtk m) {
+        return m.getReq().getOrigParam().getName();
+    }
+    
+    private String getTooltipOriginalValue(SentinelHttpMessageAtk m) {
+        return m.getReq().getOrigParam().getDecodedValue();
+    }
+    
+    private String getTooltipAttack(SentinelHttpMessageAtk m) {
+        return m.getReq().getChangeParam().getDecodedValue();
+    }
+    
     private String getTooltipAttackResult(SentinelHttpMessageAtk m) {
         return m.getAttackResult().getResultDescription();
     }
-    
         
     private String getTooltipCategorizer(SentinelHttpMessageAtk m) {
         String ret = "<html>";
@@ -178,6 +201,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
 
         return ret;
     }
+    
+    
+    /*** helpers ***/
     
     private String getValueResponseSize(SentinelHttpMessageAtk m) {
         String r = "";
@@ -249,9 +275,8 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         httpMessage.addObserver(this);
         httpMessage.getParentHttpMessage().addObserver(this);
         
-        // last entry changed - but if we do this the reselecting does not work :(
-        //this.fireTableRowsInserted(messages.size(), messages.size());
-        this.fireTableDataChanged();
+        // last entry changed
+        this.fireTableRowsInserted(messages.size()-1, messages.size()-1);
     }
 
     public SentinelHttpMessageAtk getHttpMessage(int n) {
