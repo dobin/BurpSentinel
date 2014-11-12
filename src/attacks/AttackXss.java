@@ -112,6 +112,7 @@ private LinkedList<AttackData> attackData;
                 }
                 break;
             case 4:
+                
                 // Finito
                 doContinue = false;
                 break;
@@ -131,7 +132,21 @@ private LinkedList<AttackData> attackData;
             return httpMessage;
         }
         
-        if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+        
+        boolean hasXss = false;
+        switch(state) {
+            case 0:
+            case 1:
+            case 2:
+                hasXss = httpMessage.getRes().extractBody().contains(data.getOutput());
+                break;
+            case 3:
+            case 4:    
+                hasXss = checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator());
+                break;
+        }
+        
+        if (hasXss) {
             data.setSuccess(true);
             
             AttackResult res = new AttackResult(
