@@ -16,6 +16,8 @@
  */
 package gui.lists;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.LinkedList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -52,35 +54,44 @@ public class ListManagerUi extends javax.swing.JFrame {
             showList(currentSelectedRow);
             tableIndex.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
         }
-                
-        // Add selection listener
+
+        // Add selection listener to table
         ListSelectionModel lsm = tableIndex.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
             @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    //Ignore extra messages.
-                    if (e.getValueIsAdjusting()) return;
- 
-                    ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                    if (lsm.isSelectionEmpty()) {
-                       //
-                    } else {
-                        // Get selected row and tell the main frame to show it 
-                        // in the bottom frame
-                        saveCurrent();
-                        currentSelectedRow = lsm.getMinSelectionIndex();
-                        showList(currentSelectedRow);
-                    }
-                }});
+            public void valueChanged(ListSelectionEvent e) {
+                //Ignore extra messages.
+                if (e.getValueIsAdjusting()) {
+                    return;
+                }
+
+                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+                if (lsm.isSelectionEmpty()) {
+                    //
+                } else {
+                    saveCurrentUiToModel();
+                    currentSelectedRow = lsm.getMinSelectionIndex();
+                    showList(currentSelectedRow);
+                }
+            }
+        });
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                save();
+            }
+        });
     }
     
     
     public void save() {
+        saveCurrentUiToModel();
         managerModel.writeConfig();
     }
     
     
-    private void saveCurrent() {
+    private void saveCurrentUiToModel() {
         if (currentSelectedRow >= 0) {
             // Save current one
             LinkedList<String> l = new LinkedList<String>();
@@ -91,9 +102,7 @@ public class ListManagerUi extends javax.swing.JFrame {
             }
             managerModel.getList(currentSelectedRow).setContent(l);
         }
-        managerModel.writeConfig();
-    }
-    
+    }    
     
     private void showList(int index) {
         // Show new one

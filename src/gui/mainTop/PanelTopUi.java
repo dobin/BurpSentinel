@@ -486,6 +486,7 @@ public class PanelTopUi extends javax.swing.JPanel {
             listManagerUi.setVisible(true);
         } else {
             listManagerUi.setVisible(false);
+            listManagerUi.save();
         }
     }//GEN-LAST:event_btnListsActionPerformed
 
