@@ -244,7 +244,7 @@ public class AttackSqlExtended extends AttackI {
                     
                     // Same size as original request!
                     AttackResult res = new AttackResult(
-                            AttackData.AttackType.INFO,
+                            AttackData.AttackType.ABORT,
                             "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,

@@ -26,6 +26,7 @@ public class AttackData {
         NONE,
         INFO,
         VULN,
+        ABORT
     };
 
     private String input;

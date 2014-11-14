@@ -245,6 +245,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
                     case VULN:
                         ret = "<html><b><font color=\"red\">\u2620</font></b></html>";
                         break;
+                    case ABORT:
+                        ret = "<html><b><font color=\"blue\">\u2139</font></b></html>";
+                        break;
                 }
                 return ret;
                 //return m.getAttackResult().getAttackType() + "\u26A0";

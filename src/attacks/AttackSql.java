@@ -32,10 +32,10 @@ import util.Utility;
  * @author unreal
  */
 public class AttackSql extends AttackI {
-
     private int state = 0;
     private boolean doContinue = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
+    private int responseOnErrorSizeChange = 0;
 
     private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
@@ -134,16 +134,15 @@ public class AttackSql extends AttackI {
         state++;
         return doContinue;
     }
-
+    
+    
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
         return lastHttpMessage;
     }
+    
 
-        
-    private int responseOnErrorSizeChange = 0;
     private void analyzeResponse() {
-        
         // Test: Response size
         if (state == 0) {
             // First request is the "generate error" request
@@ -159,8 +158,8 @@ public class AttackSql extends AttackI {
                     
                     // Same size as original request!
                     AttackResult res = new AttackResult(
-                            AttackData.AttackType.INFO,
-                            "SQL" + state,
+                            AttackData.AttackType.ABORT,
+                            "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
                             "break request identical to original. no chance to identify SQL.");
@@ -186,6 +185,7 @@ public class AttackSql extends AttackI {
             }
         }
     }
+    
     
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
