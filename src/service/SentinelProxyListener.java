@@ -46,6 +46,11 @@ public class SentinelProxyListener implements IProxyListener {
     }
 
     private void processRequest(IInterceptedProxyMessage message) {
+        if (sentinelCheck(message)) {
+            message.setInterceptAction(IInterceptedProxyMessage.ACTION_DROP);
+            return;
+        }
+        
         if (next2Repeater) {
             SentinelHttpMessage httpMessage = new SentinelHttpMessageOrig(message.getMessageInfo());
             BurpCallbacks.getInstance().getBurp().sendToRepeater(
@@ -63,33 +68,35 @@ public class SentinelProxyListener implements IProxyListener {
             next2Sentinel = false;
         }
 
-        sentinelCheck(message);
+        
     }
 
-    private void sentinelCheck(IInterceptedProxyMessage message) {
+    private boolean sentinelCheck(IInterceptedProxyMessage message) {
         if (message.getMessageInfo().getRequest().length < 40) {
-            return;
+            return false;
         }
-        String url = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(Arrays.copyOfRange(message.getMessageInfo().getRequest(), 4, 32));
-             
-        if (url.startsWith("http://sentinel")) {
+        String url = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(Arrays.copyOfRange(message.getMessageInfo().getRequest(), 4, 36));
+
+        if (url.startsWith("/__sentinel__/")) {
             if (url.contains("nextToRepeater")) {
                 next2Repeater = true;
+                return true;
             }
             if (url.contains("nextToSentinel")) {
                 next2Sentinel = true;
+                return true;
             }
 
             if (url.contains("enableIntercept")) {
                 BurpCallbacks.getInstance().getBurp().setProxyInterceptionEnabled(true);
+                return true;
             }
             if (url.contains("disableIntercept")) {
                 BurpCallbacks.getInstance().getBurp().setProxyInterceptionEnabled(false);
+                return true;
             }
-
-            // Removed, because did not really remove request
-//            message.getMessageInfo().setRequest("GET http://burp/ HTTP1.1\r\nHost: burp\r\n\r\n".getBytes());
-            message.setInterceptAction(IInterceptedProxyMessage.ACTION_DROP);
         }
+        
+        return false;
     }
 }
