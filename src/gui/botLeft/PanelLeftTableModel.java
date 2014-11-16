@@ -120,9 +120,9 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 3:
                 return "XSS";
             case 4:
-                return "SQL";
+                return "SQLu";
             case 5:
-                return "SQLE";
+                return "SQLs";
             case 6:
                 return "Misc";
 

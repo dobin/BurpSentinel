@@ -112,6 +112,7 @@ public class PanelRightUi extends javax.swing.JPanel {
                     }
                 }});
  
+        tableMessages.setTableHeader(new TableHeaderTooltip(tableMessages.getColumnModel()));
         popupTableHeader = new PopupTableHeader(tableMessages);
         tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override

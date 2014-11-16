@@ -110,6 +110,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
+        tableMessages.setTableHeader(new TableHeaderTooltip(tableMessages.getColumnModel()));
+        
         // Options Popup
         optionsPopup = new PanelLeftOptions();
         

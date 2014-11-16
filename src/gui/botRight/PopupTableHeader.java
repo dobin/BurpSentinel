@@ -44,8 +44,6 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         this.tableMessages = tableMessages;
         this.tableColumnModel = tableMessages.getColumnModel();
 
-            tableMessages.setTableHeader(new TableHeaderTooltip(tableMessages.getColumnModel()));
-        
         JMenuItem menuItem;
         menuItem = new JCheckBoxMenuItem("#", true);
         menuItem.addActionListener(this);
