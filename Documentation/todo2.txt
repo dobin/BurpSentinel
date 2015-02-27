@@ -1,0 +1,213 @@
+
+Sessions:
+- what is it
+- disable?
+- usefulness?
+- correctness?
+
+Lists:
+- do they fucking work?
+  - yes?
+  - but what about updates?
+
+www.dobin.ch?a=b
+- lists?
+- xss etc work?
+
+Network:
+- cancelation work for real?
+
+Notification:
+- do not fucking use skull icon!
+
+SQL:
+- what tests are performed?
+
+Redo Lists?
+- not uptodate!
+
+Clean that shit up:
+- move "Payload add right" to options "XSS" or something
+- "Session" Really works?
+
+Fuzzdb oracle: first line fucked up?
+
+Add more lists?
+
+clean up categorize:
+- nicer buttons etc
+
+
+-------------
+
+http://get-or-head.me 
+/?-s
+/dump.sql
+/trace.axd
+/backup.tar.gz
+/jmx-console
+/manager/html
+/CFIDE/administrator
+
+
+http://domain/c99.php?c99shcook[login]=0 
+
+
+PHP < 5.3 LFI Path Truncation Bypass (add /. until path has 4096-char) http://domain/include.php?lang=b/../../../etc/passwd/././.
+
+
+X_Forwarded_For: 127.0.0.1
+
+
+
+sentinel 3 todo:
+- make OR 41=41
+  - not OR 41=42...
+- omg, test case-insesitiv in XSS...
+- fail: XSS GET www.credit-suisse.com/search/en/index.jsp?qt=a&search=Search&site=internet&ql=s&tab=news&dt=ba&ady=1&amo=1&ayr=2014&bdy=27&bmo=11&byr=2014 HTTP/1.1
+- "java.lang.SecurityException"
+- tag test: also include '
+  - needs to be checked too!
+- xss: add ' too
+- xss: check content type
+- regex for sql error messages etc: change to strstr because its taking too long for 100k requests?
+- rename .jar to "BurpSentinel" damned!
+
+
+- remove cookie from "select all"
+- ff plugin fix?
+  - "enable intercept" does not work? -> fix
+- dont show "abort" on paneltop
+- blue info symbol does not work on windoof...
+- add blue info symbol on xss (no reflect)
+- Tests:
+  - directory listening
+  - robots.txt
+- big JSON responses fuck it up?
+- in Test: Remove SQLe, do SQLs SQLu
+- attack json with xss/sql: breaks!
+- canceling: something prints "please wait", but never returns?
+- disable multiple select in panelright
+
+
+sentinel:
+- add: browser ident header atk
+- add: empty param atk
+- fix: deselect panelright upon scan (new results)
+- fix: sql/sqle: do not continue if no change (exists?)
+
+
+http://danmcinerney.org/xsscrapy-fast-thorough-xss-vulnerability-spider/
+http://danmcinerney.org/modern-techniques-for-xss-discovery/
+http://htmlpurifier.org/live/smoketests/xssAttacks.php
+https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+
+
+http://blog.gerv.net/2014/10/new-class-of-vulnerability-in-perl-web-applications/
+http://danmcinerney.org/modern-techniques-for-xss-discovery/
+https://www.sektioneins.de/en/advisories/advisory-012014-drupal-pre-auth-sql-injection-vulnerability.html
+http://www.denimgroup.com/blog/denim_group/2014/10/approach-application-security.html
+http://www.getmantra.com/tools.html
+
+http://www.iodigitalsec.com/mysql_real_escape_string-wont-magically-solve-your-sql-injection-problems/
+http://blog.risingstack.com/node-js-security-tips/?utm_source=nodeweekly&utm_medium=email
+http://danmcinerney.org/xsscrapy-fast-thorough-xss-vulnerability-spider/
+http://danmcinerney.org/modern-techniques-for-xss-discovery/
+http://htmlpurifier.org/live/smoketests/xssAttacks.php
+https://www.securusglobal.com/community/2014/10/13/bypassing-wafs-with-svg/
+
+
+http://edge-security.blogspot.com.es/2014/10/wfuzz-21-released.html
+http://www.darknet.org.uk/2014/10/arachni-v1-0-released-web-application-security-scanner-framework/
+
+
+https://api.github.com/repos/dobin/BurpSentinel/releases
+
+- add &?DEBUG=1
+- change from .xxx to .yyy
+- XSS1 check if change!
+- / is not urlencoded?!
+- check all paths from url for directory listening
+
+http://www.thermofonte.ch/produkte/haus-und-garten/dampfbuegeleisen/rotel-professional-plus.php
+
+- react(js) mvc thingy
+- http://9gag.com/gag/aGVwG9Z
+  - Puella Magi Madoka Magica
+  - Code Geass
+
+http://www.youtube.com/watch?v=vAofT4Jx6Qc
+http://www.youtube.com/watch?v=fCy30_twlko
+http://www.youtube.com/watch?v=xqexA2WGfpo
+http://www.youtube.com/watch?v=UrgIkJYaiZk
+
+http://wallpaperz.co/movies/sucker-punch-dark-samurai-wallpaper/
+https://github.com/cure53/xss-challenge-wiki/wiki/prompt.ml
+
+https://www.youtube.com/watch?v=_YCGtT_FRYg
+http://www.golem.de/news/ddr-hackerfilm-zwei-schraege-voegel-mit-erotik-und-kybernetik-ins-perfekte-chaos-1409-109172.html
+
+
+
+Sentinel Presi:
+
+- Display SQL Syntax
+  - SELECT
+  - INSERT
+  - UPDATE
+
+- Break:
+  - \xBF'\"(
+  
+- BSQL?
+  - https://bitquark.co.uk/blog/2014/08/31/popping_a_shell_on_the_oculus_developer_portal
+
+  
+--------------------------------------
+  
+- SQL INT: 3 missing...
+- if GET/PATH: dont send " " ... (encode to +?)
+  - also: = and &
+- show "end" of param attacks in palenright
+- user-defined regexes not working?
+- file path traversal shizzle
+- save: does not work?
+  - CategoryEntry
+- when BREAK same size as original CANCEL
+- use only response size to compare (without header)
+- rename SQL0,1 break or something like this
+- XSS in tag is somewhat broken?
+  <a id="ctl84_ContactsGridView_ctl11_lkbGVRow" href="javascript:__doPostBack('ctl84$ContactsGridView$ctl11$lkbGVRow','')">testXssaf"=&nbsp;test</a>
+- break request has to be GET/PATH safe
+- add \' test?
+- highlight name/value in panelleft should show it completely (overlong strings...)
+
+
+http://shiflett.org/blog/2006/jan/addslashes-versus-mysql-real-escape-string
+
+
+dobin-links.txt
+
+http://contextis.co.uk/blog/comma-separated-vulnerabilities/
+http://lwn.net/Articles/609511/
+
+http://www.imdb.com/title/tt0118736/
+http://www.imdb.com/title/tt0455944/?ref_=vi_tt_i
+
+http://www.stumbleupon.com/su/27bXXE
+http://0pointer.net/blog/revisiting-how-we-put-together-linux-systems.html
+
+https://www.sektioneins.de/en/blog/14-09-07-webedition-sql-injection-vulnerability.html
+
+http://dfir.org/?q=node/8
+http://de.slideshare.net/tiagomendo/isel-tech-sq-li
+http://jmchilton.net/blog/?p=23
+
+http://www.scilogs.de/klimalounge/westantarktis-ueberschreitet-den-kipppunkt/
+
+http://www.exploresecurity.com/wp-content/uploads/custom/SSL_manual_cheatsheet.html
+http://de.slideshare.net/exploresecurity/
+http://blog.mindedsecurity.com/2014/08/linkedincom-fixes-high-risk.html
+http://jsforallof.us/2014/08/08/templating/
+http://torrentz.eu/search?f=borgen
+http://ameblo.jp/momo-minbe/entry-11923387569.html?frm_src=thumb_module

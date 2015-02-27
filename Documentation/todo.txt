@@ -1,42 +1,61 @@
 <img src=z onerror=alert(document.domain)>
 https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-discovery.appspot.com/_ah/api#p/admin/reports_v1/
 
+
+-----------------------------
+
+Sessions:
+- what is it
+- disable?
+- usefulness?
+- correctness?
+
+Lists:
++ do they fucking work?
+- but what about list updates?
+- Add more lists?
+
++ www.dobin.ch?a=b
+  + lists work?
+  + xss work?
++ Notification: do not fucking use skull icon!
+
+Network:
+- cancelation work for real?
+
+SQL:
+- what tests are performed?
+
+Clean that shit up:
+- move "Payload add right" to options "XSS" or something
+- "Session" Really works?
+
+Fuzzdb oracle: first line fucked up?
+
+clean up categorize:
+- nicer buttons etc
+
+-----------------------------
+
+- add: host: header
+- add: browser ident header atk
+- add: empty param atk
+- file path traversal shizzle
+
 ------------------------------
 
 csnc test:
-- file path traversal shizzle
-- show "end" of param attacks in palenright
 
- 
-+ SQL INT: 3 missing...
-+ if GET/PATH: dont send " " ... (encode to +?)
-  + also: = and &
-+ user-defined regexes not working?
-+ save: does not work?
-  + CategoryEntry
-+ when BREAK same size as original CANCEL
-+ use only response size to compare (without header)
-+ rename SQL0,1 break or something like this
 - XSS in tag is somewhat broken?
   <a id="ctl84_ContactsGridView_ctl11_lkbGVRow" href="javascript:__doPostBack('ctl84$ContactsGridView$ctl11$lkbGVRow','')">testXssaf"=&nbsp;test</a>
-+ break request has to be GET/PATH safe
+
 - add \' test?
 - highlight name/value in panelleft should show it completely (overlong strings...)
-
-
 
 -------------------
 
 at defcon:
 - autoscroll feature? (upon sending request, always select newest one)
-- how to identify blind sql?
-  -> send 1 = 1 ...
-  - filter uninteresting ones?
-- attack misc:
-  - integer <-> string
-  - integer++
-  - host: header
-
 
 -------------------
 
@@ -244,6 +263,27 @@ Questions:
   - invokelater for sendtosentinel?
 
 --------------------------------------------------------------------------------
+
++ how to identify blind sql?
+  -> send 1 = 1 ...
+  - filter uninteresting ones?
++ attack misc:
+  - integer <-> string
+  - integer++
+  - host: header
+
++ show "end" of param attacks in palenright
++ SQL INT: 3 missing...
++ if GET/PATH: dont send " " ... (encode to +?)
+  + also: = and &
++ user-defined regexes not working?
++ save: does not work?
+  + CategoryEntry
++ when BREAK same size as original CANCEL
++ use only response size to compare (without header)
++ rename SQL0,1 break or something like this
++ break request has to be GET/PATH safe
+
 
 + fix report generator
 + nullpointerexception when network window is open
