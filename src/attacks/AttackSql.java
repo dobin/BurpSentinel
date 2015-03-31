@@ -44,15 +44,15 @@ public class AttackSql extends AttackI {
         "'BREAK\"",
         
         // Should return Original Value - variant 1
-        " OR 41=42",
-        "' OR '41'='42",
-        "\" OR \"41\"=\"42",
+        " OR 41=41",
+        "' OR '41'='41",
+        "\" OR \"41\"=\"41",
         "/**/",
 
         // Should return original value - variant 2
-        ") OR (41=42",
-        "') OR ('41'='42",
-        "\") OR (\"41\"=\"42",       
+        ") OR (41=41",
+        "') OR ('41'='41",
+        "\") OR (\"41\"=\"41",
     };
     
      public AttackSql(AttackWorkEntry work) {
