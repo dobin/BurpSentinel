@@ -21,6 +21,7 @@ import attacks.AttackI;
 import attacks.AttackList;
 import attacks.AttackMain;
 import attacks.AttackOriginal;
+import attacks.AttackOther;
 import attacks.AttackPersistentXss;
 import attacks.AttackSql;
 import attacks.AttackSqlExtended;
@@ -74,7 +75,7 @@ public class NetworkerSender {
                 attack = new AttackXss(work);
                 break;
             case OTHER:
-                attack = new AttackPersistentXss(work);
+                attack = new AttackOther(work);
                 break;
             case SQL:
                 attack = new AttackSql(work);
