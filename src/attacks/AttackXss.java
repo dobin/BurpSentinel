@@ -142,7 +142,8 @@ private LinkedList<AttackData> attackData;
                 break;
             case 3:
             case 4:    
-                hasXss = checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator());
+                //hasXss = checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator());
+                // TODO: Make it really work...
                 break;
         }
         
@@ -205,7 +206,8 @@ private LinkedList<AttackData> attackData;
 
     private boolean checkIfInTag(String res, int lastIndex) {
         if ((res.lastIndexOf('>', lastIndex) < res.lastIndexOf('<', lastIndex))
-                && (res.indexOf('>', lastIndex) < res.indexOf('<', lastIndex))) {
+         && (res.indexOf('>', lastIndex) < res.indexOf('<', lastIndex))) 
+        {
             return true;
         }
 

@@ -263,10 +263,22 @@ public class SentinelHttpRequest implements Serializable {
         }
 
         byte paramType = changeParam.getType();
-        if (paramType == SentinelHttpParam.PARAM_PATH) {
-            request = updateParameterPath(request, changeParam);
-        } else {
-            request = BurpCallbacks.getInstance().getBurp().getHelpers().updateParameter(request, changeParam);
+        switch(paramType) {
+            case SentinelHttpParam.PARAM_PATH:
+                request = updateParameterPath(request, changeParam);
+                break;
+            case SentinelHttpParam.PARAM_JSON:
+                request = updateParameterJSON(request, changeParam);
+                break;
+            case SentinelHttpParam.PARAM_BODY:
+            case SentinelHttpParam.PARAM_URL:    
+            case SentinelHttpParam.PARAM_COOKIE:
+                request = BurpCallbacks.getInstance().getBurp().getHelpers().updateParameter(request, changeParam);
+                break;
+            default:
+                //BurpCallbacks.getInstance().print("ApplyChangeParam: Not supported type");    
+                request = updateParameterJSON(request, changeParam); // We just try this for now...
+                return false;
         }
         
         // Update httpparams linked with this request with correct offsets
@@ -289,6 +301,15 @@ public class SentinelHttpRequest implements Serializable {
         req = req.replaceFirst("\\/" + origParam.getValue(), "\\/" + changeParam.getValue());
         
         return BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(req);
+    }
+    
+    private byte[] updateParameterJSON(byte[] request, SentinelHttpParam changeParam) {
+        String req = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
+        StringBuilder r = new StringBuilder(req);
+        
+        r.replace(changeParam.getValueStart(), changeParam.getValueEnd(), changeParam.getValue());
+        
+        return BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(r.toString());
     }
     
 
