@@ -61,8 +61,7 @@ X_Forwarded_For: 127.0.0.1
 
 
 sentinel 3 todo:
-- make OR 41=41
-  - not OR 41=42...
++ make OR 41=41
 - omg, test case-insesitiv in XSS...
 - fail: XSS GET www.credit-suisse.com/search/en/index.jsp?qt=a&search=Search&site=internet&ql=s&tab=news&dt=ba&ady=1&amo=1&ayr=2014&bdy=27&bmo=11&byr=2014 HTTP/1.1
 - "java.lang.SecurityException"
