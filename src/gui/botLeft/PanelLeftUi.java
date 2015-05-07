@@ -87,7 +87,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         PanelLeftTableCellRenderer renderer = new PanelLeftTableCellRenderer(comboBoxSession);
         column2.setCellRenderer(renderer);
         column2.setCellEditor(new PanelLeftTableCellEditor(comboBoxSession));
-        //column1.setCellRenderer(renderer);
+        column1.setCellRenderer(renderer);
 
         // Param Popup
         paramPopup = new PanelLeftPopup(this);

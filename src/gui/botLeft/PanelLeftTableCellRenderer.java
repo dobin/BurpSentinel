@@ -49,10 +49,14 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
             String s = (String) model.getValueAt(row, column);
             //s = BurpCallbacks.getInstance().getBurp().getHelpers().urlDecode(s);
             setToolTipText(s);
-            //BurpCallbacks.getInstance().print("Tooltip: " + s);
+            //BurpCallbacks.getInstance().print("Tooltip: " + s + " Column: " + column);
         }
         
-        
+            Component c = super.getTableCellRendererComponent(table, value,
+                    isSelected, hasFocus, row, column);        
+            return c;
+/*        
+        // FIXME Removed
         // Cookie selector
         if (column != 2) {
             return this;
@@ -68,6 +72,6 @@ public class PanelLeftTableCellRenderer extends DefaultTableCellRenderer {
                     isSelected, hasFocus, row, column);
 
             return c;
-        }
+        }*/
     }
 }

