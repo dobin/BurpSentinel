@@ -1,5 +1,19 @@
 Sentinel Burp
 
-A plugin for current versions of burp
-
+A plugin for current versions of burp. 
 Eases discovery of common security holes in web applications.
+
+Blog: http://dobin.github.io/
+Wiki: https://github.com/dobin/BurpSentinel/wiki
+
+BurpSentinel is a little GUI based Burp extension, which quick and easy can attack
+parameters of HTTP requests. 
+
+Features:
+- Predefined attack payloads
+- Automated identification of reflected XSS
+- Automated identification of non-blind SQL injections
+- Indicators and visual aid for the user to identify blind/fullblind SQL injections
+- UI features for the penetration tester
+
+
