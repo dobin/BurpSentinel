@@ -20,7 +20,6 @@ import attacks.AttackMain;
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
 import gui.sqlmap.SqlmapManager;
-import gui.sqlmap.SqlmapUi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -104,15 +103,13 @@ public class PanelLeftPopup implements ActionListener {
     /**
      * * SQLMap **
      */
-    
     private void testActionSqlmap(Object o) {
         if (o == sqlmapEntry) {
             SqlmapManager.getInstance().setHttpRequest(parent.getOrigHttpMessage(), parent.getSelectedHttpParam());
             SqlmapManager.getInstance().showUi();
         }
     }
-    
-    
+        
     /**
      * * Attack **
      */
@@ -149,23 +146,22 @@ public class PanelLeftPopup implements ActionListener {
             // Removed following two, as they are already available with checkboxes
 //            AttackMain.AttackTypes.SQL, 
 //            AttackMain.AttackTypes.XSS,
-            AttackMain.AttackTypes.SQLE,
+//            AttackMain.AttackTypes.SQLE,
+//            AttackMain.AttackTypes.OTHER,            
             AttackMain.AttackTypes.XSSLESSTHAN,
-            AttackMain.AttackTypes.OTHER,
+
+            // Removed, as no functionality as of yet
             AttackMain.AttackTypes.AUTHORISATION,
         };
         
-        //for (AttackMain.AttackTypes atkType: AttackMain.AttackTypes.values()) {
         for (AttackMain.AttackTypes atkType: displayTypes) {
             JMenuItem menuItem = new JMenuItem(atkType.name());
             attackMenuItems.add(menuItem);
             attackSubmenu.add(menuItem);
             menuItem.addActionListener(this);
         }
-
     }
     
-
     /**
      * * Attack List **
      */
@@ -236,7 +232,6 @@ public class PanelLeftPopup implements ActionListener {
         // TODO: remove all old selections
         parent.updateModel();
     }
-
 
     private void initDecodeSubmenu() {
         decodeBase64 = new JMenuItem("Decode Base64");
