@@ -268,15 +268,15 @@ public class SettingsManager {
         }
     }
     
-    public static boolean getListInitState() {
+    public static int getListInitState() {
         Preferences pref = Preferences.userRoot().node("Initialization");
         
-        return pref.getBoolean("FuzzDb", false);
+        return pref.getInt("FuzzDb", 1);
     }
     
-    public static void setListInitState(boolean b) {
+    public static void setListInitState(int b) {
         Preferences pref = Preferences.userRoot().node("Initialization");
-        pref.putBoolean("FuzzDb", b);
+        pref.putInt("FuzzDb", b);
     }
 
     public static void storePanelLeftOptionRedirect(boolean optionEnableRedirect) {
