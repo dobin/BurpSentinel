@@ -84,9 +84,18 @@ public class SentinelHttpResponse implements Serializable {
         responseInfo = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponse(response);
         
         // Populate domcount
+        String mime = responseInfo.getInferredMimeType();
         domCount = 0;
+        char domSearch = ' ';
+        if (mime.equals("JSON")) {
+            domSearch = '{';
+        } else if (mime.equals("HTML")) {
+            domSearch = '<';
+        } else {
+            domSearch = '\n';
+        }
         for(int n=0; n<response.length; n++) {
-            if (response[n] == '<') {
+            if (response[n] == domSearch) {
                 domCount++;
             }
         }
