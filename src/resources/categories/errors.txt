@@ -38,3 +38,6 @@ server object error
 Error Occurred While Processing Request
 RuntimeException
 Caused by:
+expects parameter 
+on line 
+/var/www/
