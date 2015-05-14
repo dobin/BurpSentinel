@@ -22,7 +22,6 @@ import attacks.AttackList;
 import attacks.AttackMain;
 import attacks.AttackOriginal;
 import attacks.AttackOther;
-import attacks.AttackPersistentXss;
 import attacks.AttackSql;
 import attacks.AttackSqlExtended;
 import attacks.AttackXss;
