@@ -115,9 +115,6 @@ public class CategorizerManager extends Observable {
         byte[] bytePattern = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(pattern);
         
         int idx = BurpCallbacks.getInstance().getBurp().getHelpers().indexOf(input, bytePattern, true, 0, input.length);
-        
-        BurpCallbacks.getInstance().print("Not found: " + pattern);
-        
         if (idx >= 0) {
             ResponseCategory c = new ResponseCategory(entry, pattern, "Found: " + pattern);
             categories.add(c);            
