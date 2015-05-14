@@ -198,6 +198,11 @@ public class AttackSqlExtended extends AttackI {
         String origParamValue = attackWorkEntry.attackHttpParam.getDecodedValue();
         String data;
         
+        // Cant handle empty params
+        if (origParamValue.length() == 0) {
+            return false;
+        }
+        
         // Overwrite insert position, as we will always overwrite here
         attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;        
         
