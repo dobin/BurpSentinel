@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import util.BurpCallbacks;
 import util.SettingsManager;
 
@@ -93,10 +91,10 @@ public class CategorizerManager extends Observable {
         return null;
     }
     
-    public LinkedList<ResponseCategory> categorize(String input) {
+    public LinkedList<ResponseCategory> categorize(byte[] input) {
         LinkedList<ResponseCategory> newCategories = new LinkedList<ResponseCategory>();
         
-        if (input == null || input.length() <= 0) {
+        if (input == null || input.length <= 0) {
             return newCategories;
         }
     
@@ -110,15 +108,19 @@ public class CategorizerManager extends Observable {
     }
 
     
-    private LinkedList<ResponseCategory> scanForRegex(CategoryEntry entry, String input) {
+    private LinkedList<ResponseCategory> scanForRegex(CategoryEntry entry, byte[] input) {
         LinkedList<ResponseCategory> categories = new LinkedList<ResponseCategory>();
 
-        Pattern pattern = Pattern.compile(entry.getRegex());
-        Matcher matcher = pattern.matcher(input);
-
-        if (matcher.find()) {
-            ResponseCategory c = new ResponseCategory(entry, matcher.group(), "Found: " + matcher.group());
-            categories.add(c);
+        String pattern = entry.getRegex();
+        byte[] bytePattern = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(pattern);
+        
+        int idx = BurpCallbacks.getInstance().getBurp().getHelpers().indexOf(input, bytePattern, true, 0, input.length);
+        
+        BurpCallbacks.getInstance().print("Not found: " + pattern);
+        
+        if (idx >= 0) {
+            ResponseCategory c = new ResponseCategory(entry, pattern, "Found: " + pattern);
+            categories.add(c);            
         }
 
         return categories;
@@ -143,9 +145,10 @@ public class CategorizerManager extends Observable {
     }
     
     private void initFileCategories() {
-        if (SettingsManager.getListInitState()) {
-            return;
-        }
+        // FIXME Removed
+        //if (SettingsManager.getListInitState()) {
+        //    return;
+        //}
         
         List<StaticCategoriesIndexEntries> staticCategoriesIndex = new ArrayList<StaticCategoriesIndexEntries>();
         staticCategoriesIndex.add(new StaticCategoriesIndexEntries("errors.txt", "error"));
@@ -164,7 +167,7 @@ public class CategorizerManager extends Observable {
             try {
                 while ((line = reader.readLine()) != null) {
                     String regex = line;
-                    CategoryEntry categoryEntry = new CategoryEntry(staticCategory.getTagName(), Pattern.quote(regex));
+                    CategoryEntry categoryEntry = new CategoryEntry(staticCategory.getTagName(), regex);
                     
                     staticCategoryList.add(categoryEntry);
                 }

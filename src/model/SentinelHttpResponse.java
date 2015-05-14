@@ -121,7 +121,7 @@ public class SentinelHttpResponse implements Serializable {
     
     public void categorizeResponse() {
         categories.clear();
-        categories.addAll(CategorizerManager.getInstance().categorize(new String(response)));
+        categories.addAll(CategorizerManager.getInstance().categorize(response));
         for(ResponseCategory category: categories) {
             ResponseHighlight highlight = new ResponseHighlight(category.getIndicator(), Color.orange);
             addHighlight(highlight);

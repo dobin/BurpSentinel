@@ -19,9 +19,7 @@ package gui.categorizer;
 import gui.categorizer.model.Category;
 import gui.categorizer.model.CategoryEntry;
 import java.awt.Color;
-import java.util.LinkedList;
 import javax.swing.table.AbstractTableModel;
-import util.SettingsManager;
 
 /**
  *
@@ -94,7 +92,7 @@ public class CategorizerTableModel extends AbstractTableModel {
             case 2:
                 return "Tag";
             case 3:
-                return "Regex";
+                return "String";
             default:
                 return "";
         }
@@ -132,7 +130,7 @@ public class CategorizerTableModel extends AbstractTableModel {
         char c = (char) (65 + getRowCount());
         String res = Character.toString(c) +Character.toString(c);
         
-        category.getCategoryEntries().add( new CategoryEntry(res, ".*XXX.*"));
+        category.getCategoryEntries().add( new CategoryEntry(res, "XXX"));
         this.fireTableDataChanged();
     }
 

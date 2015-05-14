@@ -69,13 +69,14 @@ public class ListManagerModel {
     }
       
     public void initFuzzDB() {
-        if (SettingsManager.getListInitState() == false) {
-            BurpCallbacks.getInstance().print("Load Lists");
+        // FIXME Removed        
+        //if (SettingsManager.getListInitState() == false) {
+            BurpCallbacks.getInstance().print("(re)load static Lists");
             loadFuzzDB();
             SettingsManager.setListInitState(true);
-        } else {
-            BurpCallbacks.getInstance().print("Do not Load Lists");
-        }
+        //} else {
+        //    BurpCallbacks.getInstance().print("Do not (re)load Lists");
+        //}
     }
     
     private void loadFuzzDB() {
