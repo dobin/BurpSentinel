@@ -121,6 +121,8 @@ public class AttackOther extends AttackI {
         // Hack - should be in payload definition
         if (state == 0 || state == 1) {
             attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.LEFT;
+        } else if (state == 2) {
+            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;
         } else {
             attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
         }
