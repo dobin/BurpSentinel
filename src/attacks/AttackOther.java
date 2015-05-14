@@ -41,7 +41,8 @@ public class AttackOther extends AttackI {
         "\" ;sleep 10 ",
         "' ;sleep 10 ",
         "|sleep 10",
-        "\\'"
+        "\\'",
+        "%00"
     };
     
        // return attack string
