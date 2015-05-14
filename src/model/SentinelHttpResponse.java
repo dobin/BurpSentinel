@@ -92,13 +92,14 @@ public class SentinelHttpResponse implements Serializable {
         } else if (mime.equals("HTML")) {
             domSearch = '<';
         } else {
-            domSearch = '\n';
+            domSearch = ' ';
         }
-        for(int n=0; n<response.length; n++) {
+        for(int n=responseInfo.getBodyOffset(); n<response.length; n++) {
             if (response[n] == domSearch) {
                 domCount++;
             }
         }
+        //BurpCallbacks.getInstance().print("MIME: " + mime);
         
         // Get response length
         size = -1;
