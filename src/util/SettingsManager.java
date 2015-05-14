@@ -249,7 +249,9 @@ public class SettingsManager {
         }
         
         for(ListManagerList list: lists) {
-            pref.put(list.getName(), list.getContentAsString());
+            if (! list.isFuzzDB()) {
+                pref.put(list.getName(), list.getContentAsString());
+            }
         }
     }
     
@@ -261,7 +263,7 @@ public class SettingsManager {
             children = pref.keys();
             for (String s : children) {
                 String value = pref.get(s, "");
-                lists.add( new ListManagerList(s, value));
+                lists.add( new ListManagerList(s, value, false));
             }            
         } catch (BackingStoreException ex) {
             Logger.getLogger(SettingsManager.class.getName()).log(Level.SEVERE, null, ex);

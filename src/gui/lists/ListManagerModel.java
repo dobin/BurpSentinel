@@ -69,13 +69,13 @@ public class ListManagerModel {
     }
       
     public void initFuzzDB() {
-        if (SettingsManager.getListInitState() != 2) {
-            BurpCallbacks.getInstance().print("(re)load static Lists");
+        //if (SettingsManager.getListInitState() != 2) {
+        //    BurpCallbacks.getInstance().print("(re)load static Lists");
             loadFuzzDB();
-            SettingsManager.setListInitState(2);
-        } else {
-            BurpCallbacks.getInstance().print("Do not (re)load Lists");
-        }
+        //    SettingsManager.setListInitState(2);
+        //} else {
+        //    BurpCallbacks.getInstance().print("Do not (re)load Lists");
+        //}
     }
     
     private void loadFuzzDB() {
@@ -97,7 +97,7 @@ public class ListManagerModel {
             InputStream is = getClass().getResourceAsStream("/resources/fuzzdb/" + fileName + ".txt");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             
-            ListManagerList list = new ListManagerList(fileName, "");
+            ListManagerList list = new ListManagerList(fileName, "", true);
             
             String line;
             try {

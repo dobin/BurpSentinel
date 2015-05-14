@@ -39,11 +39,9 @@ public class ListManagerUi extends javax.swing.JFrame {
      */
     public ListManagerUi() {
         initComponents();
-   
         init();
     }
-    
-    
+        
     public void init() {
         managerModel = ListManager.getInstance().getModel();
         tableModel = new ListManagerTableModel(managerModel);

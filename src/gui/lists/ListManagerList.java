@@ -32,13 +32,14 @@ public class ListManagerList {
         content = new LinkedList<String>();
     }
     
-    public ListManagerList(String s) {
+    public ListManagerList(String name) {
         content = new LinkedList<String>();
-        name = s;
+        this.name = name;
     }
 
-    public ListManagerList(String s, String contentAsString) {
-        this(s);
+    public ListManagerList(String name, String contentAsString, boolean isFuzzDB) {
+        this(name);
+        this.isFuzzDB = isFuzzDB;
         
         String c[] = contentAsString.split("\n");
         for(int n=0; n<c.length; n++) {
