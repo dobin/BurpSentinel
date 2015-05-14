@@ -14,6 +14,14 @@ Features:
 - Automated identification of reflected XSS
 - Automated identification of non-blind SQL injections
 - Indicators and visual aid for the user to identify blind/fullblind SQL injections
-- UI features for the penetration tester
+- UI features for helping the penetration tester
 
 
+What it cannot do:
+- Find DOM Injections
+- Exploit vulnerabilities
+
+
+Alternatives:
+- Ironwasp (www.ironwasp.org, .NET)
+- Wfuzz (www.edge-security.com/wfuzz.php, Python)

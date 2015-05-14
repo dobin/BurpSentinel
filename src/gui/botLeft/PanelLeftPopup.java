@@ -151,7 +151,7 @@ public class PanelLeftPopup implements ActionListener {
             AttackMain.AttackTypes.XSSLESSTHAN,
 
             // Removed, as no functionality as of yet
-            AttackMain.AttackTypes.AUTHORISATION,
+            //AttackMain.AttackTypes.AUTHORISATION,
         };
         
         for (AttackMain.AttackTypes atkType: displayTypes) {
