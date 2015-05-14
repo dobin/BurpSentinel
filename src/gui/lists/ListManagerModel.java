@@ -81,14 +81,17 @@ public class ListManagerModel {
     
     private void loadFuzzDB() {
         String[] fileNames = { 
-            "xss_rsnake",
-            "fuzzdb_mysql",
             "fuzzdb_generic_blind",
             "fuzzdb_int",
+            "fuzzdb_metacharacters",
             "fuzzdb_mssql",
             "fuzzdb_mssql_blind",
+            "fuzzdb_mysql",
             "fuzzdb_oracle", 
-            "fuzzdb_metacharacters",
+            "fuzzdb_sqlboolean",
+            "sqlmap_blindsql",
+            "wapiti_blindsql",
+            "xss_rsnake",
         };
         
         for(String fileName: fileNames) {
