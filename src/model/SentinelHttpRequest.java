@@ -217,7 +217,7 @@ public class SentinelHttpRequest implements Serializable {
      * ************************** Getters*************************************
      * 
      * Note: the following functions are slow, as it extracts on the fly
-     * 
+     * Currently only used for clipboard helper
      */
     public String extractFirstLine() {
         String http = getRequestStr().substring(0, getRequestStr().indexOf("\r\n"));
