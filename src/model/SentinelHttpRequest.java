@@ -25,6 +25,7 @@ import gui.session.SessionUser;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import util.BurpCallbacks;
@@ -71,6 +72,8 @@ public class SentinelHttpRequest implements Serializable {
         init(httpMessage);
     }
     
+    /* This is used if the input is specified other than by burp (which gives bytearrays)
+     * Thats why we strangely convert string to bytes */
     public SentinelHttpRequest(String r, IHttpService httpService) {
         this.httpService = new SentinelHttpService(httpService);
         this.request = BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(r);
@@ -148,17 +151,13 @@ public class SentinelHttpRequest implements Serializable {
     }
         
     private void initMyParams() {
-        String req = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
-        
-        int newlineIndex = req.indexOf("\r\n");
+        int newlineIndex = BurpCallbacks.getInstance().getBurp().getHelpers().indexOf(request, "\r\n".getBytes(), false, 0, request.length);
         if (newlineIndex < 0) {
             BurpCallbacks.getInstance().print("Error in HTTP Request: no newline");
             return;
         }
         
-        String firstLine = req.substring(0, newlineIndex);
-        //String rest = req.substring(req.indexOf("\r\n"), req.length());
-        
+        String firstLine = new String ( Arrays.copyOfRange(request, 0, newlineIndex) );
         String header[] = firstLine.split(" ");
         if (header.length != 3) {
             return;

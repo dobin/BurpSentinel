@@ -60,7 +60,6 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
     }
 
     public SentinelHttpMessage(String s, String host, int port, boolean https) {
-        //httpService = BurpCallbacks.getInstance().getBurp().getHelpers().buildHttpService(host, port, https);
         httpService = new SentinelHttpService(host, port, https);
         httpRequest = new SentinelHttpRequest(s, httpService);
 
@@ -69,12 +68,12 @@ public abstract class SentinelHttpMessage extends Observable implements IHttpReq
         createTime = new Date(System.currentTimeMillis());
     }
 
-    public SentinelHttpMessage(String s, IHttpService httpService) {
+    /*public SentinelHttpMessage(String s, IHttpService httpService) {
         this.httpService = new SentinelHttpService(httpService);
         httpRequest = new SentinelHttpRequest(s, httpService);
 
         createTime = new Date(System.currentTimeMillis());
-    }
+    }*/
 
     public SentinelHttpRequest getReq() {
         return httpRequest;

@@ -16,9 +16,7 @@
  */
 package model;
 
-import gui.mainBot.PanelBotUi;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Observable;
 
