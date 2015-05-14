@@ -78,3 +78,11 @@ Unclosed quotation mark after the character string
 error '80040e14'" in data and "Incorrect syntax near
 ORA-
 Warning: mysql_fetch_array()
+supplied argument is not a valid MySQL
+Column count doesn't match value count at row
+You have an error in your SQL syntax
+MySQL server version for the right syntax to use
+[MySQL][ODBC
+Column count doesn't match
+valid MySQL result
+MySqlClient
