@@ -50,8 +50,8 @@ private LinkedList<AttackData> attackData;
         attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
         attackData.add(new AttackData(1, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
         attackData.add(new AttackData(2, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(3, indicator+ "%22%3D", indicator + "\"=", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(4, indicator + "\"=", indicator + "\"=", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(3, indicator + "%27%22%3D", indicator + "'\"=", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(4, indicator + "'\"=", indicator + "'\"=", AttackData.AttackType.VULN));
     }
     
     @Override
@@ -74,12 +74,7 @@ private LinkedList<AttackData> attackData;
  
         switch (state) {
             case 0:
-                // Goon if: reflected
-                if (data.getSuccess()) {
-                    doContinue = true;
-                } else {
-                    doContinue = false;
-                }
+                doContinue = true;
 
                 if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator())) {
                     inputReflectedInTag = true;
@@ -88,32 +83,15 @@ private LinkedList<AttackData> attackData;
                 }
                 break;
             case 1:
-                // Goon if: not successful
-                if (data.getSuccess()) {
-                    doContinue = false;
-                } else {
-                    doContinue = true;
-                }
+                doContinue = true;                
                 break;
             case 2:
-                // Goon if: not successful
-                if (data.getSuccess()) {
-                    doContinue = false;
-                } else {
-                    doContinue = true;
-                }
+                doContinue = true;                
                 break;
             case 3:
-                // Goon if: not successful or in tag
-                if (data.getSuccess() || inputReflectedInTag) {
-                    doContinue = false;
-                } else {
-                    doContinue = true;
-                }
+                doContinue = true;
                 break;
             case 4:
-                
-                // Finito
                 doContinue = false;
                 break;
         }
@@ -134,16 +112,41 @@ private LinkedList<AttackData> attackData;
         
         
         boolean hasXss = false;
+        boolean hasInput = false;
         switch(state) {
             case 0:
             case 1:
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
+                if (hasInput && ! inputReflectedInTag) {
+                    hasXss = true;
+                }
+                break;
             case 2:
-                hasXss = httpMessage.getRes().extractBody().contains(data.getOutput());
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
+                if (hasInput && ! inputReflectedInTag) {
+                    hasXss = true;
+                }
                 break;
             case 3:
-            case 4:    
-                //hasXss = checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator());
-                // TODO: Make it really work...
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
+                if (hasInput && inputReflectedInTag) {
+                    hasXss = true;
+                }
+                break;
+            case 4:
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
+                if (hasInput && inputReflectedInTag) {
+                    hasXss = true;
+                }
+
                 break;
         }
         
@@ -152,6 +155,17 @@ private LinkedList<AttackData> attackData;
             
             AttackResult res = new AttackResult(
                     data.getAttackType(),
+                    "XSS" + data.getIndex(), 
+                    httpMessage.getReq().getChangeParam(), 
+                    true,
+                    "Found: " + data.getOutput());
+            httpMessage.addAttackResult(res);
+
+            ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
+            httpMessage.getRes().addHighlight(h);
+        } else if (hasInput) {
+            AttackResult res = new AttackResult(
+                    AttackData.AttackType.INFO,
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
                     true,
