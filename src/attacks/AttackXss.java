@@ -47,11 +47,45 @@ private LinkedList<AttackData> attackData;
         String indicator;
         
         indicator = XssIndicator.getInstance().getIndicator();
+        /*
+         1  <p>"
+         2  %3Cp%3E%22
+           
+         3  <p "=>
+         4  %3Cp%20%22%3D%3E
+          
+         5  ' =                 t
+         6  %27%20%3D           t
+           
+         7  " =                 t
+         8  %20%22%3D           t
+          
+         9  ;alert(1)
+        10  %3Balert(1)
+          
+        11  \\'\\"
+        12  %5C%5C%27%5C%5C%22
+        
+        13  \u0022a
+        14  %253Ca%2527%2522%253E
+        */
+        
+        
         attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
-        attackData.add(new AttackData(1, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(2, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(3, indicator + "%27%22%3D", indicator + "'\"=", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(4, indicator + "'\"=", indicator + "'\"=", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(1, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(2, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(3, indicator + "<p \"=>", indicator + "<p \"=>", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(4, indicator + "%3Cp%20%22%3D%3E", indicator + "<p \"=>", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(5, indicator + "' =", indicator + "' =", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(6, indicator + "%27%20%3D", indicator + "' =", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(7, indicator + "\" =", indicator + "\" =", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(8, indicator + "%22%20%3D", indicator + "\" =", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(9, indicator + ";alert(1)", indicator + ";alert(1)", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(10, indicator + "%3Balert(1)", indicator + ";alert(1)", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(11, indicator + "\\'\\\"", indicator + "\\'\\\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(12, indicator + "%5C%5C%27%5C%5C%22", indicator + "\\'\\\"", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(13, indicator + "\\u0022a", indicator + "", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(14, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackType.VULN));
     }
     
     @Override
@@ -82,17 +116,11 @@ private LinkedList<AttackData> attackData;
                     inputReflectedInTag = false;
                 }
                 break;
-            case 1:
-                doContinue = true;                
-                break;
-            case 2:
-                doContinue = true;                
-                break;
-            case 3:
-                doContinue = true;
-                break;
-            case 4:
+            case 14:
                 doContinue = false;
+                break;
+            default:
+                doContinue = true;
                 break;
         }
         
@@ -101,6 +129,12 @@ private LinkedList<AttackData> attackData;
     }
     
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
+        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
+                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
+        {
+            data.urlEncode();
+        }
+        
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
@@ -115,39 +149,40 @@ private LinkedList<AttackData> attackData;
         boolean hasInput = false;
         switch(state) {
             case 0:
+                
+                // ! tag
             case 1:
-                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
-                    hasInput = true;
-                }
-                if (hasInput && ! inputReflectedInTag) {
-                    hasXss = true;
-                }
-                break;
             case 2:
-                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
-                    hasInput = true;
-                }
-                if (hasInput && ! inputReflectedInTag) {
-                    hasXss = true;
-                }
-                break;
             case 3:
-                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
-                    hasInput = true;
-                }
-                if (hasInput && inputReflectedInTag) {
-                    hasXss = true;
-                }
-                break;
             case 4:
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
                 }
+                if (hasInput && ! inputReflectedInTag) {
+                    hasXss = true;
+                }
+                break;
+            
+                // tag
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
                 if (hasInput && inputReflectedInTag) {
                     hasXss = true;
                 }
-
                 break;
+                
+                // whatever
+            case 11:
+            case 12:
+            case 14:
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                }
         }
         
         if (hasXss) {

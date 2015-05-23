@@ -22,6 +22,8 @@ package attacks;
  * @author unreal
  */
 public class AttackData {
+
+
     public enum AttackType {
         NONE,
         INFO,
@@ -65,5 +67,8 @@ public class AttackData {
     public Boolean getSuccess() {
         return success;
     }
-    
+ 
+    void urlEncode() {
+        input = input.replace(' ', '+');
+    }
 }
