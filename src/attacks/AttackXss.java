@@ -63,7 +63,7 @@ private LinkedList<AttackData> attackData;
          9  ;alert(1)
         10  %3Balert(1)
           
-        11  \\'\\"
+        11  \'\"
         12  %5C%5C%27%5C%5C%22
         
         13  \u0022a

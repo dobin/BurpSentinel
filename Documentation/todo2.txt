@@ -65,11 +65,11 @@ sentinel 3 todo:
 - omg, test case-insesitiv in XSS...
 - fail: XSS GET www.credit-suisse.com/search/en/index.jsp?qt=a&search=Search&site=internet&ql=s&tab=news&dt=ba&ady=1&amo=1&ayr=2014&bdy=27&bmo=11&byr=2014 HTTP/1.1
 - "java.lang.SecurityException"
-- tag test: also include '
-  - needs to be checked too!
-- xss: add ' too
++ tag test: also include '
+  + needs to be checked too!
++ xss: add ' too
 - xss: check content type
-- regex for sql error messages etc: change to strstr because its taking too long for 100k requests?
++ regex for sql error messages etc: change to strstr because its taking too long for 100k requests?
 - rename .jar to "BurpSentinel" damned!
 
 
