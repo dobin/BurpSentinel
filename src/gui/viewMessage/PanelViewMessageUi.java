@@ -53,6 +53,8 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
 import org.w3c.tidy.Tidy;
+import org.w3c.tidy.TidyMessage;
+import org.w3c.tidy.TidyMessageListener;
 import util.BurpCallbacks;
 import util.SettingsManager;
 import util.diff.DiffPrint.UnifiedSmallPrint;
@@ -202,7 +204,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
 
 
     /*** Show Data based on different selected views ***/
-    
+
     private void showDefaultView() {
         String viewDefaultContent = httpMessage.getRes().getResponseStr();
         setMessageText(viewDefaultContent);
@@ -210,38 +212,15 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     }
     
     private void showBeautifyView() {
-        String viewBeautifyContent = null;
-
-        String res = httpMessage.getRes().extractBody();
-
-        InputStream is = new ByteArrayInputStream(res.getBytes());
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        Tidy tidy = new Tidy();
-        tidy.setWraplen(0);
-        tidy.setDropEmptyParas(false);
-        tidy.setDropFontTags(false);
-        tidy.setDropProprietaryAttributes(false);
-        tidy.setIndentContent(true);
-
-        tidy.parse(is, os);
-        try {
-            String s = new String(os.toByteArray(), "UTF-8");
-            viewBeautifyContent = s;
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(PanelViewMessageUi.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        setMessageText(viewBeautifyContent);
+        String tidied = "";
+        tidied = util.Beautifier.getInstance().tidyUp(httpMessage.getRes().extractBody());
+        setMessageText(tidied);
         highlightResponse();
     }
-    
-    
     
     public void setBuddy(SentinelHttpMessage msg) {
         this.diffHttpMessage = msg;
     }
-    
     
     private void showUnifiedDiffView() {
         if (httpMessage instanceof SentinelHttpMessageOrig) {

@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.XssIndicator;
+import org.w3c.tidy.TidyMessage;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
@@ -31,14 +32,17 @@ import util.ConnectionTimeoutException;
  * @author unreal
  */
 public class AttackXss extends AttackI {
+    // Static:
+    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
+    private LinkedList<AttackData> attackData;
+    
+    // Changes per iteration:
     private int state = 0;
-    private boolean inputReflectedInTag = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
     
-    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
-    
-private LinkedList<AttackData> attackData;
-    
+    // Information from state 0 - may be used in state >0
+    private boolean inputReflectedInTag = false;
+    private LinkedList<TidyMessage> origTidyMsgs = null;
     
     public AttackXss(AttackWorkEntry work) {
         super(work);
@@ -144,23 +148,51 @@ private LinkedList<AttackData> attackData;
             return httpMessage;
         }
         
+        analyzeResponse(data, httpMessage);
         
+
+        // Highlight indicator anyway
+        String indicator = XssIndicator.getInstance().getBaseIndicator();
+        if (! indicator.equals(data.getOutput())) {
+            ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
+            httpMessage.getRes().addHighlight(h);
+        }
+        
+        return httpMessage;
+    }
+    
+    
+    private void analyzeResponse(AttackData data, SentinelHttpMessageAtk httpMessage) {
         boolean hasXss = false;
         boolean hasInput = false;
+        String message = "<html>";
         switch(state) {
             case 0:
+                origTidyMsgs = util.Beautifier.getInstance().analyze(httpMessage.getRes().extractBody());
+                
+                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                    hasInput = true;
+                    message += "Found decoded attack string: " + data.getOutput();
+                }
+
+                break;
                 
                 // ! tag
             case 1:
             case 2:
             case 3:
             case 4:
+                // Check for decoded string in response
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
+                    message += "Found decoded attack string: " + data.getOutput();
                 }
+                
+                // Check if decoded string is at the right place
                 if (hasInput && ! inputReflectedInTag) {
                     hasXss = true;
                 }
+                
                 break;
             
                 // tag
@@ -170,6 +202,7 @@ private LinkedList<AttackData> attackData;
             case 8:
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
+                    message += "Found decoded attack string: " + data.getOutput();
                 }
                 if (hasInput && inputReflectedInTag) {
                     hasXss = true;
@@ -182,8 +215,24 @@ private LinkedList<AttackData> attackData;
             case 14:
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
+                    message += "Found decoded attack string: " + data.getOutput();
                 }
         }
+        
+        if (state > 0) {
+            // Alternativ: Check for html syntax error
+            LinkedList<TidyMessage> msgs = util.Beautifier.getInstance().analyze(httpMessage.getRes().extractBody());
+            
+            if (util.Beautifier.getInstance().hasHtmlSyntaxError(origTidyMsgs, msgs)) {
+                hasXss = true;
+                if (! message.equals("<html>")) {
+                    message += "<br><br>";
+                }
+                message += "Found HTML errors: <br>" + util.Beautifier.getInstance().getMessageDiffString(origTidyMsgs, msgs);
+            }
+        }
+        message += "</html>";
+        BurpCallbacks.getInstance().print(message);
         
         if (hasXss) {
             data.setSuccess(true);
@@ -193,7 +242,7 @@ private LinkedList<AttackData> attackData;
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
                     true,
-                    "Found: " + data.getOutput());
+                    message);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
@@ -204,7 +253,7 @@ private LinkedList<AttackData> attackData;
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
                     true,
-                    "Found: " + data.getOutput());
+                    message);
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
@@ -220,16 +269,8 @@ private LinkedList<AttackData> attackData;
                     null);
             httpMessage.addAttackResult(res);
         }
-
-        // Highlight indicator anyway
-        String indicator = XssIndicator.getInstance().getBaseIndicator();
-        if (! indicator.equals(data.getOutput())) {
-            ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
-            httpMessage.getRes().addHighlight(h);
-        }
-        
-        return httpMessage;
     }
+    
     
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
