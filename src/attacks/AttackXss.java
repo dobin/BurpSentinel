@@ -64,16 +64,10 @@ public class AttackXss extends AttackI {
          7  " =                 t
          8  %20%22%3D           t
           
-         9  ;alert(1)
-        10  %3Balert(1)
-          
-        11  \'\"
-        12  %5C%5C%27%5C%5C%22
-        
-        13  \u0022a
-        14  %253Ca%2527%2522%253E
+         9  %5C%5C%27%5C%5C%22_\'\"
+        10  _\u0022a_æ_\u00e6
+        11  %253Ca%2527%2522%253E
         */
-        
         
         attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
         attackData.add(new AttackData(1, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
@@ -84,12 +78,9 @@ public class AttackXss extends AttackI {
         attackData.add(new AttackData(6, indicator + "%27%20%3D", indicator + "' =", AttackData.AttackType.VULN));
         attackData.add(new AttackData(7, indicator + "\" =", indicator + "\" =", AttackData.AttackType.VULN));
         attackData.add(new AttackData(8, indicator + "%22%20%3D", indicator + "\" =", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(9, indicator + ";alert(1)", indicator + ";alert(1)", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(10, indicator + "%3Balert(1)", indicator + ";alert(1)", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(11, indicator + "\\'\\\"", indicator + "\\'\\\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(12, indicator + "%5C%5C%27%5C%5C%22", indicator + "\\'\\\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(13, indicator + "\\u0022a", indicator + "", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(14, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(9, indicator + "%5C%27%5C%22_\\'\\\"", indicator + "", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(10, indicator + "_\\u0022_æ_\\u00E6_", indicator + "", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(11, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackType.VULN));
     }
     
     @Override
@@ -120,7 +111,7 @@ public class AttackXss extends AttackI {
                     inputReflectedInTag = false;
                 }
                 break;
-            case 14:
+            case 11:
                 doContinue = false;
                 break;
             default:
@@ -196,24 +187,15 @@ public class AttackXss extends AttackI {
                 break;
             
                 // tag
-            case 5:
-            case 6:
             case 7:
             case 8:
-                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                if (httpMessage.getRes().extractBody().contains(data.getOutput()) && inputReflectedInTag) {
                     hasInput = true;
                     message += "Found decoded attack string: " + data.getOutput();
                 }
-                if (hasInput && inputReflectedInTag) {
-                    hasXss = true;
-                }
                 break;
-                
-                // whatever
             case 11:
-            case 12:
-            case 14:
-                if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
+                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
                     message += "Found decoded attack string: " + data.getOutput();
                 }
@@ -232,7 +214,6 @@ public class AttackXss extends AttackI {
             }
         }
         message += "</html>";
-        BurpCallbacks.getInstance().print(message);
         
         if (hasXss) {
             data.setSuccess(true);

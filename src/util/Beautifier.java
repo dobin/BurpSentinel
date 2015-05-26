@@ -68,7 +68,13 @@ public class Beautifier {
         
         @Override
         public void messageReceived(TidyMessage tm) {
-            list.add(tm);
+            int errCode = tm.getErrorCode();
+            
+            // Ignore 66 because it can fuck up everyting
+            // 66: <form> Anchor "landingSearch" already defined
+            if (! (errCode == 66)) {
+                list.add(tm);
+            }
         }
     }
     
@@ -115,7 +121,7 @@ public class Beautifier {
             boolean found = false;
             
             for(TidyMessage orig: origList) {
-                if (orig.getLine() == curr.getLine()) {
+                if (orig.getErrorCode() == curr.getErrorCode()) {
                     found = true;
                     break;
                 }
@@ -128,7 +134,7 @@ public class Beautifier {
         
         for (TidyMessage diff: diffList) {
             //ret += BurpCallbacks.getInstance().getBurp().getHelpers().urlEncode(diff.getMessage()) + "<br>";
-            ret += StringEscapeUtils.escapeHtml4(diff.getMessage()) + "<br>";
+            ret += Integer.toString(diff.getLine()) + ": " +  StringEscapeUtils.escapeHtml4(diff.getMessage()) + "<br>";
         }
         
         return ret;
