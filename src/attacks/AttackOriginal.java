@@ -49,6 +49,9 @@ public class AttackOriginal extends AttackI {
     public boolean performNextAttack() {
         try {
             SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue());
+            if (httpMessage == null) {
+               return false;
+            }
             BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
             this.message = httpMessage;
             

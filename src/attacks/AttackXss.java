@@ -96,6 +96,9 @@ public class AttackXss extends AttackI {
         SentinelHttpMessage httpMessage;
         try {
             httpMessage = attack(data);
+            if (httpMessage == null) {
+                return false;
+            }
         } catch (ConnectionTimeoutException ex) {
             state++;
             return false;
@@ -131,6 +134,9 @@ public class AttackXss extends AttackI {
         }
         
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
+        if (httpMessage == null) {
+            return null;
+        }
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
         

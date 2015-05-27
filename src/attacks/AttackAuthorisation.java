@@ -58,6 +58,9 @@ public class AttackAuthorisation extends AttackI {
         String sessionId = SessionManager.getInstance().getValueFor(attackWorkEntry.options);
 
         httpMessageA = initAttackHttpMessage(sessionId);
+        if (httpMessageA == null) {
+            return false;
+        }
         try {
             BurpCallbacks.getInstance().sendRessource(httpMessageA, attackWorkEntry.followRedirect);
         } catch (ConnectionTimeoutException ex) {

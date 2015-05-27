@@ -136,6 +136,9 @@ public class AttackXssLessThan extends AttackI {
         SentinelHttpMessage httpMessage;
         try {
             httpMessage = attack(atkData);
+            if (httpMessage == null) {
+                return false;
+            }
         } catch (ConnectionTimeoutException ex) {
             state++;
             return false;
@@ -152,6 +155,9 @@ public class AttackXssLessThan extends AttackI {
 
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
+        if (httpMessage == null) {
+            return null;
+        }
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 

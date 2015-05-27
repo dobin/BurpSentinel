@@ -47,6 +47,9 @@ public class AttackList extends AttackI {
 
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
+        if (httpMessage == null) {
+            return null;
+        }
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
@@ -103,6 +106,9 @@ public class AttackList extends AttackI {
 
         try {
             SentinelHttpMessage httpMessage = attack(data);
+            if (httpMessage == null) {
+                return false;
+            }
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout: " + ex.getLocalizedMessage());
             return false;
