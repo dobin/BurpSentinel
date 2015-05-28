@@ -277,7 +277,7 @@ public class SentinelHttpRequest implements Serializable {
             default:
                 //BurpCallbacks.getInstance().print("ApplyChangeParam: Not supported type");    
                 request = updateParameterJSON(request, changeParam); // We just try this for now...
-                return false;
+                return true;
         }
         
         // Update httpparams linked with this request with correct offsets
@@ -305,9 +305,7 @@ public class SentinelHttpRequest implements Serializable {
     private byte[] updateParameterJSON(byte[] request, SentinelHttpParam changeParam) {
         String req = BurpCallbacks.getInstance().getBurp().getHelpers().bytesToString(request);
         StringBuilder r = new StringBuilder(req);
-        
-        r.replace(changeParam.getValueStart(), changeParam.getValueEnd(), changeParam.getValue());
-        
+        r.replace(origParam.getValueStart(), origParam.getValueEnd(), changeParam.getValue());
         return BurpCallbacks.getInstance().getBurp().getHelpers().stringToBytes(r.toString());
     }
     
