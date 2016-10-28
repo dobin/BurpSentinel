@@ -35,8 +35,6 @@ import util.BurpCallbacks;
 public class BurpExtender implements IExtensionStateListener {
 
     public IBurpExtenderCallbacks mCallbacks;
-    private CustomMenuItem sentinelMenuItem;
-    private CustomMenuItem replayerMenuItem;
 
     private SentinelMainUi sentinelMainUi;
     private ReplayerMainUi replayerMain;
@@ -78,14 +76,10 @@ public class BurpExtender implements IExtensionStateListener {
                 //replayerMain = new ReplayerMainUi();
                 
                 callbacks.addSuiteTab(sentinelMainUi);
+                callbacks.setExtensionName("BurpSentinel");
                 //callbacks.addSuiteTab(replayerMain);
                 
-                // Add burp connections
-                sentinelMenuItem = new CustomMenuItem(sentinelApi);
-                //replayerMenuItem = new CustomMenuItem(replayerMain);
-                
-                callbacks.registerMenuItem("Send to Sentinel", sentinelMenuItem);
-                ///callbacks.registerContextMenuFactory(null);
+                callbacks.registerContextMenuFactory(new BurpSentinelMenu(sentinelApi));
                 callbacks.registerProxyListener(sentinelApi.getProxyListener());
                 callbacks.registerScannerCheck(sentinelApi.getPassiveScanner());
                 //callbacks.registerMessageEditorTabFactory(sentinelApi.getEditorFactoryInfo());
@@ -93,7 +87,7 @@ public class BurpExtender implements IExtensionStateListener {
                 
                 //sentinelMainUi.initTestMessages();
                 
-                BurpCallbacks.getInstance().print("Sentinel v0.8 - May 2015");
+                BurpCallbacks.getInstance().print("Sentinel v0.9 - Nov 2016");
             }
         });
     }
