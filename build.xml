@@ -96,7 +96,7 @@
     
     <target name="-post-jar">  
 
-        <jar jarfile="dist/BurpPlugin-full.jar">  
+        <jar jarfile="dist/BurpSentinel.jar">  
             <zipfileset src="dist/BurpPlugin.jar" excludes="META-INF/*" />  
             <zipfileset src="lib/rsyntaxtextarea.jar" excludes="META-INF/*" />
             <zipfileset src="lib/jtidy-r938.jar" excludes="META-INF/*" />
