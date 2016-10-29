@@ -16,7 +16,7 @@
  */
 package gui.networking;
 
-import attacks.AttackMain;
+import attacks.model.AttackMain;
 import gui.botLeft.PanelLeftInsertions;
 import gui.botLeft.PanelLeftUi;
 import model.SentinelHttpMessageOrig;

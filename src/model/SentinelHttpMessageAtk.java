@@ -16,7 +16,7 @@
  */
 package model;
 
-import attacks.AttackResult;
+import attacks.model.AttackResult;
 import java.io.Serializable;
 import util.BurpCallbacks;
 

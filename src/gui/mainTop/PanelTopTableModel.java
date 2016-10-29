@@ -16,7 +16,7 @@
  */
 package gui.mainTop;
 
-import attacks.AttackData;
+import attacks.model.AttackData;
 import gui.session.SessionManager;
 import java.net.URL;
 import java.text.SimpleDateFormat;

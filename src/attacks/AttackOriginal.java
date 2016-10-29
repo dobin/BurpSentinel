@@ -16,7 +16,9 @@
  */
 package attacks;
 
-import attacks.AttackData.AttackType;
+import attacks.model.AttackI;
+import attacks.model.AttackResult;
+import attacks.model.AttackData.AttackType;
 import gui.botLeft.PanelLeftInsertions;
 import gui.networking.AttackWorkEntry;
 import java.util.logging.Level;

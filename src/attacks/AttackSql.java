@@ -16,6 +16,9 @@
  */
 package attacks;
 
+import attacks.model.AttackI;
+import attacks.model.AttackResult;
+import attacks.model.AttackData;
 import gui.botLeft.PanelLeftInsertions;
 import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;

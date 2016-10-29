@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import attacks.model.AttackI;
 import gui.networking.AttackWorkEntry;
 import gui.session.SessionManager;
 import java.util.logging.Level;

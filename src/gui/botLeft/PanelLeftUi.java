@@ -16,8 +16,9 @@
  */
 package gui.botLeft;
 
-import attacks.AttackMain;
+import attacks.model.AttackMain;
 import gui.SentinelMainUi;
+import gui.botLeft.AttackSelection.AttackSelectionUi;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
@@ -51,6 +52,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private final PanelLeftPopup paramPopup;
     private final PanelLeftOptions optionsPopup;
     private final PopupTableHeaderLeft popupTableHeaderLeft;
+    private final AttackSelectionUi attackSelectionUi;
 
     /**
      * Creates new form RequestConfigForm
@@ -117,6 +119,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
         
         // Init Payload button
         ((PanelLeftInsertions) buttonPayload).init();
+        
+        attackSelectionUi = new AttackSelectionUi();
 
 
         popupTableHeaderLeft = new PopupTableHeaderLeft(tableMessages, tableModel);
@@ -226,6 +230,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         buttonAttack = new javax.swing.JButton();
         buttonOptions = new javax.swing.JButton();
         buttonPayload = new PanelLeftInsertions();
+        buttonPayloadSelection = new javax.swing.JButton();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -261,6 +266,13 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
+        buttonPayloadSelection.setText("Payload Selection");
+        buttonPayloadSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPayloadSelectionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
         panelTopHeaderLayout.setHorizontalGroup(
@@ -269,6 +281,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 .addComponent(buttonOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPayload)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonPayloadSelection)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -279,7 +293,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAttack)
                     .addComponent(buttonOptions)
-                    .addComponent(buttonPayload))
+                    .addComponent(buttonPayload)
+                    .addComponent(buttonPayloadSelection))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -354,10 +369,15 @@ public class PanelLeftUi extends javax.swing.JPanel {
         menu.show(buttonPayload, buttonPayload.getBounds().width, 0);
     }//GEN-LAST:event_buttonPayloadActionPerformed
 
+    private void buttonPayloadSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadSelectionActionPerformed
+        attackSelectionUi.setVisible(true);
+    }//GEN-LAST:event_buttonPayloadSelectionActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
     private javax.swing.JButton buttonPayload;
+    private javax.swing.JButton buttonPayloadSelection;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package attacks;
+package attacks.model;
 
 /**
  *
@@ -68,7 +68,7 @@ public class AttackData {
         return success;
     }
  
-    void urlEncode() {
+    public void urlEncode() {
         input = input.replace(' ', '+');
     }
 }

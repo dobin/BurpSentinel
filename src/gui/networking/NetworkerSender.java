@@ -17,9 +17,9 @@
 package gui.networking;
 
 import attacks.AttackAuthorisation;
-import attacks.AttackI;
+import attacks.model.AttackI;
 import attacks.AttackList;
-import attacks.AttackMain;
+import attacks.model.AttackMain;
 import attacks.AttackOriginal;
 import attacks.AttackOther;
 import attacks.AttackSql;

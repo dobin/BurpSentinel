@@ -16,7 +16,7 @@
  */
 package gui.botLeft;
 
-import attacks.AttackMain;
+import attacks.model.AttackMain;
 import gui.lists.ListManager;
 import gui.lists.ListManagerList;
 import gui.sqlmap.SqlmapManager;

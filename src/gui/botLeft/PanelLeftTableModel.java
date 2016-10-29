@@ -16,7 +16,7 @@
  */
 package gui.botLeft;
 
-import attacks.AttackMain;
+import attacks.model.AttackMain;
 import burp.IParameter;
 import gui.session.SessionManager;
 import java.util.LinkedList;
@@ -274,6 +274,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         this.fireTableDataChanged();
     }
     
+    
     public void intentSelectAll(int column) {
         for(PanelLeftTableUIEntry entry: uiEntries) {
             // UI: Skip path
@@ -351,10 +352,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             }
         }
     }
+    
 
     SentinelHttpParam getHttpParamAt(int selectedRow) {
         return uiEntries.get(selectedRow).sourceHttpParam;
     }
-
 
 }
