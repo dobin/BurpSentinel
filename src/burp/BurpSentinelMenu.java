@@ -38,7 +38,7 @@ public class BurpSentinelMenu implements IContextMenuFactory {
         
         @Override
 	public List<JMenuItem> createMenuItems(final IContextMenuInvocation invocation) {
-            JMenuItem sendToSentinelMenu = new JMenuItem("Send to BurpSentinel 2");
+            JMenuItem sendToSentinelMenu = new JMenuItem("Send to Sentinel");
 
             sendToSentinelMenu.addMouseListener(new MouseListener() {
                     @Override
