@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import util.BurpCallbacks;
 import util.SettingsManager;
 
 /**
@@ -37,13 +38,29 @@ import util.SettingsManager;
 public class PanelLeftOptions implements ActionListener {
 
     private JPopupMenu menuMain;
-    // Menus
+    
+    // Menu option
     private JMenu menuFollowRedirects;
     private JMenuItem menuItemEnableRedirect;
     private JMenuItem menuItemDisableRedirect;
     
+    // Menu attack insertion
+    private JMenu menuInsert;
+    private JMenuItem menuItemReplace;
+    private JMenuItem menuItemInsertLeft;
+    private JMenuItem menuItemInsertRight;
+    
+    
     // Options
     private boolean optionEnableRedirect;
+    
+    
+    public static enum InsertPositions {
+        REPLACE,
+        LEFT,
+        RIGHT,};
+    private PanelLeftInsertions.InsertPositions optionInsertPosition;
+    
 
     public PanelLeftOptions() {
         init();
@@ -52,10 +69,12 @@ public class PanelLeftOptions implements ActionListener {
     private void init() {
         // Options
         optionEnableRedirect = SettingsManager.restorePanelLeftOptionRedirect();
+        optionInsertPosition = SettingsManager.restorePanelLeftOptionPosition();
 
-        // Menu
+
         menuMain = new JPopupMenu("Options");
 
+        // Menu option
         menuFollowRedirects = new JMenu("Follow Redirects: ");
         menuItemDisableRedirect = new JMenuItem("Disable");
         menuItemEnableRedirect = new JMenuItem("Enable");
@@ -63,8 +82,21 @@ public class PanelLeftOptions implements ActionListener {
         menuItemEnableRedirect.addActionListener(this);
         menuFollowRedirects.add(menuItemEnableRedirect);
         menuFollowRedirects.add(menuItemDisableRedirect);
-
         menuMain.add(menuFollowRedirects);
+        
+        
+        // Menu
+        menuInsert = new JMenu("Insert");
+        menuItemReplace = new JMenuItem("Replace");
+        menuItemInsertLeft = new JMenuItem("Insert Left");
+        menuItemInsertRight = new JMenuItem("Insert Right");
+        menuItemReplace.addActionListener(this);
+        menuItemInsertLeft.addActionListener(this);
+        menuItemInsertRight.addActionListener(this);
+        menuInsert.add(menuItemReplace);
+        menuInsert.add(menuItemInsertLeft);
+        menuInsert.add(menuItemInsertRight);
+        menuMain.add(menuInsert);
 
         refresh();
     }
@@ -78,10 +110,30 @@ public class PanelLeftOptions implements ActionListener {
             menuItemDisableRedirect.setEnabled(false);
         }
 
+        switch (optionInsertPosition) {
+            case REPLACE:
+                menuItemReplace.setEnabled(false);
+                menuItemInsertLeft.setEnabled(true);
+                menuItemInsertRight.setEnabled(true);
+                break;
+            case LEFT:
+                menuItemReplace.setEnabled(true);
+                menuItemInsertLeft.setEnabled(false);
+                menuItemInsertRight.setEnabled(true);
+                break;
+            case RIGHT:
+                menuItemReplace.setEnabled(true);
+                menuItemInsertLeft.setEnabled(true);
+                menuItemInsertRight.setEnabled(false);
+                break;
+            default:
+                BurpCallbacks.getInstance().print("Nope");
+        }
     }
 
     void storeUiPrefs() {
         SettingsManager.storePanelLeftOptionRedirect(optionEnableRedirect);
+        SettingsManager.storePanelLeftOptionPosition(optionInsertPosition);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -95,11 +147,23 @@ public class PanelLeftOptions implements ActionListener {
         } else if (e.getSource() == menuItemDisableRedirect) {
             optionEnableRedirect = false;
         }
+        
+        if (e.getSource() == menuItemReplace) {
+            optionInsertPosition = PanelLeftInsertions.InsertPositions.REPLACE;
+        } else if (e.getSource() == menuItemInsertLeft) {
+            optionInsertPosition = PanelLeftInsertions.InsertPositions.LEFT;
+        } else if (e.getSource() == menuItemInsertRight) {
+            optionInsertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
+        }
 
         refresh();
     }
 
     boolean getOptionRedirect() {
         return optionEnableRedirect;
+    }
+    
+    PanelLeftInsertions.InsertPositions getOptionInsertPosition() {
+        return optionInsertPosition;
     }
 }

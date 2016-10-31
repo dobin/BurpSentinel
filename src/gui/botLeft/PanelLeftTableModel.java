@@ -16,10 +16,13 @@
  */
 package gui.botLeft;
 
+import attacks.model.AttackDescription;
 import attacks.model.AttackMain;
 import burp.IParameter;
+import gui.botLeft.AttackSelection.AttackSelectionTableModel;
 import gui.session.SessionManager;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.DefaultTableModel;
@@ -40,19 +43,24 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     // The Request belonging to this table
     private SentinelHttpMessageOrig myMessage = null;
     
+    // The attack selection table model
+    // So we know which attacks the user want to perform
+    private AttackSelectionTableModel attackSelectionTableModel;
+    
     // the table data itself 
     //   rows in a linked list
     //   list entry object data are columns
     private final LinkedList<PanelLeftTableUIEntry> uiEntries = new LinkedList<PanelLeftTableUIEntry>();
 
-    public PanelLeftTableModel() {
+    public PanelLeftTableModel(AttackSelectionTableModel attackSelectionTableModel) {
+        this.attackSelectionTableModel = attackSelectionTableModel;
     }
     
 
     @Override
     public boolean isCellEditable(int row, int column) {
         // For checkboxes
-        if (column == 3 || column == 4 || column == 5 || column == 6) {
+        if (column == 3 || column == 4) {
             return true;
         }
         
@@ -77,7 +85,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     @Override
     public int getColumnCount() {
-        return 7;
+        return 4;
     }
     
 
@@ -92,13 +100,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 2:
                 return String.class;
 
-            case 3: // XSS
-                return Boolean.class;
-            case 4: // SQL
-                return Boolean.class;
-            case 5: // SQLE
-                return Boolean.class;
-            case 6: // Other
+            case 3: // Attack
                 return Boolean.class;
 
             default:
@@ -118,13 +120,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 return "Value";
 
             case 3:
-                return "XSS";
-            case 4:
-                return "SQLu";
-            case 5:
-                return "SQLs";
-            case 6:
-                return "Misc";
+                return "Attack";
 
             default:
                 return "hmm";
@@ -136,16 +132,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     public void setValueAt(Object value, int row, int column) {
         switch (column) {
             case 3:
-                uiEntries.get(row).isXssEnabled = !uiEntries.get(row).isXssEnabled;
-                break;
-            case 4:
-                uiEntries.get(row).isSqlEnabled = !uiEntries.get(row).isSqlEnabled;
-                break;
-            case 5:
-                uiEntries.get(row).isSqleEnabled = !uiEntries.get(row).isSqleEnabled;
-                break;
-            case 6:
-                uiEntries.get(row).isOtherEnabled = !uiEntries.get(row).isOtherEnabled;
+                uiEntries.get(row).performAttack = !uiEntries.get(row).performAttack;
                 break;
         }
 
@@ -164,13 +151,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             case 2:
                 return uiEntries.get(rowIndex).sourceHttpParam.getDecodedValue();
             case 3:
-                return uiEntries.get(rowIndex).isXssEnabled;
-            case 4:
-                return uiEntries.get(rowIndex).isSqlEnabled;
-            case 5:
-                return uiEntries.get(rowIndex).isSqleEnabled;
-            case 6:
-                return uiEntries.get(rowIndex).isOtherEnabled;
+                return uiEntries.get(rowIndex).performAttack;
+
             default:
                 return "";
         }
@@ -214,29 +196,16 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     public void createChangeParam(PanelLeftUi parent) {
         // Check all params of httpmessage if they should be attacked
-        // This has been set by the UI
+        // This has been set by AttackSelectionUi
 
         for (PanelLeftTableUIEntry entry : uiEntries) {
             SentinelHttpParam param = entry.sourceHttpParam;
 
-            if (entry.isSomethingEnabled()) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.ORIGINAL, null);
-            }
-
-            if (entry.isXssEnabled) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.XSS, null);
-            }
-
-            if (entry.isSqlEnabled) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.SQL, null);
-            }
-            
-            if (entry.isSqleEnabled) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.SQLE, null);
-            }
-
-            if (entry.isOtherEnabled) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.OTHER, null);
+            if (entry.performAttack) {
+                List<AttackDescription> attackDescriptions = attackSelectionTableModel.getSelected();
+                for(AttackDescription attack: attackDescriptions) {
+                    parent.attackSelectedParam(param, attack.getAttackType(), null);
+                }
             }
 
             if (entry.isAuthEnabled) {
@@ -252,20 +221,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             if (entry.sourceHttpParam.getTypeStr().equals("PATH") ) {
                 continue;
             }
-
             
             switch(column) {
                 case 3:
-                    entry.isXssEnabled = ! entry.isXssEnabled;
-                    break;
-                case 4:
-                    entry.isSqlEnabled = ! entry.isSqlEnabled;
-                    break;
-                case 5:
-                    entry.isSqleEnabled = ! entry.isSqleEnabled;
-                    break;
-                case 6:
-                    entry.isOtherEnabled = ! entry.isOtherEnabled;
+                    entry.performAttack = ! entry.performAttack;
                     break;
             }
         }
@@ -284,16 +243,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             
             switch(column) {
                 case 3:
-                    entry.isXssEnabled = true;
-                    break;
-                case 4:
-                    entry.isSqlEnabled = true;
-                    break;
-                case 5:
-                    entry.isSqleEnabled = true;
-                    break;
-                case 6:
-                    entry.isOtherEnabled = true;
+                    entry.performAttack = true;
                     break;
             }
         }
@@ -312,11 +262,8 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
 
     void resetAttackSelection() {
         for(PanelLeftTableUIEntry entry: uiEntries) {
-            entry.isXssEnabled = false;
-            entry.isSqlEnabled = false;
-            entry.isSqleEnabled = false;
-            entry.isOtherEnabled = false;
-
+            entry.performAttack = false;
+            
             entry.isAuthEnabled = false;
             entry.authData = null;
         }
@@ -337,6 +284,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             return false;
         }
     }
+    
 
     // Called if we want to change cookie with a specific session
     void setSessionAttackMessage(boolean enabled, String selected) {

@@ -16,6 +16,9 @@
  */
 package attacks.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author unreal
@@ -32,5 +35,45 @@ public class AttackMain {
         LIST,
         XSSLESSTHAN,
     };
+    
+    static private AttackMain attackMain;
+    
+    static public AttackMain getInstance() {
+        if (attackMain == null) {
+            attackMain = new AttackMain();
+        }
+        
+        return attackMain;
+    }
+    
+    
+    private ArrayList<AttackDescription> attackList;
+    
+    private AttackMain() {
+        attackList = new ArrayList<AttackDescription>();
+        
+        attackList.add(new AttackDescription(AttackTypes.XSS, "XSS"));
+        attackList.add(new AttackDescription(AttackTypes.SQL, "SQL"));
+        attackList.add(new AttackDescription(AttackTypes.SQLE, "SQLe"));
+    }
+    
+
+    public List<AttackDescription> getAttackDescriptions() {
+        return attackList;
+    }    
+    
+    AttackI getAttackClass(AttackTypes attackType) {
+        AttackI attack;
+        
+        switch(attackType) {
+            case XSS:
+                //return new AttackXss();
+                return null;
+            default: 
+                return null;
+        }
+    }
+    
+
     
 }

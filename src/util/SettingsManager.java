@@ -16,6 +16,7 @@
  */
 package util;
 
+import attacks.model.AttackDescription;
 import gui.botLeft.PanelLeftInsertions.InsertPositions;
 import gui.categorizer.model.Category;
 import gui.session.SessionUser;
@@ -28,6 +29,7 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -48,7 +50,7 @@ public class SettingsManager {
     private static Theme theme = null;
     
     public static void resetConfig() {
-        BurpCallbacks.getInstance().print("AAA");
+        BurpCallbacks.getInstance().print("Reset config");
         try {
             //Preferences.userRoot().removeNode();
             
@@ -304,6 +306,7 @@ public class SettingsManager {
         return InsertPositions.valueOf(res);
     }
     
+    
     public static void storeEnableRelativeResponseSize(boolean b) {
         Preferences pref = Preferences.userRoot().node("Options");
         pref.putBoolean("RelativeResponseSize", b);
@@ -313,8 +316,7 @@ public class SettingsManager {
         Preferences pref = Preferences.userRoot().node("Options");
         boolean res = pref.getBoolean("RelativeResponseSize", true);
         return res;
-    }
-    
+    }    
     
 
     public static SqlmapData getSqlmapConfig() {
@@ -336,5 +338,22 @@ public class SettingsManager {
         pref.put("WorkingDir", data.workingDir);
     }
 
+    
+    public static void storeAttackSelectionConfig(List<AttackDescription> attacks) {
+        Preferences pref = Preferences.userRoot().node("AttackSelection");
+        
+        for(AttackDescription attack: attacks) {
+            pref.putBoolean(attack.getShort(), attack.isEnabled());
+        }
+    }
+    
+    
+    public static void getAttackSelectionConfig(List<AttackDescription> attacks) {
+        Preferences pref = Preferences.userRoot().node("AttackSelection");
+        
+        for(AttackDescription attack: attacks) {
+            attack.setEnabled( pref.getBoolean(attack.getShort(), false) );
+        }
+    }
     
 }

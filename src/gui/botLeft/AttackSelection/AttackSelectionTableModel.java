@@ -16,7 +16,13 @@
  */
 package gui.botLeft.AttackSelection;
 
+import attacks.model.AttackDescription;
+import attacks.model.AttackMain;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import util.SettingsManager;
 
 /**
  *
@@ -24,17 +30,42 @@ import javax.swing.table.DefaultTableModel;
  */
 public class AttackSelectionTableModel extends DefaultTableModel {
     
+    List<AttackDescription> attackDescriptions;
+    
+    AttackSelectionTableModel() {
+        attackDescriptions = new ArrayList<AttackDescription>();
+        this.attackDescriptions = AttackMain.getInstance().getAttackDescriptions();
+        SettingsManager.getAttackSelectionConfig(attackDescriptions);
+    }
+    
+    
+    public List<AttackDescription> getSelected() {
+        List<AttackDescription> activeAttacks = new LinkedList<AttackDescription>();
+
+        for(AttackDescription attack: attackDescriptions) {
+            if (attack.isEnabled()) {
+                activeAttacks.add(attack);
+            }
+        }
+        
+        return activeAttacks;
+    }
+    
     
     @Override
     public int getRowCount() {
-        return 2;
+        if (attackDescriptions == null) {
+            return 0;
+        } else {
+            return attackDescriptions.size();
+        }    
     }
+    
     
     @Override
     public int getColumnCount() {
-        return 2;
+        return 3;
     }
-    
     
     
     @Override
@@ -46,14 +77,49 @@ public class AttackSelectionTableModel extends DefaultTableModel {
                 return "Description";
             case 2:
                 return "Active";
+                
             default:
                 return "hmm";
+        }
+    }
+    
+    
+    @Override
+    public Class getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 0:
+                return String.class;
+            case 1:
+                return String.class;
+            case 2: 
+                return Boolean.class;
+
+            default:
+                return String.class;
         }
     }
 
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return "Test";
+        switch (columnIndex) {
+            case 0:
+                return attackDescriptions.get(rowIndex).getShort();
+            case 1:
+                return attackDescriptions.get(rowIndex).getDescription();
+            case 2:
+                return attackDescriptions.get(rowIndex).isEnabled();
+            default: return "";
+        }
+    }
+    
+    
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        if (column == 2) {
+            attackDescriptions.get(row).setEnabled( ! attackDescriptions.get(row).isEnabled());
+            
+            SettingsManager.storeAttackSelectionConfig(attackDescriptions);
+        }
     }
 }

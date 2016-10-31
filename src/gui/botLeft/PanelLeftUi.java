@@ -54,30 +54,24 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private final PopupTableHeaderLeft popupTableHeaderLeft;
     private final AttackSelectionUi attackSelectionUi;
 
+    
     /**
      * Creates new form RequestConfigForm
      */
     public PanelLeftUi() {
-        tableModel = new PanelLeftTableModel();
+        attackSelectionUi = new AttackSelectionUi();
+        tableModel = new PanelLeftTableModel( attackSelectionUi.getTableModel() );
         sessionComboBoxModel = new PanelLeftComboBoxModel();
         comboBoxSession = new JComboBox();
         comboBoxSession.setModel(sessionComboBoxModel);
 
         initComponents();
 
-        int width = 48;
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
         tableMessages.getColumnModel().getColumn(0).setMinWidth(64);
 
-        tableMessages.getColumnModel().getColumn(3).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(3).setMinWidth(width);
-        tableMessages.getColumnModel().getColumn(4).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(4).setMinWidth(width);
-        tableMessages.getColumnModel().getColumn(5).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(5).setMinWidth(width);
-        tableMessages.getColumnModel().getColumn(6).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(6).setMinWidth(width);
-
+        tableMessages.getColumnModel().getColumn(3).setMaxWidth(64);
+        tableMessages.getColumnModel().getColumn(3).setMinWidth(64);
 
         tableMessages.setAutoCreateRowSorter(true);
         SettingsManager.restoreSplitLocation(jSplitPane1, this);
@@ -116,12 +110,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         
         // Options Popup
         optionsPopup = new PanelLeftOptions();
-        
-        // Init Payload button
-        ((PanelLeftInsertions) buttonPayload).init();
-        
-        attackSelectionUi = new AttackSelectionUi();
-
 
         popupTableHeaderLeft = new PopupTableHeaderLeft(tableMessages, tableModel);
         tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
@@ -144,13 +132,16 @@ public class PanelLeftUi extends javax.swing.JPanel {
         });
     }
 
+    
     SentinelHttpParam getSelectedHttpParam() {
         return tableModel.getHttpParamAt(selectedRow);
     }
 
+    
     private TableModel getTableModel() {
         return tableModel;
     }
+    
 
     public void setMessage(SentinelHttpMessageOrig message) {
         this.origHttpMessage = message;
@@ -158,6 +149,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelViewMessage.setHttpMessage(origHttpMessage);
     }
 
+    
     /*
      * Add Attack Message
      * 
@@ -168,6 +160,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelParent.addAttackMessage(attackMessage);
     }
 
+    
     /*
      * Called when click on param attack popup menu
      * 
@@ -181,11 +174,12 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 origHttpMessage,
                 this,
                 optionsPopup.getOptionRedirect(),
-                ((PanelLeftInsertions)buttonPayload).getOptionInsertPosition(),
+                optionsPopup.getOptionInsertPosition(),
                 (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
 
         Networker.getInstance().attackThis(attackEntry);
     }
+    
 
     /*
      * Click on "Go"
@@ -206,6 +200,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         comboBoxSession.setSelectedIndex(0);
     }
 
+    
     /*
      * If we add a virtual parameter (decoded version of existing one), we need
      * to update table model and redraw table.
@@ -229,7 +224,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         panelTopHeader = new javax.swing.JPanel();
         buttonAttack = new javax.swing.JButton();
         buttonOptions = new javax.swing.JButton();
-        buttonPayload = new PanelLeftInsertions();
         buttonPayloadSelection = new javax.swing.JButton();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -259,14 +253,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
-        buttonPayload.setText("Insert: ");
-        buttonPayload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonPayloadActionPerformed(evt);
-            }
-        });
-
-        buttonPayloadSelection.setText("Payload Selection");
+        buttonPayloadSelection.setText("Attack Selection");
         buttonPayloadSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPayloadSelectionActionPerformed(evt);
@@ -280,8 +267,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTopHeaderLayout.createSequentialGroup()
                 .addComponent(buttonOptions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonPayload)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPayloadSelection)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,7 +278,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAttack)
                     .addComponent(buttonOptions)
-                    .addComponent(buttonPayload)
                     .addComponent(buttonPayloadSelection))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -364,11 +348,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
         menu.show(buttonOptions, buttonOptions.getBounds().width, 0);
     }//GEN-LAST:event_buttonOptionsActionPerformed
 
-    private void buttonPayloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadActionPerformed
-        JPopupMenu menu = ((PanelLeftInsertions)buttonPayload).getPopupMenu();
-        menu.show(buttonPayload, buttonPayload.getBounds().width, 0);
-    }//GEN-LAST:event_buttonPayloadActionPerformed
-
     private void buttonPayloadSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadSelectionActionPerformed
         attackSelectionUi.setVisible(true);
     }//GEN-LAST:event_buttonPayloadSelectionActionPerformed
@@ -376,7 +355,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
-    private javax.swing.JButton buttonPayload;
     private javax.swing.JButton buttonPayloadSelection;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -389,19 +367,21 @@ public class PanelLeftUi extends javax.swing.JPanel {
     private javax.swing.JTable tableMessages;
     // End of variables declaration//GEN-END:variables
 
+    
     public void setPanelParent(PanelBotUi aThis) {
         this.panelParent = aThis;
         panelViewMessage.setLinkManager(panelParent.getLinkManager());
     }
 
+    
     public void storeUiPrefs() {
         SettingsManager.storeSplitLocation(jSplitPane1, this);
         SettingsManager.storeTableDimensions(tableMessages, this);
 
         optionsPopup.storeUiPrefs();
-        ((PanelLeftInsertions)buttonPayload).storeUiPrefs();
     }
 
+    
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;
     }

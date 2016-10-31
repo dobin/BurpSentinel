@@ -25,20 +25,13 @@ import model.SentinelHttpParam;
  * @author dobin
  */
 class PanelLeftTableUIEntry {
-    
     public SentinelHttpParam sourceHttpParam;
-    
-    public boolean isXssEnabled;
-    public boolean isSqlEnabled;
-    public boolean isSqleEnabled;
-    public boolean isOtherEnabled;
+
+    public boolean performAttack;
     
     public boolean isAuthEnabled;
     public String authData;
     
     public boolean isOrigEnabled;
     
-    public boolean isSomethingEnabled() {
-        return isXssEnabled || isSqlEnabled || isOtherEnabled;
-    }
 }

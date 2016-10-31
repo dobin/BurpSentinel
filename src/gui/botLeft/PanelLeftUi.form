@@ -71,8 +71,6 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="buttonOptions" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="buttonPayload" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="buttonPayloadSelection" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="buttonAttack" min="-2" pref="67" max="-2" attributes="0"/>
@@ -86,7 +84,6 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="buttonAttack" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="buttonOptions" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="buttonPayload" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="buttonPayloadSelection" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -114,20 +111,9 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonOptionsActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="buttonPayload">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Insert: "/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonPayloadActionPerformed"/>
-                      </Events>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new PanelLeftInsertions()"/>
-                      </AuxValues>
-                    </Component>
                     <Component class="javax.swing.JButton" name="buttonPayloadSelection">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="Payload Selection"/>
+                        <Property name="text" type="java.lang.String" value="Attack Selection"/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonPayloadSelectionActionPerformed"/>
