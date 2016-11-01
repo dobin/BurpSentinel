@@ -204,6 +204,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             if (entry.performAttack) {
                 List<AttackDescription> attackDescriptions = attackSelectionTableModel.getSelected();
                 for(AttackDescription attack: attackDescriptions) {
+                    // First: Do ORIG attack
+                    parent.attackSelectedParam(param, AttackMain.AttackTypes.ORIGINAL, null);
+                    
+                    // Then the one we selected
                     parent.attackSelectedParam(param, attack.getAttackType(), null);
                 }
             }
