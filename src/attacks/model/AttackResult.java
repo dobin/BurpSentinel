@@ -26,7 +26,7 @@ import model.SentinelHttpParam;
  */
 public class AttackResult implements Serializable {
     private String attackName = "";
-    private AttackData.AttackType attackType = null;
+    private AttackData.AttackResultType attackType = null;
     private SentinelHttpParam attackParam = null;
     private boolean success;
     private String resultDescription;
@@ -34,7 +34,7 @@ public class AttackResult implements Serializable {
     /*
      * ResultDescription can be null
      */
-    public AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription) {
+    public AttackResult(AttackData.AttackResultType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription) {
 //        AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success) {
         this.attackName = attackName;
         this.attackType = attackType;
@@ -55,7 +55,7 @@ public class AttackResult implements Serializable {
         return attackName;
     }
 
-    public AttackData.AttackType getAttackType() {
+    public AttackData.AttackResultType getAttackType() {
         return attackType;
     }
 

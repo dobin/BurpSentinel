@@ -24,7 +24,7 @@ package attacks.model;
 public class AttackData {
 
 
-    public enum AttackType {
+    public enum AttackResultType {
         NONE,
         INFO,
         VULN,
@@ -35,16 +35,16 @@ public class AttackData {
     private String output;
     private Boolean success = false;
     private int index = -1;
-    private AttackType attackType;
+    private AttackResultType attackType;
     
-    public AttackData(int index, String input, String output, AttackType attackType) {
+    public AttackData(int index, String input, String output, AttackResultType attackType) {
         this.index = index;
         this.input = input;
         this.output = output;
         this.attackType = attackType;
     }
     
-    public AttackType getAttackType() {
+    public AttackResultType getAttackType() {
         return attackType;
     }
     

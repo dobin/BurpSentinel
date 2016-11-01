@@ -198,7 +198,7 @@ public class PanelTopTableModel extends AbstractTableModel implements Observer {
     }
 
     private String getHighestVulnerabilityOf(SentinelHttpMessageOrig httpMessage) {
-        AttackData.AttackType attackType = AttackData.AttackType.NONE;
+        AttackData.AttackResultType attackType = AttackData.AttackResultType.NONE;
         
         for(SentinelHttpMessageAtk m: httpMessage.getHttpMessageChildren()) {
             if (m.getAttackResult() == null) {
