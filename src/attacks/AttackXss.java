@@ -22,7 +22,11 @@ import attacks.model.AttackData;
 import gui.networking.AttackWorkEntry;
 import model.ResponseHighlight;
 import java.awt.Color;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.XssIndicator;
@@ -36,7 +40,7 @@ import util.ConnectionTimeoutException;
  */
 public class AttackXss extends AttackI {
     // Static:
-    private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
+    private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     private LinkedList<AttackData> attackData;
     
     // Changes per iteration:
@@ -148,7 +152,11 @@ public class AttackXss extends AttackI {
             return httpMessage;
         }
         
-        analyzeResponse(data, httpMessage);
+        try {
+            analyzeResponse(data, httpMessage);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(AttackXss.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
 
         // Highlight indicator anyway
@@ -162,7 +170,7 @@ public class AttackXss extends AttackI {
     }
     
     
-    private void analyzeResponse(AttackData data, SentinelHttpMessageAtk httpMessage) {
+    private void analyzeResponse(AttackData data, SentinelHttpMessageAtk httpMessage) throws UnsupportedEncodingException {
         boolean hasXss = false;
         boolean hasInput = false;
         String message = "<html>";
@@ -172,7 +180,7 @@ public class AttackXss extends AttackI {
                 
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
-                    message += "Found decoded attack string: " + data.getOutput();
+                    message += "Found decoded attack string: " + URLEncoder.encode(data.getOutput(), "UTF-8");
                 }
 
                 break;
@@ -185,7 +193,7 @@ public class AttackXss extends AttackI {
                 // Check for decoded string in response
                 if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
-                    message += "Found decoded attack string: " + data.getOutput();
+                    message += "Found decoded attack string: " + URLEncoder.encode(data.getOutput(), "UTF-8");
                 }
                 
                 // Check if decoded string is at the right place
@@ -200,13 +208,13 @@ public class AttackXss extends AttackI {
             case 8:
                 if (httpMessage.getRes().extractBody().contains(data.getOutput()) && inputReflectedInTag) {
                     hasInput = true;
-                    message += "Found decoded attack string: " + data.getOutput();
+                    message += "Found decoded attack string: " + URLEncoder.encode(data.getOutput(), "UTF-8");
                 }
                 break;
             case 11:
                  if (httpMessage.getRes().extractBody().contains(data.getOutput())) {
                     hasInput = true;
-                    message += "Found decoded attack string: " + data.getOutput();
+                    message += "Found decoded attack string: " + URLEncoder.encode(data.getOutput(), "UTF-8");
                 }
         }
         

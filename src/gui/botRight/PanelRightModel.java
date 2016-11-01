@@ -23,6 +23,7 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessageAtk;
+import util.BurpCallbacks;
 import util.SettingsManager;
 import util.Utility;
 
@@ -61,11 +62,13 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
     }
     
+    
     @Override
     public int getRowCount() {
         return messages.size();
     }
 
+    
     @Override
     public int getColumnCount() {
         return 12;
@@ -121,6 +124,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
     }
 
+    
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         SentinelHttpMessageAtk m = messages.get(rowIndex);
@@ -141,6 +145,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             default: return "AAA";
         }
     }
+    
     
     public String getTooltipAt(int rowIndex, int columnIndex) {
         String ret = null;

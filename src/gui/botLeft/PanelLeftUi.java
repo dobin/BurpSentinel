@@ -254,6 +254,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         });
 
         buttonPayloadSelection.setText("Attack Selection");
+        buttonPayloadSelection.setToolTipText("Select the attack payloads you want to use.");
         buttonPayloadSelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonPayloadSelectionActionPerformed(evt);
@@ -349,7 +350,13 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonOptionsActionPerformed
 
     private void buttonPayloadSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadSelectionActionPerformed
-        attackSelectionUi.setVisible(true);
+        
+        if (attackSelectionUi.isVisible()) {
+            attackSelectionUi.setVisible(false);
+        } else {
+            attackSelectionUi.setLocationRelativeTo(this.panelParent);
+            attackSelectionUi.setVisible(true);
+        }
     }//GEN-LAST:event_buttonPayloadSelectionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -35,7 +35,6 @@ public class AttackResult implements Serializable {
      * ResultDescription can be null
      */
     public AttackResult(AttackData.AttackResultType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription) {
-//        AttackResult(AttackData.AttackType attackType, String attackName, SentinelHttpParam attackParam, boolean success) {
         this.attackName = attackName;
         this.attackType = attackType;
         this.attackParam = attackParam;

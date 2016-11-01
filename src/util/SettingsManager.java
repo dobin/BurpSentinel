@@ -17,7 +17,6 @@
 package util;
 
 import attacks.model.AttackDescription;
-import attacks.model.AttackMain;
 import attacks.model.AttackMain.AttackTypes;
 import gui.botLeft.PanelLeftInsertions.InsertPositions;
 import gui.categorizer.model.Category;

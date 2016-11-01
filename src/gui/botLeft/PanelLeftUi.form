@@ -114,6 +114,7 @@
                     <Component class="javax.swing.JButton" name="buttonPayloadSelection">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Attack Selection"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Select the attack payloads you want to use."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonPayloadSelectionActionPerformed"/>
