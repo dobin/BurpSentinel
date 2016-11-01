@@ -2,7 +2,7 @@
 
 Eases discovery of common security holes in web applications.
 
-* Intro / tutorial: https://github.com/dobin/BurpSentinel/wiki/how-to
+* Intro / tutorial: https://github.com/dobin/BurpSentinel/wiki/BurpSentinel---HowTo-and-introduction
 * Blog: http://dobin.github.io/
 
 With BurpSentinel it is possible for the penetration tester to quickly and easily
