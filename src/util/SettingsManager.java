@@ -17,6 +17,8 @@
 package util;
 
 import attacks.model.AttackDescription;
+import attacks.model.AttackMain;
+import attacks.model.AttackMain.AttackTypes;
 import gui.botLeft.PanelLeftInsertions.InsertPositions;
 import gui.categorizer.model.Category;
 import gui.session.SessionUser;
@@ -352,7 +354,12 @@ public class SettingsManager {
         Preferences pref = Preferences.userRoot().node("AttackSelection");
         
         for(AttackDescription attack: attacks) {
-            attack.setEnabled( pref.getBoolean(attack.getShort(), false) );
+            // Make sane defaults for new users: XSS and SQLE
+            if (attack.getAttackType() == AttackTypes.XSS || attack.getAttackType() == AttackTypes.SQLE) {
+                attack.setEnabled( pref.getBoolean(attack.getShort(), true) );
+            } else {
+                attack.setEnabled( pref.getBoolean(attack.getShort(), false) );
+            }
         }
     }
     
