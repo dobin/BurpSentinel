@@ -132,7 +132,8 @@ public class PanelLeftPopup implements ActionListener {
         SentinelHttpParam httpParam = parent.getSelectedHttpParam();
 
         // attack it
-        parent.attackSelectedParam(httpParam, attackType, null);
+        UiAttackParam attackParam = new UiAttackParam(httpParam, attackType, null);
+        parent.attackSelectedParam(attackParam);
     }
 
     private void initAttackSubmenu() {
@@ -143,11 +144,10 @@ public class PanelLeftPopup implements ActionListener {
         attackSubmenu.add(title);
 
         AttackMain.AttackTypes displayTypes[] = {
-            // Removed following two, as they are already available with checkboxes
-//            AttackMain.AttackTypes.SQL, 
-//            AttackMain.AttackTypes.XSS,
-//            AttackMain.AttackTypes.SQLE,
-//            AttackMain.AttackTypes.OTHER,            
+            AttackMain.AttackTypes.SQL, 
+            AttackMain.AttackTypes.XSS,
+            AttackMain.AttackTypes.SQLE,
+            AttackMain.AttackTypes.OTHER,            
             AttackMain.AttackTypes.XSSLESSTHAN,
 
             // Removed, as no functionality as of yet
@@ -181,7 +181,8 @@ public class PanelLeftPopup implements ActionListener {
         String options = Integer.toString(n);
         
         // attack it
-        parent.attackSelectedParam(httpParam, AttackMain.AttackTypes.LIST, options);
+        UiAttackParam attackParam = new UiAttackParam(httpParam, AttackMain.AttackTypes.LIST, options);
+        parent.attackSelectedParam(attackParam);
     }
 
     void refreshAttackListIndex() {

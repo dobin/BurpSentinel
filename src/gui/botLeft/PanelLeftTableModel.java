@@ -45,7 +45,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     // The attack selection table model
     // So we know which attacks the user want to perform
-    private AttackSelectionTableModel attackSelectionTableModel;
+    private final AttackSelectionTableModel attackSelectionTableModel;
     
     // the table data itself 
     //   rows in a linked list
@@ -173,7 +173,6 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
     
     void reinit() {
         uiEntries.clear();
-        
 
         for(SentinelHttpParamVirt httpParam: myMessage.getReq().getParamsVirt()) {
             PanelLeftTableUIEntry entry = new PanelLeftTableUIEntry();
@@ -192,9 +191,10 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
         // complete table new
         this.fireTableDataChanged();
     }
+  
     
-
-    public void createChangeParam(PanelLeftUi parent) {
+    public List<UiAttackParam> getChangedParams() {
+        List<UiAttackParam> returnParam = new LinkedList<UiAttackParam>();
         // Check all params of httpmessage if they should be attacked
         // This has been set by AttackSelectionUi
 
@@ -205,17 +205,19 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
                 List<AttackDescription> attackDescriptions = attackSelectionTableModel.getSelected();
                 for(AttackDescription attack: attackDescriptions) {
                     // First: Do ORIG attack
-                    parent.attackSelectedParam(param, AttackMain.AttackTypes.ORIGINAL, null);
+                    returnParam.add( new UiAttackParam(param, AttackMain.AttackTypes.ORIGINAL, null));
                     
                     // Then the one we selected
-                    parent.attackSelectedParam(param, attack.getAttackType(), null);
+                    returnParam.add( new UiAttackParam(param, attack.getAttackType(), null));
                 }
             }
 
             if (entry.isAuthEnabled) {
-                parent.attackSelectedParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData);
+                returnParam.add( new UiAttackParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData));
             }
         }
+        
+        return returnParam;
     }
     
 

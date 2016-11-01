@@ -24,6 +24,7 @@ import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
@@ -35,13 +36,13 @@ import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
 import util.SettingsManager;
 
+
 /**
  * UI Element of panel left
  * 
  * @author unreal
  */
 public class PanelLeftUi extends javax.swing.JPanel {
-
     private PanelBotUi panelParent;
     private SentinelHttpMessageOrig origHttpMessage;
     private int selectedRow = -1;
@@ -161,16 +162,20 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }
 
     
-    /*
-     * Called when click on param attack popup menu
+    /* 
+     * Attack attackParam
      * 
-     * The popup menu does not have all the necessary information. Only we have.
+     * Only we, panelLeftUi, have all the necessary information to attack.
+     *
+     * Called by:
+     *   this.attackRessource()
+     *   PanelLeftPopup.attack*()
      */
-    void attackSelectedParam(SentinelHttpParam attackHttpParams, AttackMain.AttackTypes attackType, String options) {
+    void attackSelectedParam(UiAttackParam attackParam) {
         AttackWorkEntry attackEntry = new AttackWorkEntry(
-                attackHttpParams,
-                attackType,
-                options,
+                attackParam.param,
+                attackParam.attackType,
+                attackParam.attackData,
                 origHttpMessage,
                 this,
                 optionsPopup.getOptionRedirect(),
@@ -181,7 +186,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }
     
 
-    /*
+    /* 
      * Click on "Go"
      * Attacks current httpmessage with all selected attacks
      */
@@ -193,7 +198,10 @@ public class PanelLeftUi extends javax.swing.JPanel {
 
         // Transfer UI attack ticks to HttpMessage attacks
         // The function will call attackSelectedParam() appropriatly - we are finished here.
-        tableModel.createChangeParam(this);
+        List<UiAttackParam> attackParamList = tableModel.getChangedParams();
+        for(UiAttackParam attackParam: attackParamList) {
+            attackSelectedParam(attackParam);
+        }
 
         // reset UI attack ticks
         tableModel.resetAttackSelection();
@@ -350,7 +358,6 @@ public class PanelLeftUi extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonOptionsActionPerformed
 
     private void buttonPayloadSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPayloadSelectionActionPerformed
-        
         if (attackSelectionUi.isVisible()) {
             attackSelectionUi.setVisible(false);
         } else {
