@@ -2,8 +2,8 @@
 
 Eases discovery of common security holes in web applications.
 
+* Intro / tutorial: https://github.com/dobin/BurpSentinel/wiki/how-to
 * Blog: http://dobin.github.io/
-* Wiki: https://github.com/dobin/BurpSentinel/wiki
 
 With BurpSentinel it is possible for the penetration tester to quickly and easily
 send a lot of malicious requests to parameters of a HTTP request. Not only that,
