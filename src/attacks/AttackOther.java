@@ -110,7 +110,7 @@ public class AttackOther extends AttackI {
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
         AttackResult res = new AttackResult(
-            AttackData.AttackType.NONE, 
+            AttackData.AttackResultType.NONE, 
             "OTHER" + state, 
             httpMessage.getReq().getChangeParam(), 
             false,

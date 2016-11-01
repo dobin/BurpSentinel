@@ -65,7 +65,7 @@ public class AttackList extends AttackI {
         // Check if input value gets reflected
         if (response.contains(data)) {
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.INFO,
+                    AttackData.AttackResultType.INFO,
                     "LST" + attackWorkEntry.options + "." + state,
                     httpMessage.getReq().getChangeParam(),
                     true,
@@ -77,7 +77,7 @@ public class AttackList extends AttackI {
             httpMessage.getRes().addHighlight(h);
         } else {
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.NONE, 
+                    AttackData.AttackResultType.NONE, 
                     "LST" + attackWorkEntry.options + "." + state, 
                     httpMessage.getReq().getChangeParam(), 
                     false,

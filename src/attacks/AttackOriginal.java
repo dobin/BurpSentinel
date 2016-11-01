@@ -18,7 +18,7 @@ package attacks;
 
 import attacks.model.AttackI;
 import attacks.model.AttackResult;
-import attacks.model.AttackData.AttackType;
+import attacks.model.AttackData.AttackResultType;
 import gui.botLeft.PanelLeftInsertions;
 import gui.networking.AttackWorkEntry;
 import java.util.logging.Level;
@@ -58,7 +58,7 @@ public class AttackOriginal extends AttackI {
             this.message = httpMessage;
             
             AttackResult res = new AttackResult(
-                    AttackType.INFO,
+                    AttackResultType.INFO,
                     "ORIG",
                     httpMessage.getReq().getChangeParam(),
                     false,

@@ -72,18 +72,18 @@ public class AttackXss extends AttackI {
         11  %253Ca%2527%2522%253E
         */
         
-        attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackType.INFO));
-        attackData.add(new AttackData(1, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(2, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(3, indicator + "<p \"=>", indicator + "<p \"=>", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(4, indicator + "%3Cp%20%22%3D%3E", indicator + "<p \"=>", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(5, indicator + "' =", indicator + "' =", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(6, indicator + "%27%20%3D", indicator + "' =", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(7, indicator + "\" =", indicator + "\" =", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(8, indicator + "%22%20%3D", indicator + "\" =", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(9, indicator + "%5C%27%5C%22_\\'\\\"", indicator + "", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(10, indicator + "_\\u0022_æ_\\u00E6_", indicator + "", AttackData.AttackType.VULN));
-        attackData.add(new AttackData(11, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackType.VULN));
+        attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackResultType.INFO));
+        attackData.add(new AttackData(1, indicator + "<p>\"", indicator + "<p>\"", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(2, indicator + "%3Cp%3E%22", indicator + "<p>\"", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(3, indicator + "<p \"=>", indicator + "<p \"=>", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(4, indicator + "%3Cp%20%22%3D%3E", indicator + "<p \"=>", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(5, indicator + "' =", indicator + "' =", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(6, indicator + "%27%20%3D", indicator + "' =", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(7, indicator + "\" =", indicator + "\" =", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(8, indicator + "%22%20%3D", indicator + "\" =", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(9, indicator + "%5C%27%5C%22_\\'\\\"", indicator + "", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(10, indicator + "_\\u0022_æ_\\u00E6_", indicator + "", AttackData.AttackResultType.VULN));
+        attackData.add(new AttackData(11, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackResultType.VULN));
     }
     
     @Override
@@ -239,7 +239,7 @@ public class AttackXss extends AttackI {
             httpMessage.getRes().addHighlight(h);
         } else if (hasInput) {
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.INFO,
+                    AttackData.AttackResultType.INFO,
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
                     true,
@@ -252,7 +252,7 @@ public class AttackXss extends AttackI {
             data.setSuccess(false);
             
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.NONE,
+                    AttackData.AttackResultType.NONE,
                     "XSS" + data.getIndex(), 
                     httpMessage.getReq().getChangeParam(), 
                     false,

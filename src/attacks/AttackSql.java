@@ -164,7 +164,7 @@ public class AttackSql extends AttackI {
                     
                     // Same size as original request!
                     AttackResult res = new AttackResult(
-                            AttackData.AttackType.ABORT,
+                            AttackData.AttackResultType.ABORT,
                             "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
@@ -181,7 +181,7 @@ public class AttackSql extends AttackI {
                 if (newResponseSize == origResponseSize) {
                     // Same size as original request!
                     AttackResult res = new AttackResult(
-                            AttackData.AttackType.INFO,
+                            AttackData.AttackResultType.INFO,
                             "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
@@ -213,7 +213,7 @@ public class AttackSql extends AttackI {
         
         if (hasError) {
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.VULN, 
+                    AttackData.AttackResultType.VULN, 
                     "SQL" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     true,
@@ -224,7 +224,7 @@ public class AttackSql extends AttackI {
             httpMessage.getRes().addHighlight(h);
         } else {
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.NONE, 
+                    AttackData.AttackResultType.NONE, 
                     "SQL" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     false,

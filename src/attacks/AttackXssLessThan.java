@@ -127,7 +127,7 @@ public class AttackXssLessThan extends AttackI {
             AttackData atkData = new AttackData(n, 
                     indicator + s, 
                     indicator + "<", 
-                    AttackData.AttackType.VULN);
+                    AttackData.AttackResultType.VULN);
             attackDataXss.add(atkData);
         }       
         return true;
@@ -187,7 +187,7 @@ public class AttackXssLessThan extends AttackI {
             data.setSuccess(false);
 
             AttackResult res = new AttackResult(
-                    AttackData.AttackType.NONE,
+                    AttackData.AttackResultType.NONE,
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     false,
