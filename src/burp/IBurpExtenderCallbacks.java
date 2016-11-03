@@ -27,6 +27,7 @@ import java.util.Map;
  */
 public interface IBurpExtenderCallbacks
 {
+
     /**
      * Flag used to identify Burp Suite as a whole.
      */
@@ -81,9 +82,8 @@ public interface IBurpExtenderCallbacks
     void setExtensionName(String name);
 
     /**
-     * This method is used to obtain an
-     * <code>IExtensionHelpers</code> object, which can be used by the extension
-     * to perform numerous useful tasks.
+     * This method is used to obtain an <code>IExtensionHelpers</code> object,
+     * which can be used by the extension to perform numerous useful tasks.
      *
      * @return An object containing numerous helper methods, for tasks such as
      * building and analyzing HTTP requests.
@@ -110,6 +110,22 @@ public interface IBurpExtenderCallbacks
     OutputStream getStderr();
 
     /**
+     * This method prints a line of output to the current extension's standard
+     * output stream.
+     *
+     * @param output The message to print.
+     */
+    void printOutput(String output);
+
+    /**
+     * This method prints a line of output to the current extension's standard
+     * error stream.
+     *
+     * @param error The message to print.
+     */
+    void printError(String error);
+
+    /**
      * This method is used to register a listener which will be notified of
      * changes to the extension's state. <b>Note:</b> Any extensions that start
      * background threads or open system resources (such as files or database
@@ -120,6 +136,23 @@ public interface IBurpExtenderCallbacks
      * <code>IExtensionStateListener</code> interface.
      */
     void registerExtensionStateListener(IExtensionStateListener listener);
+
+    /**
+     * This method is used to retrieve the extension state listeners that are
+     * registered by the extension.
+     *
+     * @return A list of extension state listeners that are currently registered
+     * by this extension.
+     */
+    List<IExtensionStateListener> getExtensionStateListeners();
+
+    /**
+     * This method is used to remove an extension state listener that has been
+     * registered by the extension.
+     *
+     * @param listener The extension state listener to be removed.
+     */
+    void removeExtensionStateListener(IExtensionStateListener listener);
 
     /**
      * This method is used to register a listener which will be notified of
@@ -133,6 +166,23 @@ public interface IBurpExtenderCallbacks
     void registerHttpListener(IHttpListener listener);
 
     /**
+     * This method is used to retrieve the HTTP listeners that are registered by
+     * the extension.
+     *
+     * @return A list of HTTP listeners that are currently registered by this
+     * extension.
+     */
+    List<IHttpListener> getHttpListeners();
+
+    /**
+     * This method is used to remove an HTTP listener that has been registered
+     * by the extension.
+     *
+     * @param listener The HTTP listener to be removed.
+     */
+    void removeHttpListener(IHttpListener listener);
+
+    /**
      * This method is used to register a listener which will be notified of
      * requests and responses being processed by the Proxy tool. Extensions can
      * perform custom analysis or modification of these messages, and control
@@ -142,6 +192,23 @@ public interface IBurpExtenderCallbacks
      * <code>IProxyListener</code> interface.
      */
     void registerProxyListener(IProxyListener listener);
+
+    /**
+     * This method is used to retrieve the Proxy listeners that are registered
+     * by the extension.
+     *
+     * @return A list of Proxy listeners that are currently registered by this
+     * extension.
+     */
+    List<IProxyListener> getProxyListeners();
+
+    /**
+     * This method is used to remove a Proxy listener that has been registered
+     * by the extension.
+     *
+     * @param listener The Proxy listener to be removed.
+     */
+    void removeProxyListener(IProxyListener listener);
 
     /**
      * This method is used to register a listener which will be notified of new
@@ -155,6 +222,23 @@ public interface IBurpExtenderCallbacks
     void registerScannerListener(IScannerListener listener);
 
     /**
+     * This method is used to retrieve the Scanner listeners that are registered
+     * by the extension.
+     *
+     * @return A list of Scanner listeners that are currently registered by this
+     * extension.
+     */
+    List<IScannerListener> getScannerListeners();
+
+    /**
+     * This method is used to remove a Scanner listener that has been registered
+     * by the extension.
+     *
+     * @param listener The Scanner listener to be removed.
+     */
+    void removeScannerListener(IScannerListener listener);
+
+    /**
      * This method is used to register a listener which will be notified of
      * changes to Burp's suite-wide target scope.
      *
@@ -162,6 +246,23 @@ public interface IBurpExtenderCallbacks
      * <code>IScopeChangeListener</code> interface.
      */
     void registerScopeChangeListener(IScopeChangeListener listener);
+
+    /**
+     * This method is used to retrieve the scope change listeners that are
+     * registered by the extension.
+     *
+     * @return A list of scope change listeners that are currently registered by
+     * this extension.
+     */
+    List<IScopeChangeListener> getScopeChangeListeners();
+
+    /**
+     * This method is used to remove a scope change listener that has been
+     * registered by the extension.
+     *
+     * @param listener The scope change listener to be removed.
+     */
+    void removeScopeChangeListener(IScopeChangeListener listener);
 
     /**
      * This method is used to register a factory for custom context menu items.
@@ -173,6 +274,23 @@ public interface IBurpExtenderCallbacks
      * <code>IContextMenuFactory</code> interface.
      */
     void registerContextMenuFactory(IContextMenuFactory factory);
+
+    /**
+     * This method is used to retrieve the context menu factories that are
+     * registered by the extension.
+     *
+     * @return A list of context menu factories that are currently registered by
+     * this extension.
+     */
+    List<IContextMenuFactory> getContextMenuFactories();
+
+    /**
+     * This method is used to remove a context menu factory that has been
+     * registered by the extension.
+     *
+     * @param factory The context menu factory to be removed.
+     */
+    void removeContextMenuFactory(IContextMenuFactory factory);
 
     /**
      * This method is used to register a factory for custom message editor tabs.
@@ -187,6 +305,23 @@ public interface IBurpExtenderCallbacks
     void registerMessageEditorTabFactory(IMessageEditorTabFactory factory);
 
     /**
+     * This method is used to retrieve the message editor tab factories that are
+     * registered by the extension.
+     *
+     * @return A list of message editor tab factories that are currently
+     * registered by this extension.
+     */
+    List<IMessageEditorTabFactory> getMessageEditorTabFactories();
+
+    /**
+     * This method is used to remove a message editor tab factory that has been
+     * registered by the extension.
+     *
+     * @param factory The message editor tab factory to be removed.
+     */
+    void removeMessageEditorTabFactory(IMessageEditorTabFactory factory);
+
+    /**
      * This method is used to register a provider of Scanner insertion points.
      * For each base request that is actively scanned, Burp will ask the
      * provider to provide any custom scanner insertion points that are
@@ -199,6 +334,24 @@ public interface IBurpExtenderCallbacks
             IScannerInsertionPointProvider provider);
 
     /**
+     * This method is used to retrieve the Scanner insertion point providers
+     * that are registered by the extension.
+     *
+     * @return A list of Scanner insertion point providers that are currently
+     * registered by this extension.
+     */
+    List<IScannerInsertionPointProvider> getScannerInsertionPointProviders();
+
+    /**
+     * This method is used to remove a Scanner insertion point provider that has
+     * been registered by the extension.
+     *
+     * @param provider The Scanner insertion point provider to be removed.
+     */
+    void removeScannerInsertionPointProvider(
+            IScannerInsertionPointProvider provider);
+
+    /**
      * This method is used to register a custom Scanner check. When performing
      * scanning, Burp will ask the check to perform active or passive scanning
      * on the base request, and report any Scanner issues that are identified.
@@ -207,6 +360,23 @@ public interface IBurpExtenderCallbacks
      * <code>IScannerCheck</code> interface.
      */
     void registerScannerCheck(IScannerCheck check);
+
+    /**
+     * This method is used to retrieve the Scanner checks that are registered by
+     * the extension.
+     *
+     * @return A list of Scanner checks that are currently registered by this
+     * extension.
+     */
+    List<IScannerCheck> getScannerChecks();
+
+    /**
+     * This method is used to remove a Scanner check that has been registered by
+     * the extension.
+     *
+     * @param check The Scanner check to be removed.
+     */
+    void removeScannerCheck(IScannerCheck check);
 
     /**
      * This method is used to register a factory for Intruder payloads. Each
@@ -223,6 +393,25 @@ public interface IBurpExtenderCallbacks
             IIntruderPayloadGeneratorFactory factory);
 
     /**
+     * This method is used to retrieve the Intruder payload generator factories
+     * that are registered by the extension.
+     *
+     * @return A list of Intruder payload generator factories that are currently
+     * registered by this extension.
+     */
+    List<IIntruderPayloadGeneratorFactory>
+            getIntruderPayloadGeneratorFactories();
+
+    /**
+     * This method is used to remove an Intruder payload generator factory that
+     * has been registered by the extension.
+     *
+     * @param factory The Intruder payload generator factory to be removed.
+     */
+    void removeIntruderPayloadGeneratorFactory(
+            IIntruderPayloadGeneratorFactory factory);
+
+    /**
      * This method is used to register a custom Intruder payload processor. Each
      * registered processor will be available within the Intruder UI for the
      * user to select as the action for a payload processing rule.
@@ -231,6 +420,23 @@ public interface IBurpExtenderCallbacks
      * <code>IIntruderPayloadProcessor</code> interface.
      */
     void registerIntruderPayloadProcessor(IIntruderPayloadProcessor processor);
+
+    /**
+     * This method is used to retrieve the Intruder payload processors that are
+     * registered by the extension.
+     *
+     * @return A list of Intruder payload processors that are currently
+     * registered by this extension.
+     */
+    List<IIntruderPayloadProcessor> getIntruderPayloadProcessors();
+
+    /**
+     * This method is used to remove an Intruder payload processor that has been
+     * registered by the extension.
+     *
+     * @param processor The Intruder payload processor to be removed.
+     */
+    void removeIntruderPayloadProcessor(IIntruderPayloadProcessor processor);
 
     /**
      * This method is used to register a custom session handling action. Each
@@ -242,6 +448,23 @@ public interface IBurpExtenderCallbacks
      * <code>ISessionHandlingAction</code> interface.
      */
     void registerSessionHandlingAction(ISessionHandlingAction action);
+
+    /**
+     * This method is used to retrieve the session handling actions that are
+     * registered by the extension.
+     *
+     * @return A list of session handling actions that are currently registered
+     * by this extension.
+     */
+    List<ISessionHandlingAction> getSessionHandlingActions();
+
+    /**
+     * This method is used to remove a session handling action that has been
+     * registered by the extension.
+     *
+     * @param action The extension session handling action to be removed.
+     */
+    void removeSessionHandlingAction(ISessionHandlingAction action);
 
     /**
      * This method is used to unload the extension from Burp Suite.
@@ -267,7 +490,9 @@ public interface IBurpExtenderCallbacks
 
     /**
      * This method is used to customize UI components in line with Burp's UI
-     * style, including font size, colors, table line spacing, etc.
+     * style, including font size, colors, table line spacing, etc. The action
+     * is performed recursively on any child components of the passed-in
+     * component.
      *
      * @param component The UI component to be customized.
      */
@@ -316,8 +541,7 @@ public interface IBurpExtenderCallbacks
 
     /**
      * This method is used to load configuration settings for the extension that
-     * were saved using the method
-     * <code>saveExtensionSetting()</code>.
+     * were saved using the method <code>saveExtensionSetting()</code>.
      *
      * @param name The name of the setting.
      * @return The value of the setting, or <code>null</code> if no value is
@@ -391,6 +615,13 @@ public interface IBurpExtenderCallbacks
             boolean useHttps,
             byte[] request,
             List<int[]> payloadPositionOffsets);
+
+    /**
+     * This method can be used to send data to the Comparer tool.
+     *
+     * @param data The data to be sent to Comparer.
+     */
+    void sendToComparer(byte[] data);
 
     /**
      * This method can be used to send a seed URL to the Burp Spider tool. If
@@ -570,7 +801,8 @@ public interface IBurpExtenderCallbacks
      * @param issues The Scanner issues to be reported.
      * @param file The file to which the report will be saved.
      */
-    void generateScanReport(String format, IScanIssue[] issues, java.io.File file);
+    void generateScanReport(String format, IScanIssue[] issues,
+            java.io.File file);
 
     /**
      * This method is used to retrieve the contents of Burp's session handling
@@ -614,7 +846,9 @@ public interface IBurpExtenderCallbacks
      * and must not be called from the event dispatch thread.
      *
      * @param file The file containing Burp's saved state.
+     * @deprecated State files have been replaced with Burp project files.
      */
+    @Deprecated
     void restoreState(java.io.File file);
 
     /**
@@ -623,7 +857,9 @@ public interface IBurpExtenderCallbacks
      * called from the event dispatch thread.
      *
      * @param file The file to save Burp's state in.
+     * @deprecated State files have been replaced with Burp project files.
      */
+    @Deprecated
     void saveState(java.io.File file);
 
     /**
@@ -632,7 +868,9 @@ public interface IBurpExtenderCallbacks
      *
      * @return A Map of name/value Strings reflecting Burp's current
      * configuration.
+     * @deprecated Use <code>saveConfigAsJson()</code> instead.
      */
+    @Deprecated
     Map<String, String> saveConfig();
 
     /**
@@ -641,13 +879,42 @@ public interface IBurpExtenderCallbacks
      * be restored to their default values. To selectively update only some
      * settings and leave the rest unchanged, you should first call
      * <code>saveConfig()</code> to obtain Burp's current configuration, modify
-     * the relevant items in the Map, and then call
-     * <code>loadConfig()</code> with the same Map.
+     * the relevant items in the Map, and then call <code>loadConfig()</code>
+     * with the same Map.
      *
      * @param config A map of name/value Strings to use as Burp's new
      * configuration.
+     * @deprecated Use <code>loadConfigFromJson()</code> instead.
      */
+    @Deprecated
     void loadConfig(Map<String, String> config);
+
+    /**
+     * This method causes Burp to save its current project-level configuration
+     * in JSON format. This is the same format that can be saved and loaded via
+     * the Burp user interface. To include only certain sections of the
+     * configuration, you can optionally supply the path to each section that
+     * should be included, for example: "project_options.connections". If no
+     * paths are provided, then the entire configuration will be saved.
+     *
+     * @param configPaths A list of Strings representing the path to each
+     * configuration section that should be included.
+     * @return A String representing the current configuration in JSON format.
+     */
+    String saveConfigAsJson(String... configPaths);
+
+    /**
+     * This method causes Burp to load a new project-level configuration from
+     * the JSON String provided. This is the same format that can be saved and
+     * loaded via the Burp user interface. Partial configurations are
+     * acceptable, and any settings not specified will be left unmodified.
+     *
+     * Any user-level configuration options contained in the input will be
+     * ignored.
+     *
+     * @param config A JSON String containing the new configuration.
+     */
+    void loadConfigFromJson(String config);
 
     /**
      * This method sets the master interception mode for Burp Proxy.
@@ -668,6 +935,23 @@ public interface IBurpExtenderCallbacks
      * (e.g. 03)
      */
     String[] getBurpVersion();
+
+    /**
+     * This method retrieves the absolute path name of the file from which the
+     * current extension was loaded.
+     *
+     * @return The absolute path name of the file from which the current
+     * extension was loaded.
+     */
+    String getExtensionFilename();
+
+    /**
+     * This method determines whether the current extension was loaded as a BApp
+     * (a Burp App from the BApp Store).
+     *
+     * @return Returns true if the current extension was loaded as a BApp.
+     */
+    boolean isExtensionBapp();
 
     /**
      * This method can be used to shut down Burp programmatically, with an
@@ -747,9 +1031,8 @@ public interface IBurpExtenderCallbacks
     /**
      * This method is used to register a new Scanner issue. <b>Note:</b>
      * Wherever possible, extensions should implement custom Scanner checks
-     * using
-     * <code>IScannerCheck</code> and report issues via those checks, so as to
-     * integrate with Burp's user-driven workflow, and ensure proper
+     * using <code>IScannerCheck</code> and report issues via those checks, so
+     * as to integrate with Burp's user-driven workflow, and ensure proper
      * consolidation of duplicate reported issues. This method is only designed
      * for tasks outside of the normal testing workflow, such as importing
      * results from other scanning tools.
@@ -758,6 +1041,18 @@ public interface IBurpExtenderCallbacks
      * <code>IScanIssue</code> interface.
      */
     void addScanIssue(IScanIssue issue);
+
+    /**
+     * This method is used to create a new Burp Collaborator client context,
+     * which can be used to generate Burp Collaborator payloads and poll the
+     * Collaborator server for any network interactions that result from using
+     * those payloads.
+     *
+     * @return A new instance of  <code>IBurpCollaboratorClientContext</code>
+     * that can be used to generate Collaborator payloads and retrieve
+     * interactions.
+     */
+    IBurpCollaboratorClientContext createBurpCollaboratorClientContext();
 
     /**
      * This method parses the specified request and returns details of each
