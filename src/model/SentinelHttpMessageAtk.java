@@ -29,9 +29,17 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage implements Seria
     private SentinelHttpMessageOrig parentHttpMessage = null;
     private AttackResult attackResult;
     
-     public SentinelHttpMessageAtk(SentinelHttpMessageOrig httpMessage) {
+    private String atkName;
+    private int atkIndex;
+    private String atkIdent;
+    
+     public SentinelHttpMessageAtk(SentinelHttpMessageOrig httpMessage, String atkName, int atkIndex, String atkIdent) {
          super(httpMessage);
          this.parentHttpMessage = httpMessage;
+         
+         this.atkName = atkName;
+         this.atkIndex = atkIndex;
+         this.atkIdent = atkIdent;
          
          parentHttpMessage.addChildren(this);
     }
@@ -42,6 +50,10 @@ public class SentinelHttpMessageAtk extends SentinelHttpMessage implements Seria
         ATTACKRESULT,
         CHILDREN
     };
+    
+    public String getAtkIdent() {
+        return atkIdent;
+    }
     
     public void addAttackResult(AttackResult res) {
         // Add result

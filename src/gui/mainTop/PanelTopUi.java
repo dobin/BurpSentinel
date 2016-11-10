@@ -51,6 +51,7 @@ import util.SettingsManager;
  */
 public class PanelTopUi extends javax.swing.JPanel {
     private final PanelTopTableModel tableTopModel;
+    private final PanelTopPopupTableHeader popupTableModel;
     
     private int currentSelectedRow = -1;
     
@@ -96,6 +97,14 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages.getColumnModel().getColumn(8).setMinWidth(140);
         
         SettingsManager.restoreTableDimensions(tableAllMessages, this);
+        
+        // hide some rows
+        popupTableModel = new PanelTopPopupTableHeader(tableAllMessages);
+        popupTableModel.hideColumn("Comment");
+        popupTableModel.hideColumn("Interesting");
+        popupTableModel.hideColumn("Session");
+        popupTableModel.hideColumn("Created");
+        
     }
     
     private ComboBoxModel getComboBoxModelMain() {

@@ -17,13 +17,9 @@
 package attacks;
 
 import attacks.model.AttackI;
-import attacks.model.AttackResult;
-import attacks.model.AttackData;
 import gui.botLeft.PanelLeftInsertions;
-import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;
-import model.ResponseHighlight;
-import java.awt.Color;
+import java.util.LinkedList;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +32,13 @@ import util.Utility;
  * @author unreal
  */
 public class AttackSqlExtended extends AttackI {
-    private int state = 0;
+    private int state = -1;
+    private AttackSqlExtendedAnalyzer analyzer;
+    private boolean doContinue = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
-
-    final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
+    private LinkedList<byte[]> analRes = new LinkedList<byte[]>();
+    
+    private static String atkName = "SQLE";
     
     private final int attackSqlIntSize = 3;
     private String attackSqlInt(int state, String value) {
@@ -48,7 +47,7 @@ public class AttackSqlExtended extends AttackI {
         switch (state) {
             // break test
             case 0:
-                ret = value + "'BREAK\"";
+                ret = value + "BREAK1'2\"3`";
                 break;
                 
             // pure int based (no quotes)
@@ -96,7 +95,6 @@ public class AttackSqlExtended extends AttackI {
         return ret;
     }
     
-    private boolean doContinue = false;
     
     // return attack string
     // Also sets "doContinue"
@@ -142,7 +140,7 @@ public class AttackSqlExtended extends AttackI {
         return data;
     }
     
-        // return attack string
+    // return attack string
     // Also sets "doContinue"
     // Oh my god this is ugly
     private String getDataStr(AttackWorkEntry attackWorkEntry, String data) {
@@ -188,13 +186,11 @@ public class AttackSqlExtended extends AttackI {
     
      public AttackSqlExtended(AttackWorkEntry work) {
         super(work);
+        
+        analyzer = new AttackSqlExtendedAnalyzer();
     }
 
-             
-    @Override
-    public boolean init() {
-        return true;
-    }
+    
      
     @Override
     public boolean performNextAttack() {        
@@ -209,17 +205,23 @@ public class AttackSqlExtended extends AttackI {
         // Overwrite insert position, as we will always overwrite here
         attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;        
         
-        if (StringUtils.isNumeric(origParamValue)) {
-            data = getDataInt(attackWorkEntry, origParamValue);
-        } else {            
-            data = getDataStr(attackWorkEntry, origParamValue);
+        if (state == -1) {
+            data = origParamValue;
+        } else {
+            if (StringUtils.isNumeric(origParamValue)) {
+                data = getDataInt(attackWorkEntry, origParamValue);
+            } else {
+                data = getDataStr(attackWorkEntry, origParamValue);
+            }            
         }
         
         try {
             SentinelHttpMessage httpMessage = attack(data);
             if (httpMessage == null) {
-            return false;
+                BurpCallbacks.getInstance().getBurp().printOutput("HTTPMESSAGE NULL");
+                return false;
             }
+            analRes.add(httpMessage.getResponse());
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout");
             state++;
@@ -227,102 +229,52 @@ public class AttackSqlExtended extends AttackI {
         }
         
         analyzeResponse();
-        
         state++;
+        
+        // End
+        if (doContinue == false) {
+            BurpCallbacks.getInstance().getBurp().printOutput("End!");
+            analyzer.attackEndAnalyzer(analRes);
+        } else {
+            BurpCallbacks.getInstance().getBurp().printOutput("No End!");
+        }
+        
         return doContinue;
     }
-
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
-    }
     
-    private int responseOnErrorSizeChange = 0;
+    
     private void analyzeResponse() {
-        
-        // Test: Response size
-        if (state == 0) {
-            // First request is the "generate error" request
-            int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
-            int newResponseSize = lastHttpMessage.getRes().getSize();
-            
-            responseOnErrorSizeChange = origResponseSize - newResponseSize;
-            
-            // Whaaat, no difference on error? Check content, and stop if equal
-            if (responseOnErrorSizeChange == 0) {
-                if (attackWorkEntry.origHttpMessage.getRes().getResponseStrBody().equals(lastHttpMessage.getRes().getResponseStrBody())) {
-                    doContinue = false;
-                    
-                    // Same size as original request!
-                    AttackResult res = new AttackResult(
-                            AttackData.AttackResultType.ABORT,
-                            "SQLE" + state,
-                            lastHttpMessage.getReq().getChangeParam(),
-                            true,
-                            "break request identical to original. no chance to identify SQL.");
-                    lastHttpMessage.addAttackResult(res);
-                }
-            }
+        if (state == -1) {
+            analyzeOriginalRequest(lastHttpMessage);
+            doContinue = true;
+        } else if (state == 0) {
+            doContinue = analyzer.analyzeBreak(attackWorkEntry, lastHttpMessage);
         } else {
-            // Check if first (test) request did produce a change
-            if (responseOnErrorSizeChange != 0) {
-                // Check if size differs now
-                int origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
-                int newResponseSize = lastHttpMessage.getRes().getSize();
-                if (newResponseSize == origResponseSize) {
-                    // Same size as original request!
-                    AttackResult res = new AttackResult(
-                            AttackData.AttackResultType.INFO,
-                            "SQLE" + state,
-                            lastHttpMessage.getReq().getChangeParam(),
-                            true,
-                            "Same size as original request: " + origResponseSize);
-                    lastHttpMessage.addAttackResult(res);
-                }
-            }
+            analyzer.analyzeAttackResponse(attackWorkEntry, lastHttpMessage);
         }
     }
 
+    
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
         if (httpMessage == null) {
             return null;
         }
         lastHttpMessage = httpMessage;
         BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-
-        boolean hasError = false;
-        ResponseCategory sqlResponseCategory = null;
-        for(ResponseCategory rc: httpMessage.getRes().getCategories()) {
-            if (rc.getCategoryEntry().getTag().equals("sqlerr")) {
-                hasError = true;
-                sqlResponseCategory = rc;
-                break;
-            }
-        }
-        
-        if (hasError) {
-            AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.VULN, 
-                    "SQLE" + state, 
-                    httpMessage.getReq().getChangeParam(), 
-                    true,
-                    "Error message: " + sqlResponseCategory.getIndicator());
-            httpMessage.addAttackResult(res);
-
-            ResponseHighlight h = new ResponseHighlight(sqlResponseCategory.getIndicator(), failColor);
-            httpMessage.getRes().addHighlight(h);
-        } else {
-            AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.NONE, 
-                    "SQLE" + state, 
-                    httpMessage.getReq().getChangeParam(), 
-                    false,
-                    null);
-            httpMessage.addAttackResult(res);
-        }
         
         return httpMessage;
     }
-
+    
+             
+    @Override
+    public boolean init() {
+        return true;
+    }
+    
+    
+    @Override
+    public SentinelHttpMessageAtk getLastAttackMessage() {
+        return lastHttpMessage;
+    }
 }

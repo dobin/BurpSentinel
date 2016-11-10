@@ -29,6 +29,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
@@ -45,7 +47,7 @@ public class PanelRightUi extends javax.swing.JPanel {
     private PanelBotUi panelParent;
     private PanelRightModel panelRightModel;
     private int currentSelectedRow = -1;
-    private PopupTableHeader popupTableHeader;
+    private PanelRightPopupTableHeader popupTableHeader;
     
     private PanelRightPopup panelRightPopup;
     private PanelRightPopupMultiple panelRightPopupMultiple;
@@ -55,23 +57,25 @@ public class PanelRightUi extends javax.swing.JPanel {
      */
     public PanelRightUi() {
         panelRightModel = new PanelRightModel(this);
+        
         initComponents();
+        panelViewMessage.setTheme("right");
 
         int width = 60;
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(40);
         tableMessages.getColumnModel().getColumn(0).setMinWidth(40);
+
+        tableMessages.getColumnModel().getColumn(1).setMaxWidth(width);
+        tableMessages.getColumnModel().getColumn(1).setMinWidth(width);
         
-        tableMessages.getColumnModel().getColumn(1).setMaxWidth(60);
-        tableMessages.getColumnModel().getColumn(1).setMinWidth(60);
+        tableMessages.getColumnModel().getColumn(2).setMaxWidth(60);
+        tableMessages.getColumnModel().getColumn(2).setMinWidth(60);
         
-        tableMessages.getColumnModel().getColumn(5).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(5).setMinWidth(width);
+        tableMessages.getColumnModel().getColumn(6).setMaxWidth(width);
+        tableMessages.getColumnModel().getColumn(6).setMinWidth(width);
         
-        tableMessages.getColumnModel().getColumn(6).setMaxWidth(width+4);
-        tableMessages.getColumnModel().getColumn(6).setMinWidth(width+4);
-        
-        tableMessages.getColumnModel().getColumn(7).setMaxWidth(width);
-        tableMessages.getColumnModel().getColumn(7).setMinWidth(width);
+        tableMessages.getColumnModel().getColumn(7).setMaxWidth(width+4);
+        tableMessages.getColumnModel().getColumn(7).setMinWidth(width+4);
         
         tableMessages.getColumnModel().getColumn(8).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(8).setMinWidth(width);
@@ -79,11 +83,9 @@ public class PanelRightUi extends javax.swing.JPanel {
         tableMessages.getColumnModel().getColumn(9).setMaxWidth(width);
         tableMessages.getColumnModel().getColumn(9).setMinWidth(width);
 
+
         tableMessages.getColumnModel().getColumn(10).setMaxWidth(20);
         tableMessages.getColumnModel().getColumn(10).setMinWidth(20);
-        
-        //tableMessages.getColumnModel().getColumn(11).setMaxWidth(80);
-        //tableMessages.getColumnModel().getColumn(11).setMinWidth(80);
         
         
         tableMessages.setAutoCreateRowSorter(true);
@@ -113,7 +115,13 @@ public class PanelRightUi extends javax.swing.JPanel {
                 }});
  
         tableMessages.setTableHeader(new TableHeaderTooltip(tableMessages.getColumnModel()));
-        popupTableHeader = new PopupTableHeader(tableMessages);
+        
+        // Hide some columns
+        popupTableHeader = new PanelRightPopupTableHeader(tableMessages);
+        popupTableHeader.hideColumn("Original");
+        popupTableHeader.hideColumn("Type");
+        popupTableHeader.hideColumn("Time");
+        
         tableMessages.getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -312,6 +320,19 @@ public class PanelRightUi extends javax.swing.JPanel {
     public LinkedList<SentinelHttpMessageAtk> getAttackMessage() {
         return panelRightModel.getAllAttackMessages();
     }
+    
+    
+    /* If columns are hidden, we need a translation from UI index to model index
+     * As it is only removed in the UI, we have to have this function here, in the 
+     * UI.
+     */
+    int getEffectiveColumnIndex(int columnIndex) {
+        TableColumnModel tableColumnModel = tableMessages.getColumnModel();
+        TableColumn column = tableColumnModel.getColumn(columnIndex);
+        return column.getModelIndex();
+    }
+    
+
 
     /*** Functions for children ***/
     /*

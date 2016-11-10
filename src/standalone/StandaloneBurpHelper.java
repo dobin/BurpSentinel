@@ -22,6 +22,8 @@ import burp.IHttpService;
 import burp.IParameter;
 import burp.IRequestInfo;
 import burp.IResponseInfo;
+import burp.IResponseKeywords;
+import burp.IResponseVariations;
 import burp.IScannerInsertionPoint;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -171,6 +173,16 @@ public class StandaloneBurpHelper implements IExtensionHelpers {
     @Override
     public IScannerInsertionPoint makeScannerInsertionPoint(String insertionPointName, byte[] baseRequest, int from, int to) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public IResponseVariations analyzeResponseVariations(byte[]... responses) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public IResponseKeywords analyzeResponseKeywords(List<String> keywords, byte[]... responses) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -30,16 +30,18 @@ public class AttackResult implements Serializable {
     private SentinelHttpParam attackParam = null;
     private boolean success;
     private String resultDescription;
+    private String explanation;
 
     /*
      * ResultDescription can be null
      */
-    public AttackResult(AttackData.AttackResultType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription) {
+    public AttackResult(AttackData.AttackResultType attackType, String attackName, SentinelHttpParam attackParam, boolean success, String resultDescription, String explanation) {
         this.attackName = attackName;
         this.attackType = attackType;
         this.attackParam = attackParam;
         this.success = success;
         this.resultDescription = resultDescription;
+        this.explanation = explanation;
     }
     
     public boolean isSuccess() {
@@ -60,5 +62,9 @@ public class AttackResult implements Serializable {
 
     public String getResultDescription() {
         return resultDescription;
+    }
+    
+    public String getExplanation() {
+        return explanation;
     }
 }

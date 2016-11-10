@@ -36,6 +36,7 @@ public class AttackOther extends AttackI {
     private boolean doContinue = false;
     private int state = 0;
     private SentinelHttpMessageAtk lastHttpMessage = null;
+    private String atkName = "OTHER";
     
     private final String[] attackDataOther = {
         ".\\",
@@ -102,7 +103,7 @@ public class AttackOther extends AttackI {
     }
     
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
         if (httpMessage == null) {
             return null;
         }
@@ -114,7 +115,8 @@ public class AttackOther extends AttackI {
             "OTHER" + state, 
             httpMessage.getReq().getChangeParam(), 
             false,
-            null);
+            null,
+            "");
         httpMessage.addAttackResult(res);
         
         return httpMessage;

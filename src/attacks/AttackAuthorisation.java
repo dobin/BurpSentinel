@@ -34,7 +34,8 @@ import util.ConnectionTimeoutException;
 public class AttackAuthorisation extends AttackI {
     private boolean attackAsuccess = false;
     private SentinelHttpMessageAtk httpMessageA;
-
+    private static String atkName = "Auth";
+    
     public AttackAuthorisation(AttackWorkEntry work) {
         super(work);
     }
@@ -58,7 +59,7 @@ public class AttackAuthorisation extends AttackI {
 
         String sessionId = SessionManager.getInstance().getValueFor(attackWorkEntry.options);
 
-        httpMessageA = initAttackHttpMessage(sessionId);
+        httpMessageA = initAttackHttpMessage(sessionId, atkName, 0);
         if (httpMessageA == null) {
             return false;
         }

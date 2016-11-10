@@ -17,12 +17,17 @@
 
 package attacks.model;
 
+import burp.IResponseVariations;
 import gui.networking.AttackWorkEntry;
 import gui.session.SessionManager;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpParam;
 import model.SentinelHttpParamVirt;
 import util.BurpCallbacks;
+import util.ConnectionTimeoutException;
 
 /**
  * Interface for all attack classes
@@ -72,18 +77,22 @@ public abstract class AttackI {
      *   - set parent
      * 
      */
-    protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString) {
+    protected SentinelHttpMessageAtk initAttackHttpMessage(String attackVectorString, String atkName, int state) {
         if (attackWorkEntry == null) {
             BurpCallbacks.getInstance().print("initAttackHttpMessage: work entry is null");
             return null;
         }
         if (attackVectorString == null) {
-             BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: attack is null");
+             BurpCallbacks.getInstance().print("initAttackHttpMessage: attackVectorString error");
              return null;
         }
         
         // Copy httpmessage
-        SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(attackWorkEntry.origHttpMessage);
+        SentinelHttpMessageAtk newHttpMessage = new SentinelHttpMessageAtk(
+            attackWorkEntry.origHttpMessage,
+            atkName,
+            state,
+            atkName + Integer.toString(state));
 
         // Set orig param
         newHttpMessage.getReq().setOrigParam(attackWorkEntry.attackHttpParam);
@@ -94,7 +103,10 @@ public abstract class AttackI {
             changeParam = new SentinelHttpParamVirt( (SentinelHttpParamVirt) attackWorkEntry.attackHttpParam);
         } else if (attackWorkEntry.attackHttpParam instanceof SentinelHttpParam) {
             changeParam = new SentinelHttpParam(attackWorkEntry.attackHttpParam);
-        }   
+        } else {
+             BurpCallbacks.getInstance().print("initAttackHttpMessage: changeValue: error");
+             return null;
+        }
         switch (attackWorkEntry.insertPosition) {
             case LEFT:
                 changeParam.changeValue(attackVectorString + changeParam.getValue());
@@ -132,5 +144,68 @@ public abstract class AttackI {
 
         return newHttpMessage;
     }
+    
+    
+    protected void analyzeOriginalRequest(SentinelHttpMessageAtk origAtkMessage) {
+        int sizeDiff = 0;
+        int origResponseSize;
+        int newResponseSize;
+
+        // Check if response sizes are identical
+        origResponseSize = attackWorkEntry.origHttpMessage.getRes().getSize();
+        newResponseSize = origAtkMessage.getRes().getSize();
+        sizeDiff = origResponseSize - newResponseSize;
+
+        if (sizeDiff == 0) {
+            if (attackWorkEntry.origHttpMessage.getRes().getResponseStrBody().equals(origAtkMessage.getRes().getResponseStrBody())) {
+                // They are 100% identical - that's how it should be!
+                
+                // origMsgComparer.isIdentical = true;
+                AttackResult res = new AttackResult(
+                    AttackData.AttackResultType.STATUSGOOD,
+                    "ORIG",
+                    origAtkMessage.getReq().getChangeParam(),
+                    true,
+                    "Request is optimal",
+                    "The request behaves the same every time is is sent (it generates identical output). Ideal conditions.");
+                origAtkMessage.addAttackResult(res);
+                return;
+            }
+        }
+
+        // OK messages are not identical
+        // But maybe very similar?
+        byte[][] a = new byte[2][];
+        a[0] = attackWorkEntry.origHttpMessage.getResponse();
+        a[1] = origAtkMessage.getResponse();
+               
+        IResponseVariations responseVariant = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponseVariations(a);
+        List<String> variantList = responseVariant.getVariantAttributes();
+        List<String> invariantList = responseVariant.getInvariantAttributes();
+        
+        if (invariantList.contains("tag_ids")) {
+            AttackResult res = new AttackResult(
+                AttackData.AttackResultType.STATUSGOOD,
+                "ORIG",
+                origAtkMessage.getReq().getChangeParam(),
+                true,
+                "Request is ok.",
+                "The request behaves similarly every time it is sent (it has not identical responses, but identical tags in the response). Good conditions.");
+            origAtkMessage.addAttackResult(res);
+            
+            return;
+        }
+        
+        // Very different
+        AttackResult res = new AttackResult(
+            AttackData.AttackResultType.STATUSBAD,
+            "ORIG",
+            origAtkMessage.getReq().getChangeParam(),
+            true,
+            "Request is bad.",
+            "The request behaves differently every time it is sent (the reponses differ vastly). Bad conditions."); // Too much difference
+        origAtkMessage.addAttackResult(res);
+    }
+    
     
 }

@@ -33,7 +33,8 @@ import util.ConnectionTimeoutException;
  */
 public class AttackOriginal extends AttackI {
 
-    private SentinelHttpMessageAtk message;
+    private SentinelHttpMessageAtk httpMessage;
+    private static String atkName = "ORIG";
     
     public AttackOriginal(AttackWorkEntry work) {
         super(work);
@@ -50,21 +51,15 @@ public class AttackOriginal extends AttackI {
     @Override
     public boolean performNextAttack() {
         try {
-            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue());
+            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue(), atkName, 0);
             if (httpMessage == null) {
                return false;
             }
             BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-            this.message = httpMessage;
+            this.httpMessage = httpMessage;
             
-            AttackResult res = new AttackResult(
-                    AttackResultType.INFO,
-                    "ORIG",
-                    httpMessage.getReq().getChangeParam(),
-                    false,
-                    null);
-            httpMessage.addAttackResult(res);
-
+            analyzeResponse();
+            
         } catch (ConnectionTimeoutException ex) {
             Logger.getLogger(AttackOriginal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -74,7 +69,20 @@ public class AttackOriginal extends AttackI {
 
     @Override
     public SentinelHttpMessageAtk getLastAttackMessage() {
-        return message;
+        return httpMessage;
+    }
+    
+    private void analyzeResponse() {
+            AttackResult res = new AttackResult(
+                    AttackResultType.INFO,
+                    "ORIG",
+                    httpMessage.getReq().getChangeParam(),
+                    false,
+                    null,
+                    "");
+            httpMessage.addAttackResult(res);
+
+        
     }
     
 }

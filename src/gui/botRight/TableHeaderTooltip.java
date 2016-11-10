@@ -39,23 +39,24 @@ public class TableHeaderTooltip extends JTableHeader {
             case 0:
                 return "Index";
             case 1:
-                return "Type of request (GET or POST)";
+                return "Which attack has been performed";                
             case 2:
-                return "Name of parameter";
+                return "Type of request (GET or POST)";
             case 3:
-                return "Original content of parameter";
+                return "Name of parameter";
             case 4:
-                return "New attack-content of parameter";
+                return "Original content of parameter";
             case 5:
-                return "HTTP Response Status (200, 404, ...)";
+                return "New attack-content of parameter";
             case 6:
-                return "HTTP Response body length (without headers)";
+                return "HTTP Response Status (200, 404, ...)";
             case 7:
-                return "Number of tags in HTTP Response";
+                return "HTTP Response body length (without headers)";
             case 8:
-                return "Response time in milliseconds";
+                return "Number of tags in HTTP Response";
             case 9:
-                return "Which attack has been performed";
+                return "Response time in milliseconds";
+
             case 10:
                 return "Result of the test (if possible)";
             case 11:

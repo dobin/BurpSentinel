@@ -26,9 +26,18 @@ public class AttackData {
 
     public enum AttackResultType {
         NONE,
+        ABORT,
+        ERROR,
+
+        STATUSGOOD,
+	STATUSBAD,
+
         INFO,
-        VULN,
-        ABORT
+        INFOSURE,
+        INFOUNSURE,
+        
+        VULNSURE,
+        VULNUNSURE
     };
 
     private String input;

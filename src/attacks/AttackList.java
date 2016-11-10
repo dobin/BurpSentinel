@@ -38,6 +38,7 @@ public class AttackList extends AttackI {
 
     private SentinelHttpMessageAtk lastHttpMessage = null;
     private int state = 0;
+    private static String atkName = "LIST";
 
     public AttackList(AttackWorkEntry work) {
         super(work);
@@ -49,7 +50,7 @@ public class AttackList extends AttackI {
     }
 
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
         if (httpMessage == null) {
             return null;
         }
@@ -69,7 +70,8 @@ public class AttackList extends AttackI {
                     "LST" + attackWorkEntry.options + "." + state,
                     httpMessage.getReq().getChangeParam(),
                     true,
-                    "Found: " + data);
+                    "Found: " + data,
+                    "");
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
@@ -81,7 +83,8 @@ public class AttackList extends AttackI {
                     "LST" + attackWorkEntry.options + "." + state, 
                     httpMessage.getReq().getChangeParam(), 
                     false,
-                    null);
+                    null,
+                    "");
             httpMessage.addAttackResult(res);
         }
 

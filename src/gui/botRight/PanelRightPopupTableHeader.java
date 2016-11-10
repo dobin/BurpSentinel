@@ -33,13 +33,13 @@ import util.BurpCallbacks;
  * sauce: http://stackoverflow.com/questions/6793257/add-column-to-exiting-tablemodel/6796673#6796673
  * @author DobinRutishauser@broken.ch
  */
-public class PopupTableHeader extends JPopupMenu implements ActionListener {
+public class PanelRightPopupTableHeader extends JPopupMenu implements ActionListener {
 
     private JTable tableMessages;
     private TableColumnModel tableColumnModel;
     private Map<String, IndexedColumn> hidden = new HashMap<String, IndexedColumn>();
 
-    public PopupTableHeader(JTable tableMessages) {
+    public PanelRightPopupTableHeader(JTable tableMessages) {
         super();
         this.tableMessages = tableMessages;
         this.tableColumnModel = tableMessages.getColumnModel();
@@ -49,7 +49,11 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         menuItem.addActionListener(this);
         this.add(menuItem);
 
-        menuItem = new JCheckBoxMenuItem("Type", true);
+        menuItem = new JCheckBoxMenuItem("Test", true);
+        menuItem.addActionListener(this);
+        this.add(menuItem);
+        
+        menuItem = new JCheckBoxMenuItem("Type", false);
         menuItem.addActionListener(this);
         this.add(menuItem);
 
@@ -57,7 +61,7 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         menuItem.addActionListener(this);
         this.add(menuItem);
 
-        menuItem = new JCheckBoxMenuItem("Original", true);
+        menuItem = new JCheckBoxMenuItem("Original", false);
         menuItem.addActionListener(this);
         this.add(menuItem);
 
@@ -77,11 +81,7 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
         menuItem.addActionListener(this);
         this.add(menuItem);
 
-        menuItem = new JCheckBoxMenuItem("Time", true);
-        menuItem.addActionListener(this);
-        this.add(menuItem);
-
-        menuItem = new JCheckBoxMenuItem("Test", true);
+        menuItem = new JCheckBoxMenuItem("Time", false);
         menuItem.addActionListener(this);
         this.add(menuItem);
 
@@ -118,6 +118,7 @@ public class PopupTableHeader extends JPopupMenu implements ActionListener {
             BurpCallbacks.getInstance().print("Duplicate column name.");
         }
         tableColumnModel.removeColumn(column);
+
         /*
          PanelRightModel rightModel = (PanelRightModel) tableMessages.getModel();
          rightModel.fireTableStructureChanged();

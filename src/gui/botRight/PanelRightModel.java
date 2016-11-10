@@ -23,7 +23,6 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.table.AbstractTableModel;
 import model.SentinelHttpMessageAtk;
-import util.BurpCallbacks;
 import util.SettingsManager;
 import util.Utility;
 
@@ -79,10 +78,9 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
     public Class getColumnClass(int columnIndex) {
         switch(columnIndex) {
             case 0: return Integer.class;
-            case 5: return Integer.class;
             case 6: return Integer.class;
             case 7: return Integer.class;
-            case 8: return Integer.class;
+            case 9: return Integer.class;
             default: return String.class;
         }
     }
@@ -94,26 +92,26 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             case 0:
                 return "#";
             case 1:
-                return "Type";
+                return "Test";                
+                
             case 2:
-                return "Name";
+                return "Type";
             case 3:
-                return "Original";
+                return "Name";
             case 4:
+                return "Original";
+            case 5:
                 return "Attack";
                 
-                
-            case 5:
-                return "Status";
             case 6:
-                return "Length";
+                return "Status";
             case 7:
-                return "#TAGS";
+                return "Length";
             case 8:
-                return "Time";
-                
+                return "#TAGS";
             case 9:
-                return "Test";
+                return "Time";
+
             case 10:
                 return "R";
             case 11:
@@ -131,17 +129,19 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         
         switch(columnIndex) {
             case 0: return rowIndex;
-            case 1: return m.getReq().getChangeParam().getTypeStr();
-            case 2: return m.getReq().getChangeParam().getName();
-            case 3: return m.getReq().getOrigParam().getDecodedValue();
-            case 4: return m.getReq().getChangeParam().getDecodedValue();
-            case 5: return m.getRes().getHttpCode();
-            case 6: return getValueResponseSize(m);
-            case 7: return m.getRes().getDomCount();
-            case 8: return (int) m.getLoadTime();
-            case 9: return getValueAttackResult(m);
-            case 10: return getValueResult(m);
-            case 11: return getValueCategorizer(m);
+            case 1: return m.getAtkIdent();
+            case 2: return m.getReq().getChangeParam().getTypeStr();
+            case 3: return m.getReq().getChangeParam().getName();
+            case 4: return m.getReq().getOrigParam().getDecodedValue();
+            case 5: return m.getReq().getChangeParam().getDecodedValue();
+            case 6: return m.getRes().getHttpCode();
+            case 7: return getValueResponseSize(m);
+            case 8: return getValueDomCount(m);
+            case 9: return (int) m.getLoadTime();
+            //case 10: return getValueCategorizer(m);
+            case 10: return getValueResultShort(m);
+            case 11: return getValueResult(m);
+            
             default: return "AAA";
         }
     }
@@ -155,21 +155,25 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
         SentinelHttpMessageAtk m = messages.get(rowIndex);
         
-        switch(columnIndex) {
-            case 2:
+        int realColumnIndex = parent.getEffectiveColumnIndex(columnIndex);
+        
+        switch(realColumnIndex) {
+            case 3:
                 ret = getTooltipOriginalName(m);
                 break;
-            case 3:
+            case 4:
                 ret = getTooltipOriginalValue(m);
                 break;
-            case 4:
+            case 5:
                 ret = getTooltipAttack(m);
                 break;
             case 10: 
                 ret = getTooltipAttackResult(m);
                 break;
             case 11: 
-                ret = getTooltipCategorizer(m);
+                //ret = getTooltipCategorizer(m);
+                //ret = getValueResult(m);
+                ret = getValueResultLong(m);
                 break;
         }
         
@@ -192,7 +196,11 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
     }
     
     private String getTooltipAttackResult(SentinelHttpMessageAtk m) {
-        return m.getAttackResult().getResultDescription();
+        if (m.getAttackResult() != null) {
+            return m.getAttackResult().getResultDescription();
+        } else {
+            return "";
+        }
     }
         
     private String getTooltipCategorizer(SentinelHttpMessageAtk m) {
@@ -220,7 +228,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
             if (size > 0) {
                 r = "+" + r;
             } else if (size == 0) {
-                r = "+0";
+                r = "0";
             }            
         } else {
             r = Integer.toString(m.getRes().getSize());
@@ -228,7 +236,25 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         return r;
     }
     
+    
+    private String getValueDomCount(SentinelHttpMessageAtk m) {
+        String r = "";
+        int size = 0;
+        
+        size = m.getRes().getDomCount() - m.getParentHttpMessage().getRes().getDomCount();
+        r = Integer.toString(size);
+        if (size > 0) {
+            r = "+" + r;
+        } else if (size == 0) {
+            r = "0";
+        } 
+        
+        return r;
+    }
+    
+    
     private String getValueAttackResult(SentinelHttpMessageAtk m) {
+        
         if (m.getAttackResult() != null) {
             return m.getAttackResult().getAttackName();
         } else {
@@ -236,33 +262,59 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         }
     }
 
-    private String getValueResult(SentinelHttpMessageAtk m) {
+    
+    private String getValueResultShort(SentinelHttpMessageAtk m) {
         if (m.getAttackResult() != null) {
             boolean successful = m.getAttackResult().isSuccess();
             if (successful) {
                 String ret = "";
                 switch (m.getAttackResult().getAttackType()) {
-                    case INFO:
-                        ret = "<html><b><font color=\"orange\">\u2620</font></b></html>";
-                        break;
                     case NONE:
                         break;
-                    case VULN:
-                        ret = "<html><b><font color=\"red\">\u2620</font></b></html>";
+                    case INFO:
+                    case INFOSURE:
+                    case INFOUNSURE:
+                        ret = "<html><b><font color=\"orange\">I</font></b></html>";
+                        break;                                                
+                    case VULNSURE:
+                    case VULNUNSURE:
+                        ret = "<html><b><font color=\"red\">V</font></b></html>";
                         break;
                     case ABORT:
-                        ret = "<html><b><font color=\"blue\">\u2139</font></b></html>";
+                        ret = "<html><b><font color=\"black\">A</font></b></html>";
                         break;
+                    case STATUSGOOD:
+                    case STATUSBAD:
+                        ret = "<html><b><font color=\"blue\">S</font></b></html>";
+                        break;
+                        
                 }
                 return ret;
-                //return m.getAttackResult().getAttackType() + "\u26A0";
             } else {
-                return "-";
+                return "";
             }
         } else {
-            return "Null";
+            return "";
         }
     }
+    
+    
+    private String getValueResult(SentinelHttpMessageAtk m) {
+        if (m.getAttackResult() != null) {
+            return m.getAttackResult().getResultDescription();
+        } else {
+            return "";
+        }
+    }
+    
+    private String getValueResultLong(SentinelHttpMessageAtk m) {
+        if (m.getAttackResult() != null) {
+            return m.getAttackResult().getExplanation();
+        } else {
+            return "";
+        }
+    }
+    
     
     private String getValueCategorizer(SentinelHttpMessageAtk m) {
         StringBuilder res = new StringBuilder("<html>");
@@ -277,6 +329,7 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         return res.toString();
     }
     
+    
     void addMessage(SentinelHttpMessageAtk httpMessage) {
         messages.add(httpMessage);
         httpMessage.setTableIndexAttack(messages.size() - 1);
@@ -287,13 +340,16 @@ public class PanelRightModel extends AbstractTableModel implements Observer {
         this.fireTableRowsInserted(messages.size()-1, messages.size()-1);
     }
 
+    
     public SentinelHttpMessageAtk getHttpMessage(int n) {
         return messages.get(n);
     }
     
+    
     public LinkedList<SentinelHttpMessageAtk> getAllAttackMessages() {
         return (LinkedList<SentinelHttpMessageAtk>) messages.clone();
     }
+
 
     
 }

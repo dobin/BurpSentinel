@@ -67,6 +67,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         comboBoxSession.setModel(sessionComboBoxModel);
 
         initComponents();
+        panelViewMessage.setTheme("left");
 
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
         tableMessages.getColumnModel().getColumn(0).setMinWidth(64);

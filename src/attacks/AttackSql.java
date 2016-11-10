@@ -39,7 +39,7 @@ public class AttackSql extends AttackI {
     private boolean doContinue = false;
     private SentinelHttpMessageAtk lastHttpMessage = null;
     private int responseOnErrorSizeChange = 0;
-
+    private static String atkName = "SQL";
     private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
     private final String[] attackDataSql = {
@@ -168,7 +168,8 @@ public class AttackSql extends AttackI {
                             "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
-                            "break request identical to original. no chance to identify SQL.");
+                            "break request identical to original. no chance to identify SQL.",
+                            "");
                     lastHttpMessage.addAttackResult(res);
                 }
             }
@@ -185,7 +186,8 @@ public class AttackSql extends AttackI {
                             "SQLE" + state,
                             lastHttpMessage.getReq().getChangeParam(),
                             true,
-                            "Same size as original request: " + origResponseSize);
+                            "Same size as original request: " + origResponseSize,
+                            "");
                     lastHttpMessage.addAttackResult(res);
                 }
             }
@@ -194,7 +196,7 @@ public class AttackSql extends AttackI {
     
     
     private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data);
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
         if (httpMessage == null) {
             return null;
         }
@@ -213,11 +215,12 @@ public class AttackSql extends AttackI {
         
         if (hasError) {
             AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.VULN, 
+                    AttackData.AttackResultType.VULNSURE, 
                     "SQL" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     true,
-                    "Error message: " + sqlResponseCategory.getIndicator());
+                    "Error message: " + sqlResponseCategory.getIndicator(), 
+                    "");
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(sqlResponseCategory.getIndicator(), failColor);
@@ -228,7 +231,8 @@ public class AttackSql extends AttackI {
                     "SQL" + state, 
                     httpMessage.getReq().getChangeParam(), 
                     false,
-                    null);
+                    null,
+                    "");
             httpMessage.addAttackResult(res);
         }
         

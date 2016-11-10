@@ -37,6 +37,8 @@ import util.ConnectionTimeoutException;
  */
 public class AttackXssLessThan extends AttackI {
 
+    private static String atkName = "XSSLT";
+    
     private String[] attackStrings = {
         "<",
         "%3C",
@@ -127,7 +129,7 @@ public class AttackXssLessThan extends AttackI {
             AttackData atkData = new AttackData(n, 
                     indicator + s, 
                     indicator + "<", 
-                    AttackData.AttackResultType.VULN);
+                    AttackData.AttackResultType.VULNUNSURE);
             attackDataXss.add(atkData);
         }       
         return true;
@@ -157,7 +159,7 @@ public class AttackXssLessThan extends AttackI {
     }
 
     private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput());
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput(), atkName, state);
         if (httpMessage == null) {
             return null;
         }
@@ -178,7 +180,8 @@ public class AttackXssLessThan extends AttackI {
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     true,
-                    "Found: " + data.getOutput());
+                    "Found: " + data.getOutput(),
+                    "Found unencoded < character in response.");
             httpMessage.addAttackResult(res);
 
             ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
@@ -191,7 +194,8 @@ public class AttackXssLessThan extends AttackI {
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     false,
-                    null);
+                    null,
+                    "");
             httpMessage.addAttackResult(res);
         }
 

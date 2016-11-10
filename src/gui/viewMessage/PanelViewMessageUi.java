@@ -27,11 +27,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,9 +48,6 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
-import org.w3c.tidy.Tidy;
-import org.w3c.tidy.TidyMessage;
-import org.w3c.tidy.TidyMessageListener;
 import util.BurpCallbacks;
 import util.SettingsManager;
 import util.diff.DiffPrint.UnifiedSmallPrint;
@@ -183,17 +176,10 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
 
     private void reInit() {
         if (httpMessage.getRes().hasResponse()) {
-            ///labelSize.setText(Integer.toString(httpMessage.getRes().getSize()));
-            ///labelHttpCode.setText(httpMessage.getRes().getHttpCode());
-            ///labelDom.setText(Integer.toString(httpMessage.getRes().getDom()));
-            
             if (httpMessage instanceof SentinelHttpMessageOrig) {
                 panelViewComboboxModel.hasParent(false);
             } else {
                 panelViewComboboxModel.hasParent(true);
-                SentinelHttpMessageAtk atk = (SentinelHttpMessageAtk) httpMessage;
-                
-                ///labelRedirected.setText(atk.isRedirected() ? "(R)" : "");
             }
         } else {
             
@@ -547,7 +533,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             .addComponent(buttonShowRequest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        checkboxIsLink.setText("Link Window");
+        checkboxIsLink.setText("Link Editors");
         checkboxIsLink.setToolTipText("Link Both Window Togeter - Scroll Together");
         checkboxIsLink.setMargin(new java.awt.Insets(0, 0, 0, 0));
         checkboxIsLink.addActionListener(new java.awt.event.ActionListener() {
@@ -631,7 +617,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 .addComponent(checkboxIsLink)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelHighlight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 8, Short.MAX_VALUE))
+                .addGap(0, 15, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -655,7 +641,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTopLayout.createSequentialGroup()
                 .addGroup(panelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 2, Short.MAX_VALUE))
         );
@@ -936,6 +922,14 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     @Override
     public void externalUpdate() {
         this.reInit();
+    }
+
+    public void setTheme(String theme) {
+        if (theme == "left") {
+        } else if (theme == "right") {
+            checkboxIsLink.setVisible(false);
+            checkboxIsLink.setEnabled(false);
+        }
     }
     
 
