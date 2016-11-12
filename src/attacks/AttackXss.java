@@ -128,10 +128,12 @@ public class AttackXss extends AttackI {
             analyzeOriginalRequest(lastHttpMessage);
         } else if (state == 0) {
             analyzer.analyzeInitialResponse(data, lastHttpMessage);
+        } else if (state == 1 || state == 2 || state == 3 || state == 4) {
+            analyzer.analyzeAttackResponseNonTag(data, lastHttpMessage);
         } else if (state == 5 || state == 6 || state == 7 || state == 8) {
             analyzer.analyzeAttackResponseTag(data, lastHttpMessage);
         } else {
-            analyzer.analyzeAttackResponseNonTag(data, lastHttpMessage);
+            // Nothing
         }
     }
     
