@@ -16,13 +16,11 @@
  */
 package gui.networking;
 
-import attacks.AttackAuthorisation;
 import attacks.model.AttackI;
 import attacks.AttackList;
 import attacks.model.AttackMain;
 import attacks.AttackOriginal;
-import attacks.AttackOther;
-import attacks.AttackSql;
+import attacks.AttackCommand;
 import attacks.AttackSqlExtended;
 import attacks.AttackXss;
 import attacks.AttackXssLessThan;
@@ -73,17 +71,11 @@ public class NetworkerSender {
             case XSS:
                 attack = new AttackXss(work);
                 break;
-            case OTHER:
-                attack = new AttackOther(work);
-                break;
-            case SQL:
-                attack = new AttackSql(work);
+            case CMD:
+                attack = new AttackCommand(work);
                 break;
             case SQLE:
                 attack = new AttackSqlExtended(work);
-                break;
-            case AUTHORISATION:
-                attack = new AttackAuthorisation(work);
                 break;
             case LIST:
                 attack = new AttackList(work);
@@ -119,10 +111,12 @@ public class NetworkerSender {
         log.append("     URL  : " + workEntry.origHttpMessage.getReq().getUrl().toString() + "\n");
         log.append("     Param: " + workEntry.attackHttpParam.getName() + "\n");
         log.giveSignal(NetworkerLogger.Signal.SEND);
+        
         goon = attack.performNextAttack();
+        
         log.giveSignal(NetworkerLogger.Signal.RECV);
-        log.append("     ok, done\n");
-        log.append("     continue: " + goon + "\n");
+//        log.append("     ok, done\n");
+//        log.append("     continue: " + goon + "\n");
 
         attackMessage = attack.getLastAttackMessage();
 

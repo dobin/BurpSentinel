@@ -143,16 +143,7 @@ public class PanelLeftPopup implements ActionListener {
         title.setEnabled(false);
         attackSubmenu.add(title);
 
-        AttackMain.AttackTypes displayTypes[] = {
-            AttackMain.AttackTypes.SQL, 
-            AttackMain.AttackTypes.XSS,
-            AttackMain.AttackTypes.SQLE,
-            AttackMain.AttackTypes.OTHER,            
-            AttackMain.AttackTypes.XSSLESSTHAN,
-
-            // Removed, as no functionality as of yet
-            //AttackMain.AttackTypes.AUTHORISATION,
-        };
+        AttackMain.AttackTypes displayTypes[] = AttackMain.getInstance().getAttackTypes();
         
         for (AttackMain.AttackTypes atkType: displayTypes) {
             JMenuItem menuItem = new JMenuItem(atkType.name());

@@ -29,7 +29,7 @@ public class AttackMain {
         XSS,
         SQL,
         SQLE,
-        OTHER,
+        CMD,
         AUTHORISATION,
         ORIGINAL,
         LIST,
@@ -47,18 +47,30 @@ public class AttackMain {
     }
     
     
-    private ArrayList<AttackDescription> attackList;
+    private final ArrayList<AttackDescription> attackList;
+    
+    private final AttackTypes displayTypes[] = {
+            AttackMain.AttackTypes.XSS,
+            AttackMain.AttackTypes.XSSLESSTHAN,
+            AttackMain.AttackTypes.SQLE,
+            AttackMain.AttackTypes.CMD,
+            AttackMain.AttackTypes.SQL,
+        };
     
     private AttackMain() {
         attackList = new ArrayList<AttackDescription>();
         
         attackList.add(new AttackDescription(AttackTypes.XSS, "Cross-Site Scripting with small and smart payloads"));
-        attackList.add(new AttackDescription(AttackTypes.SQL, "SQL injection with standard payloads (not really recommended)"));
-        attackList.add(new AttackDescription(AttackTypes.SQLE, "SQL injections with small and smart payloads"));
         attackList.add(new AttackDescription(AttackTypes.XSSLESSTHAN, "Different encodings for '>' to check for XSS"));
+        attackList.add(new AttackDescription(AttackTypes.SQLE, "SQL injections with small and smart payloads"));
+        attackList.add(new AttackDescription(AttackTypes.CMD, "Comamnd injection with delays"));
     }
     
 
+    public AttackTypes[] getAttackTypes() {
+        return displayTypes;
+    }
+    
     public List<AttackDescription> getAttackDescriptions() {
         return attackList;
     }    

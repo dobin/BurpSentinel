@@ -77,7 +77,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         
         // TODO not necessary if in restoreTableDimensions default?
         tableAllMessages.setAutoCreateRowSorter(true);
-        int width = 100;
+        int width = 140;
         tableAllMessages.getColumnModel().getColumn(0).setMaxWidth(40);
         tableAllMessages.getColumnModel().getColumn(0).setMinWidth(40);
         

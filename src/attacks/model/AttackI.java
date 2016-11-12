@@ -49,6 +49,10 @@ import util.ConnectionTimeoutException;
  */
 public abstract class AttackI {
     protected AttackWorkEntry attackWorkEntry;
+    private SentinelHttpMessageAtk lastHttpMessage;
+    
+    abstract protected String getAtkName();
+    abstract protected int getState();
     
     public AttackI(AttackWorkEntry work) {
         this.attackWorkEntry = work;
@@ -56,13 +60,14 @@ public abstract class AttackI {
 
     /* Will execute the next (or initial) attack
      * Returns true if more attacks are necessary/available
+     * Called by the networksender thread
      */
     abstract public boolean performNextAttack();
     
     /* 
      * Get the last http message sent by performNextAttack()
      */
-    abstract public SentinelHttpMessageAtk getLastAttackMessage();
+    //abstract public SentinelHttpMessageAtk getLastAttackMessage();
 
     /*
      * Called before performNextAttack()
@@ -143,6 +148,35 @@ public abstract class AttackI {
         }
 
         return newHttpMessage;
+    }
+    
+    
+    protected SentinelHttpMessageAtk attack(AttackData data) throws ConnectionTimeoutException {
+        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
+                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
+        {
+            data.urlEncode();
+        }
+        
+        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput(), getAtkName(), getState());
+        if (httpMessage == null) {
+            BurpCallbacks.getInstance().print("attack: Httpmessage is null");
+            return null;
+        }
+        lastHttpMessage = httpMessage;
+        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
+        
+        if (! httpMessage.getRes().hasResponse()) {
+            BurpCallbacks.getInstance().print("Response error");
+            return httpMessage;
+        }
+        
+        return httpMessage;
+    }
+    
+    
+    public SentinelHttpMessageAtk getLastAttackMessage() {
+        return lastHttpMessage;
     }
     
     

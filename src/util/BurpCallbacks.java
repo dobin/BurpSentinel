@@ -88,6 +88,8 @@ public class BurpCallbacks {
             BurpCallbacks.getInstance().print("sendRessource: Void data! Abort.");
             return;
         }
+        
+        BurpCallbacks.getInstance().print("sendRessource start");
 
         IHttpRequestResponse r = null;
         long timeStart = System.currentTimeMillis();
@@ -95,6 +97,7 @@ public class BurpCallbacks {
         long time = System.currentTimeMillis() - timeStart;
         httpMessage.setLoadTime(time);
 
+        BurpCallbacks.getInstance().print("sendRessource end");
 
         if (r.getResponse() == null) {
             throw new ConnectionTimeoutException();
