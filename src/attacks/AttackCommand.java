@@ -20,9 +20,8 @@ import attacks.model.AttackI;
 import attacks.model.AttackResult;
 import attacks.model.AttackData;
 import gui.botLeft.PanelLeftInsertions;
-import gui.categorizer.model.ResponseCategory;
 import gui.networking.AttackWorkEntry;
-import model.SentinelHttpMessage;
+import java.util.LinkedList;
 import model.SentinelHttpMessageAtk;
 import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
@@ -32,31 +31,40 @@ import util.Utility;
  *
  * @author DobinRutishauser@broken.ch
  */
-public class AttackOther extends AttackI {
+public class AttackCommand extends AttackI {
     private boolean doContinue = false;
     private int state = 0;
-    private SentinelHttpMessageAtk lastHttpMessage = null;
-    private String atkName = "OTHER";
+    private LinkedList<AttackData> attackData = new LinkedList<AttackData>();;
+
     
-    private final String[] attackDataOther = {
-        ".\\",
-        "./",
-        "() { :;}; sleep 10",
-        "%00",
-        ";sleep 10",
-        "\" ;sleep 10",
-        "';sleep 10",
-        "|sleep 10",
-        "& ping -c 10 127.0.0.1",
-        "\" & ping -c 10 127.0.0.1",
-        "' & ping -c 10 127.0.0.1",
-    };
+    public AttackCommand(AttackWorkEntry work) {
+        super(work);
+        
+        attackData.add(new AttackData(0, "() { :;}; sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, ";sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, "\" ;sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, "';sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, "|sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, "& ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0, "\" & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(0,  "' & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+    }
     
-       // return attack string
+    @Override
+    protected String getAtkName() {
+        return "CMD";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
+    }
+    
+    // return attack string
     // Also sets "doContinue"
     // Oh my god this is ugly
-    private String getData(AttackWorkEntry attackWorkEntry) {
-        String data;
+    private AttackData getData(AttackWorkEntry attackWorkEntry) {
+        AttackData atkData;
 
         boolean onlyUrlencoded;
         if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
@@ -68,26 +76,26 @@ public class AttackOther extends AttackI {
         }
 
         if (onlyUrlencoded) {
-            data = attackDataOther[state];
-            data = Utility.realUrlEncode(data);
+            atkData = attackData.get(state);
+            //data = Utility.realUrlEncode(data);
                 
-            if (state < attackDataOther.length - 1) {
+            if (state < attackData.size() - 1) {
                 doContinue = true;
             } else {
                 doContinue = false;
             }
         } else {
-            if (state < attackDataOther.length) {                
-                data = attackDataOther[state];
-                data = Utility.realUrlEncode(data);
+            if (state < attackData.size()) {
+                atkData = attackData.get(state);
+                //data = Utility.realUrlEncode(data);
             
                 doContinue = true;
             } else {
-                int newState = state - attackDataOther.length;
+                int newState = state - attackData.size();
                             
-                data = attackDataOther[newState];
+                atkData = attackData.get(newState);
                 
-                if (newState < attackDataOther.length - 1) {
+                if (newState < attackData.size() - 1) {
                     doContinue = true;
                 } else {
                     doContinue = false;
@@ -95,36 +103,14 @@ public class AttackOther extends AttackI {
             }
         }
         
-        return data;
+        return atkData;
     }
-    
-    public AttackOther(AttackWorkEntry work) {
-        super(work);
-    }
-    
-    private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
-        if (httpMessage == null) {
-            return null;
-        }
-        lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
 
-        AttackResult res = new AttackResult(
-            AttackData.AttackResultType.NONE, 
-            "OTHER" + state, 
-            httpMessage.getReq().getChangeParam(), 
-            false,
-            null,
-            "");
-        httpMessage.addAttackResult(res);
-        
-        return httpMessage;
-    }
     
     @Override
     public boolean performNextAttack() {
-        String data;
+        AttackData atkData;
+        SentinelHttpMessageAtk httpMessage;
         
         // Hack - should be in payload definition
         if (state == 0 || state == 1) {
@@ -135,13 +121,14 @@ public class AttackOther extends AttackI {
             attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
         }
         
-        data = getData(attackWorkEntry);
+        atkData = getData(attackWorkEntry);
         
         try {
-            SentinelHttpMessage httpMessage = attack(data);
+            httpMessage = attack(atkData);
             if (httpMessage == null) {
                 return false;
             }
+            analyzeResponse(httpMessage);
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout");
             state++;
@@ -151,11 +138,19 @@ public class AttackOther extends AttackI {
         state++;
         return doContinue;    
     }
-
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
+    
+    private void analyzeResponse(SentinelHttpMessageAtk httpMessage) {
+        
+        AttackResult res = new AttackResult(
+            AttackData.AttackResultType.NONE, 
+            "OTHER" + state, 
+            httpMessage.getReq().getChangeParam(), 
+            false,
+            null,
+            "");
+        httpMessage.addAttackResult(res);
     }
+
 
     @Override
     public boolean init() {

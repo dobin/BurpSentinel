@@ -113,12 +113,21 @@ public class AttackXssLessThan extends AttackI {
     };
     
     private LinkedList<AttackData> attackDataXss = new LinkedList<AttackData>();
-    private SentinelHttpMessageAtk lastHttpMessage = null;
     private int state = 0;
     private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     
     public AttackXssLessThan(AttackWorkEntry work) {
         super(work);
+    }
+    
+    @Override
+    protected String getAtkName() {
+        return "XSSLT";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
     }
     
     @Override
@@ -138,12 +147,13 @@ public class AttackXssLessThan extends AttackI {
     @Override
     public boolean performNextAttack() {
         AttackData atkData = attackDataXss.get(state);
-        SentinelHttpMessage httpMessage;
+        SentinelHttpMessageAtk httpMessage;
         try {
             httpMessage = attack(atkData);
             if (httpMessage == null) {
                 return false;
             }
+            analyzeResponse(httpMessage, atkData);
         } catch (ConnectionTimeoutException ex) {
             state++;
             return false;
@@ -157,37 +167,32 @@ public class AttackXssLessThan extends AttackI {
             return true;
         }
     }
-
-    private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput(), atkName, state);
-        if (httpMessage == null) {
-            return null;
-        }
-        lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-
+    
+    
+    private void analyzeResponse(SentinelHttpMessageAtk httpMessage, AttackData atkData) {
+        
         String response = httpMessage.getRes().getResponseStr();
         if (response == null || response.length() == 0) {
             BurpCallbacks.getInstance().print("Response error");
-            return httpMessage;
+            return;
         }
 
-        if (response.contains(data.getOutput())) {
-            data.setSuccess(true);
+        if (response.contains(atkData.getOutput())) {
+            atkData.setSuccess(true);
 
             AttackResult res = new AttackResult(
-                    data.getAttackType(),
+                    atkData.getAttackType(),
                     "XSSLT" + state,
                     httpMessage.getReq().getChangeParam(),
                     true,
-                    "Found: " + data.getOutput(),
+                    "Found: " + atkData.getOutput(),
                     "Found unencoded < character in response.");
             httpMessage.addAttackResult(res);
 
-            ResponseHighlight h = new ResponseHighlight(data.getOutput(), failColor);
+            ResponseHighlight h = new ResponseHighlight(atkData.getOutput(), failColor);
             httpMessage.getRes().addHighlight(h);
         } else {
-            data.setSuccess(false);
+            atkData.setSuccess(false);
 
             AttackResult res = new AttackResult(
                     AttackData.AttackResultType.NONE,
@@ -201,16 +206,9 @@ public class AttackXssLessThan extends AttackI {
 
         // Highlight indicator anyway
         String indicator = XssIndicator.getInstance().getBaseIndicator();
-        if (!indicator.equals(data.getOutput())) {
+        if (!indicator.equals(atkData.getOutput())) {
             ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
             httpMessage.getRes().addHighlight(h);
         }
-
-        return httpMessage;
-    }
-
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
     }
 }

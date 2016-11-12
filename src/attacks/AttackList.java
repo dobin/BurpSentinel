@@ -24,7 +24,6 @@ import gui.lists.ListManagerList;
 import gui.networking.AttackWorkEntry;
 import java.awt.Color;
 import model.ResponseHighlight;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.XssIndicator;
 import util.BurpCallbacks;
@@ -35,13 +34,20 @@ import util.ConnectionTimeoutException;
  * @author DobinRutishauser@broken.ch
  */
 public class AttackList extends AttackI {
-
-    private SentinelHttpMessageAtk lastHttpMessage = null;
     private int state = 0;
-    private static String atkName = "LIST";
 
     public AttackList(AttackWorkEntry work) {
         super(work);
+    }
+    
+    @Override
+    protected String getAtkName() {
+        return "LIST";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
     }
 
     @Override
@@ -49,51 +55,12 @@ public class AttackList extends AttackI {
         return true;
     }
 
-    private SentinelHttpMessage attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
-        if (httpMessage == null) {
-            return null;
-        }
-        lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-
-        String response = httpMessage.getRes().getResponseStr();
-        if (response == null || response.length() == 0) {
-            BurpCallbacks.getInstance().print("Response error");
-            return httpMessage;
-        }
-
-        // Check if input value gets reflected
-        if (response.contains(data)) {
-            AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.INFO,
-                    "LST" + attackWorkEntry.options + "." + state,
-                    httpMessage.getReq().getChangeParam(),
-                    true,
-                    "Found: " + data,
-                    "");
-            httpMessage.addAttackResult(res);
-
-            ResponseHighlight h = new ResponseHighlight(data, Color.ORANGE);
-
-            httpMessage.getRes().addHighlight(h);
-        } else {
-            AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.NONE, 
-                    "LST" + attackWorkEntry.options + "." + state, 
-                    httpMessage.getReq().getChangeParam(), 
-                    false,
-                    null,
-                    "");
-            httpMessage.addAttackResult(res);
-        }
-
-        return httpMessage;
-    }
 
     @Override
     public boolean performNextAttack() {
         boolean doContinue = false;
+        SentinelHttpMessageAtk httpMessage;
+        AttackData atkData;
 
         ListManagerList list = ListManager.getInstance().getModel().getList(Integer.parseInt(attackWorkEntry.options));
         if (list == null) {
@@ -110,11 +77,15 @@ public class AttackList extends AttackI {
         // Replace placeholder with our XSS Identifier
         data = data.replace("XSS", XssIndicator.getInstance().getIndicator());
 
+        // Prepare attackData
+        atkData = new AttackData(state, data, XssIndicator.getInstance().getIndicator(), AttackData.AttackResultType.INFO);
+                
         try {
-            SentinelHttpMessage httpMessage = attack(data);
+            httpMessage = attack(atkData);
             if (httpMessage == null) {
                 return false;
             }
+            analyzeResponse(httpMessage, atkData);
         } catch (ConnectionTimeoutException ex) {
             BurpCallbacks.getInstance().print("Connection timeout: " + ex.getLocalizedMessage());
             return false;
@@ -129,9 +100,40 @@ public class AttackList extends AttackI {
         state++;
         return doContinue;
     }
+    
+    
+    private void analyzeResponse(SentinelHttpMessageAtk httpMessage, AttackData atkData) {
+        String response = httpMessage.getRes().getResponseStr();
+        if (response == null || response.length() == 0) {
+            BurpCallbacks.getInstance().print("Response error");
+            return;
+        }
+        
+        // Check if input value gets reflected
+        if (response.contains(atkData.getOutput())) {
+            AttackResult res = new AttackResult(
+                    AttackData.AttackResultType.INFO,
+                    "LST" + attackWorkEntry.options + "." + state,
+                    httpMessage.getReq().getChangeParam(),
+                    true,
+                    "Found: " + atkData.getOutput(),
+                    "");
+            httpMessage.addAttackResult(res);
 
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
+            ResponseHighlight h = new ResponseHighlight(atkData.getOutput(), Color.ORANGE);
+
+            httpMessage.getRes().addHighlight(h);
+        } else {
+            AttackResult res = new AttackResult(
+                    AttackData.AttackResultType.NONE, 
+                    "LST" + attackWorkEntry.options + "." + state, 
+                    httpMessage.getReq().getChangeParam(), 
+                    false,
+                    null,
+                    "");
+            httpMessage.addAttackResult(res);
+        }
     }
+
+
 }

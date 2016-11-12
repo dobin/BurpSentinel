@@ -32,15 +32,21 @@ import util.ConnectionTimeoutException;
  * @author unreal
  */
 public class AttackOriginal extends AttackI {
-
-    private SentinelHttpMessageAtk httpMessage;
-    private static String atkName = "ORIG";
-    
     public AttackOriginal(AttackWorkEntry work) {
         super(work);
         
         // Overwrite this as workaround (ignore user setting)
         work.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;
+    }
+    
+    @Override
+    protected String getAtkName() {
+        return "ORIG";
+    }
+    
+    @Override
+    protected int getState() {
+        return 0;
     }
     
     @Override
@@ -51,14 +57,13 @@ public class AttackOriginal extends AttackI {
     @Override
     public boolean performNextAttack() {
         try {
-            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue(), atkName, 0);
+            SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(attackWorkEntry.attackHttpParam.getValue(), getAtkName(), getState());
             if (httpMessage == null) {
                return false;
             }
             BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-            this.httpMessage = httpMessage;
             
-            analyzeResponse();
+            analyzeResponse(httpMessage);
             
         } catch (ConnectionTimeoutException ex) {
             Logger.getLogger(AttackOriginal.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,12 +72,8 @@ public class AttackOriginal extends AttackI {
         return false;
     }
 
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return httpMessage;
-    }
     
-    private void analyzeResponse() {
+    private void analyzeResponse(SentinelHttpMessageAtk httpMessage) {
             AttackResult res = new AttackResult(
                     AttackResultType.INFO,
                     "ORIG",
@@ -81,8 +82,6 @@ public class AttackOriginal extends AttackI {
                     null,
                     "");
             httpMessage.addAttackResult(res);
-
-        
     }
     
 }

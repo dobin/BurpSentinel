@@ -85,7 +85,7 @@ public class AttackXssAnalyzer {
         
         if (httpMessage.getRes().extractBody().contains(data.getOutput()) && inputReflectedInTag) {
             data.setSuccess(true);
-            message += "Found: " + data.getOutput();
+            message += "Found in tag: " + data.getOutput();
              
             AttackResult res = new AttackResult(
                 data.getAttackType(),

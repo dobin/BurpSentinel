@@ -33,12 +33,11 @@ import util.ConnectionTimeoutException;
  */
 public class AttackXss extends AttackI {
     // Static:
-    private LinkedList<AttackData> attackData;
+    private LinkedList<AttackData> attackData = new LinkedList<AttackData>();
     private static final String atkName = "XSS";
     
     // Changes per iteration:
     private int state = -1;
-    private SentinelHttpMessageAtk lastHttpMessage = null;
     private final AttackXssAnalyzer analyzer;
     
     
@@ -46,7 +45,7 @@ public class AttackXss extends AttackI {
         super(work);
         analyzer = new AttackXssAnalyzer();
         
-        attackData = new LinkedList<AttackData>();
+        
         String indicator;
         
         indicator = XssIndicator.getInstance().getIndicator();
@@ -82,6 +81,16 @@ public class AttackXss extends AttackI {
         attackData.add(new AttackData(11, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackResultType.VULNSURE));
     }
  
+    @Override
+    protected String getAtkName() {
+        return "XSS";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
+    }
+    
 
     @Override
     public boolean performNextAttack() {
@@ -98,6 +107,7 @@ public class AttackXss extends AttackI {
         try {
             httpMessage = attack(data);
             if (httpMessage == null) {
+                BurpCallbacks.getInstance().print("performNextAttack: httpmsg is null");
                 return false;
             }
         } catch (ConnectionTimeoutException ex) {
@@ -125,47 +135,18 @@ public class AttackXss extends AttackI {
         }
         
         if (state == -1) {
-            analyzeOriginalRequest(lastHttpMessage);
+            analyzeOriginalRequest(httpMessage);
         } else if (state == 0) {
-            analyzer.analyzeInitialResponse(data, lastHttpMessage);
+            analyzer.analyzeInitialResponse(data, httpMessage);
         } else if (state == 1 || state == 2 || state == 3 || state == 4) {
-            analyzer.analyzeAttackResponseNonTag(data, lastHttpMessage);
+            analyzer.analyzeAttackResponseNonTag(data, httpMessage);
         } else if (state == 5 || state == 6 || state == 7 || state == 8) {
-            analyzer.analyzeAttackResponseTag(data, lastHttpMessage);
+            analyzer.analyzeAttackResponseTag(data, httpMessage);
         } else {
             // Nothing
         }
     }
     
-    
-    private SentinelHttpMessageAtk attack(AttackData data) throws ConnectionTimeoutException {
-        if (attackWorkEntry.attackHttpParam.getTypeStr().equals("GET") 
-                || attackWorkEntry.attackHttpParam.getTypeStr().equals("PATH")) 
-        {
-            data.urlEncode();
-        }
-        
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data.getInput(), atkName, state);
-        if (httpMessage == null) {
-            return null;
-        }
-        lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-        
-        if (! httpMessage.getRes().hasResponse()) {
-            BurpCallbacks.getInstance().print("Response error");
-            return httpMessage;
-        }
-        
-        return httpMessage;
-    }
-    
-    
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
-    }
-
        
     @Override
     public boolean init() {

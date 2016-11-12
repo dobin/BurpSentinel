@@ -16,6 +16,7 @@
  */
 package attacks;
 
+import attacks.model.AttackData;
 import attacks.model.AttackI;
 import gui.botLeft.PanelLeftInsertions;
 import gui.networking.AttackWorkEntry;
@@ -33,12 +34,20 @@ import util.Utility;
  */
 public class AttackSqlExtended extends AttackI {
     private int state = -1;
-    private AttackSqlExtendedAnalyzer analyzer;
+    private final AttackSqlExtendedAnalyzer analyzer;
     private boolean doContinue = false;
-    private SentinelHttpMessageAtk lastHttpMessage = null;
-    private LinkedList<byte[]> analRes = new LinkedList<byte[]>();
+    private final LinkedList<byte[]> analRes = new LinkedList<byte[]>();
     
-    private static String atkName = "SQLE";
+    
+    @Override
+    protected String getAtkName() {
+        return "SQLE";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
+    }
     
     private final int attackSqlIntSize = 5;
     private String attackSqlInt(int state, String value) {
@@ -220,9 +229,9 @@ public class AttackSqlExtended extends AttackI {
     public boolean performNextAttack() {        
         String origParamValue = attackWorkEntry.attackHttpParam.getDecodedValue();
         String data;
+        AttackData atkData;
         SentinelHttpMessageAtk httpMessage = null;
 
-        
         // Cant handle empty params
         if (origParamValue.length() == 0) {
             return false;
@@ -241,8 +250,10 @@ public class AttackSqlExtended extends AttackI {
             }            
         }
         
+        atkData = new AttackData(state, data, "", AttackData.AttackResultType.INFO);
+        
         try {
-            httpMessage = attack(data);
+            httpMessage = attack(atkData);
             if (httpMessage == null) {
                 BurpCallbacks.getInstance().getBurp().printOutput("HTTPMESSAGE NULL");
                 return false;
@@ -280,18 +291,6 @@ public class AttackSqlExtended extends AttackI {
             analyzer.analyzeAttackResponse(attackWorkEntry, httpMessage);
         }
     }
-
-    
-    private SentinelHttpMessageAtk attack(String data) throws ConnectionTimeoutException {
-        SentinelHttpMessageAtk httpMessage = initAttackHttpMessage(data, atkName, state);
-        if (httpMessage == null) {
-            return null;
-        }
-        lastHttpMessage = httpMessage;
-        BurpCallbacks.getInstance().sendRessource(httpMessage, attackWorkEntry.followRedirect);
-        
-        return httpMessage;
-    }
     
              
     @Override
@@ -299,9 +298,5 @@ public class AttackSqlExtended extends AttackI {
         return true;
     }
     
-    
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        return lastHttpMessage;
-    }
+ 
 }

@@ -38,7 +38,6 @@ public class AttackTemplate extends AttackI {
     
     // Changes per iteration:
     private int state = 0;
-    private SentinelHttpMessageAtk lastHttpMessage = null;
     
     // Information from state 0 - may be used in state >0
     private boolean inputReflectedInTag = false;
@@ -57,13 +56,16 @@ public class AttackTemplate extends AttackI {
         attackData.add(new AttackData(3, indicator + "{{7*'7'}}", indicator + "49", AttackData.AttackResultType.VULNSURE));
         attackData.add(new AttackData(4, indicator + "a{*comment*}", indicator + "<p \"=>", AttackData.AttackResultType.VULNSURE));
         attackData.add(new AttackData(5, indicator + "${\"z\".join(\"ab\")", indicator + "' =", AttackData.AttackResultType.VULNSURE));
-        
-        attackData.add(new AttackData(6, indicator + "%27%20%3D", indicator + "' =", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(7, indicator + "\" =", indicator + "\" =", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(8, indicator + "%22%20%3D", indicator + "\" =", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(9, indicator + "%5C%27%5C%22_\\'\\\"", indicator + "", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(10, indicator + "_\\u0022_æ_\\u00E6_", indicator + "", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(11, indicator + "%253Cp%2527%2522%253E", indicator + "<p'\">", AttackData.AttackResultType.VULNSURE));
+    }
+    
+    @Override
+    protected String getAtkName() {
+        return "TMPL";
+    }
+    
+    @Override
+    protected int getState() {
+        return state;
     }
     
     @Override
@@ -71,9 +73,6 @@ public class AttackTemplate extends AttackI {
         return true;
     }
     
-    private SentinelHttpMessage attack(AttackData data) throws ConnectionTimeoutException {
-        return null;
-    }
 
     @Override
     public boolean performNextAttack() {
@@ -113,8 +112,4 @@ public class AttackTemplate extends AttackI {
         return doContinue;
     }
 
-    @Override
-    public SentinelHttpMessageAtk getLastAttackMessage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
