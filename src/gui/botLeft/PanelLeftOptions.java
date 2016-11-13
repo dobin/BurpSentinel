@@ -85,10 +85,10 @@ public class PanelLeftOptions implements ActionListener {
         
         
         // Menu
-        menuInsert = new JMenu("Insert");
-        menuItemReplace = new JMenuItem("Replace");
-        menuItemInsertLeft = new JMenuItem("Insert Left");
-        menuItemInsertRight = new JMenuItem("Insert Right");
+        menuInsert = new JMenu("Attack payload location");
+        menuItemReplace = new JMenuItem("Replace param");
+        menuItemInsertLeft = new JMenuItem("Insert left of param");
+        menuItemInsertRight = new JMenuItem("Insert right of param");
         menuItemReplace.addActionListener(this);
         menuItemInsertLeft.addActionListener(this);
         menuItemInsertRight.addActionListener(this);
