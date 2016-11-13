@@ -21,10 +21,12 @@ import attacks.model.AttackI;
 import gui.networking.AttackWorkEntry;
 import java.awt.Color;
 import java.util.LinkedList;
+import model.ResponseHighlight;
 import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.XssIndicator;
 import org.w3c.tidy.TidyMessage;
+import util.BurpCallbacks;
 import util.ConnectionTimeoutException;
 
 /**
@@ -36,11 +38,7 @@ public class AttackTemplate extends AttackI {
     private final Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
     private LinkedList<AttackData> attackData;
     
-    // Changes per iteration:
     private int state = 0;
-    
-    // Information from state 0 - may be used in state >0
-    private boolean inputReflectedInTag = false;
     
     public AttackTemplate(AttackWorkEntry work) {
         super(work);
@@ -53,9 +51,9 @@ public class AttackTemplate extends AttackI {
         attackData.add(new AttackData(0, indicator, indicator, AttackData.AttackResultType.STATUSGOOD));
         attackData.add(new AttackData(1, indicator + "{{7*7}}", indicator + "49", AttackData.AttackResultType.VULNSURE));
         attackData.add(new AttackData(2, indicator + "${7*7}", indicator + "49", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(3, indicator + "{{7*'7'}}", indicator + "49", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(4, indicator + "a{*comment*}", indicator + "<p \"=>", AttackData.AttackResultType.VULNSURE));
-        attackData.add(new AttackData(5, indicator + "${\"z\".join(\"ab\")", indicator + "' =", AttackData.AttackResultType.VULNSURE));
+        attackData.add(new AttackData(3, indicator + "{{1*'1'}}", indicator + "1", AttackData.AttackResultType.VULNSURE));
+        attackData.add(new AttackData(4, indicator + "a{*comment*}b", indicator + "ab", AttackData.AttackResultType.VULNSURE));
+        attackData.add(new AttackData(5, indicator + "${\"z\".join(\"ab\")", indicator + "zab", AttackData.AttackResultType.VULNSURE));
     }
     
     @Override
@@ -76,10 +74,12 @@ public class AttackTemplate extends AttackI {
 
     @Override
     public boolean performNextAttack() {
-        boolean doContinue = false;
+        boolean doContinue = true;
+        
+        BurpCallbacks.getInstance().print("A: " + state);
         
         AttackData data = attackData.get(state);
-        SentinelHttpMessage httpMessage;
+        SentinelHttpMessageAtk httpMessage;
         try {
             httpMessage = attack(data);
             if (httpMessage == null) {
@@ -90,17 +90,13 @@ public class AttackTemplate extends AttackI {
             return false;
         }
  
+        analyzeResponse(data, httpMessage);
+
+        
         switch (state) {
             case 0:
-                doContinue = true;
-
-/*                if (checkTag(httpMessage.getRes().getResponseStr(), XssIndicator.getInstance().getBaseIndicator())) {
-                    inputReflectedInTag = true;
-                } else {
-                    inputReflectedInTag = false;
-                }*/
                 break;
-            case 11:
+            case 5:
                 doContinue = false;
                 break;
             default:
@@ -110,6 +106,15 @@ public class AttackTemplate extends AttackI {
         
         state++;
         return doContinue;
+    }
+    
+    private void analyzeResponse(AttackData data, SentinelHttpMessageAtk httpMessage) {
+        // Highlight indicator anyway
+        String indicator = XssIndicator.getInstance().getBaseIndicator();
+        if (! indicator.equals(data.getOutput())) {
+            ResponseHighlight h = new ResponseHighlight(indicator, Color.green);
+            httpMessage.getRes().addHighlight(h);
+        }
     }
 
 }
