@@ -22,6 +22,7 @@ import gui.botLeft.AttackSelection.AttackSelectionUi;
 import gui.mainBot.PanelBotUi;
 import gui.networking.AttackWorkEntry;
 import gui.networking.Networker;
+import gui.viewMessage.ExternalUpdater;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -34,6 +35,7 @@ import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import model.SentinelHttpMessageOrig;
 import model.SentinelHttpParam;
+import util.BurpCallbacks;
 import util.SettingsManager;
 
 
@@ -42,7 +44,7 @@ import util.SettingsManager;
  * 
  * @author unreal
  */
-public class PanelLeftUi extends javax.swing.JPanel {
+public class PanelLeftUi extends javax.swing.JPanel implements ExternalUpdater {
     private PanelBotUi panelParent;
     private SentinelHttpMessageOrig origHttpMessage;
     private int selectedRow = -1;
@@ -67,6 +69,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         comboBoxSession.setModel(sessionComboBoxModel);
 
         initComponents();
+        buttonSend.setVisible(false);
         panelViewMessage.setTheme("left");
 
         tableMessages.getColumnModel().getColumn(0).setMaxWidth(64);
@@ -149,6 +152,14 @@ public class PanelLeftUi extends javax.swing.JPanel {
         this.origHttpMessage = message;
         tableModel.setMessage(origHttpMessage);
         panelViewMessage.setHttpMessage(origHttpMessage);
+        
+        if (message.getResponse() == null) {
+            buttonAttack.setEnabled(false);
+            buttonSend.setVisible(true);
+        } else {
+            buttonAttack.setEnabled(true);
+            buttonSend.setVisible(false);
+        }
     }
 
     
@@ -235,6 +246,7 @@ public class PanelLeftUi extends javax.swing.JPanel {
         buttonAttack = new javax.swing.JButton();
         buttonOptions = new javax.swing.JButton();
         buttonPayloadSelection = new javax.swing.JButton();
+        buttonSend = new javax.swing.JButton();
         panelTopBody = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableMessages = new javax.swing.JTable();
@@ -271,6 +283,14 @@ public class PanelLeftUi extends javax.swing.JPanel {
             }
         });
 
+        buttonSend.setBackground(new java.awt.Color(229, 137, 0));
+        buttonSend.setText("Send");
+        buttonSend.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonSendActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTopHeaderLayout = new javax.swing.GroupLayout(panelTopHeader);
         panelTopHeader.setLayout(panelTopHeaderLayout);
         panelTopHeaderLayout.setHorizontalGroup(
@@ -280,6 +300,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonPayloadSelection)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonSend)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAttack, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -289,7 +311,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 .addGroup(panelTopHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonAttack)
                     .addComponent(buttonOptions)
-                    .addComponent(buttonPayloadSelection))
+                    .addComponent(buttonPayloadSelection)
+                    .addComponent(buttonSend))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -368,10 +391,24 @@ public class PanelLeftUi extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonPayloadSelectionActionPerformed
 
+    // Send request again
+    // The sender will call this.externalUpdate() upon success
+    private void buttonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonSendActionPerformed
+        BurpCallbacks.getInstance().sendRessource(origHttpMessage, true, this);
+    }//GEN-LAST:event_buttonSendActionPerformed
+
+    // Burp successfully sent the request again
+    // Re-Initialize everything so we see the response
+    @Override
+    public void externalUpdate() {
+        setMessage(origHttpMessage);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonAttack;
     private javax.swing.JButton buttonOptions;
     private javax.swing.JButton buttonPayloadSelection;
+    private javax.swing.JButton buttonSend;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
@@ -401,4 +438,5 @@ public class PanelLeftUi extends javax.swing.JPanel {
     public SentinelHttpMessage getOrigHttpMessage() {
         return origHttpMessage;
     }
+
 }

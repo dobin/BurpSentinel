@@ -65,7 +65,10 @@ public class BurpCallbacks {
             public void run() {
                 try {
                     sendRessource(sentinelMessage, followRedirect);
-                    updater.externalUpdate();
+                    
+                    if (updater != null) {
+                        updater.externalUpdate();
+                    }
                 } catch (ConnectionTimeoutException ex) {
                     BurpCallbacks.getInstance().print("Error sendingz");
                 }
