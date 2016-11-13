@@ -181,7 +181,8 @@ public class PanelLeftUi extends javax.swing.JPanel {
                 this,
                 optionsPopup.getOptionRedirect(),
                 optionsPopup.getOptionInsertPosition(),
-                (String) SentinelMainUi.getMainUi().getPanelTop().getSelectedSession());
+                (String) SentinelMainUi.getMainUi().getPanelTop().getOptionsPopup().getOptionsOrig().getSelectedSession());
+                // Holy shit, a pretty long line for something which is not functional...
 
         Networker.getInstance().attackThis(attackEntry);
     }

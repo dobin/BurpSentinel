@@ -213,7 +213,7 @@ public class PanelLeftTableModel extends DefaultTableModel implements Observer {
             }
 
             if (entry.isAuthEnabled) {
-                returnParam.add( new UiAttackParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData));
+                //returnParam.add( new UiAttackParam(param, AttackMain.AttackTypes.AUTHORISATION, entry.authData));
             }
         }
         

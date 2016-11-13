@@ -33,6 +33,8 @@ import util.BurpCallbacks;
  */
 public class AttackSqlExtendedAnalyzer {
     final private Color failColor = new Color(0xff, 0xcc, 0xcc, 100);
+    
+    private boolean emptyResponseOnBreak = false;
 
     
     public AttackSqlExtendedAnalyzer() {
@@ -56,16 +58,29 @@ public class AttackSqlExtendedAnalyzer {
     
     
     public boolean analyzeBreak(AttackWorkEntry attackWorkEntry, SentinelHttpMessageAtk lastHttpMessage) {
-        boolean doContinue = true;
-
         // First check if it already yielded a SQL error
         if (responseContainSqlErrorString(lastHttpMessage)) {
-            return true; // We continue anyway a bit
+            return false; // No need to continue
         }
 
+        // check for empty responses
+        if (attackWorkEntry.origHttpMessage.getRes().getSize() > 0
+                && lastHttpMessage.getRes().getSize() == 0) 
+        {
+            AttackResult res = new AttackResult(
+                AttackData.AttackResultType.STATUSGOOD,
+                "SQLE",
+                lastHttpMessage.getReq().getChangeParam(),
+                true,
+                "Good. break request resulted in empty response.",
+                "Response is different (empty) than the original response, therefore there is a chance to identify SQL injection");
+            lastHttpMessage.addAttackResult(res);
+            emptyResponseOnBreak = true;
+            
+            return true;
+        }
+        
         if (areResponseTagsIdentical(attackWorkEntry, lastHttpMessage)) {
-            doContinue = false;
-
             AttackResult res = new AttackResult(
                 AttackData.AttackResultType.ABORT,
                 "SQLE",
@@ -73,10 +88,10 @@ public class AttackSqlExtendedAnalyzer {
                 true,
                 "Abort. break request identical to original.",
                 "Response is identical to original response, therefore its not possible to identify SQL injection.");
-            lastHttpMessage.addAttackResult(res);            
-        } else {
-            doContinue = true;
+            lastHttpMessage.addAttackResult(res);           
             
+            return false;
+        } else {
             AttackResult res = new AttackResult(
                 AttackData.AttackResultType.STATUSGOOD,
                 "SQLE",
@@ -85,9 +100,9 @@ public class AttackSqlExtendedAnalyzer {
                 "Good. break request resulted in difference.",
                 "Response is different than the original response, therefore there is a chance to identify SQL injection");
             lastHttpMessage.addAttackResult(res);
+            
+            return true;
         }
-
-        return doContinue;
     }
     
     
@@ -116,6 +131,23 @@ public class AttackSqlExtendedAnalyzer {
                 "Same number of tags as original request",
                 "Strong indicator for SQL injection. The request with idempotent modification generated a similar output.");
             lastHttpMessage.addAttackResult(res);
+            
+            return;
+        }
+        
+        // Check empty response case
+        // But it at the bottom, so the other checks are performed first
+        if (emptyResponseOnBreak) {
+            if (lastHttpMessage.getRes().getSize() > 0) {
+                AttackResult res = new AttackResult(
+                    AttackData.AttackResultType.VULNUNSURE,
+                    "SQLE",
+                    lastHttpMessage.getReq().getChangeParam(),
+                    true,
+                    "Non-empty response",
+                    "Strong indicator for SQL injection. The request with idempotent modification generated a non-empty response.");
+                lastHttpMessage.addAttackResult(res);
+            }
             
             return;
         }

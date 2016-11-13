@@ -19,6 +19,7 @@ package gui.mainTop.options;
 import model.ModelRoot;
 import gui.SentinelMainApi;
 import gui.SentinelMainUi;
+import gui.botLeft.PanelLeftComboBoxModel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +29,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import model.SentinelHttpMessageOrig;
@@ -37,22 +39,34 @@ import util.SettingsManager;
  *
  * @author DobinRutishauser@broken.ch
  */
-public class FrameOptions extends javax.swing.JFrame {
+public class FrameOptionsOrig extends javax.swing.JFrame {
 
+    private PanelLeftComboBoxModel sessionComboBoxModelMain;
+
+    
     /**
      * Creates new form FrameOptions
      */
-    public FrameOptions() {
+    public FrameOptionsOrig() {
+        sessionComboBoxModelMain = new PanelLeftComboBoxModel();
         initComponents();
-        
         init();
     }
     
     private void init() {
         checkboxRelativeSize.setSelected(SettingsManager.getEnableRelativeResponseSize());
-
     }
 
+    
+    private ComboBoxModel getComboBoxModelMain() {
+        return sessionComboBoxModelMain;
+    }
+
+    
+    public String getSelectedSession() {
+        return (String) sessionComboBoxModelMain.getSelectedItem();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -69,6 +83,9 @@ public class FrameOptions extends javax.swing.JFrame {
         buttonRestore = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         checkboxRelativeSize = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -142,9 +159,30 @@ public class FrameOptions extends javax.swing.JFrame {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(checkboxRelativeSize)
-                .addGap(0, 54, Short.MAX_VALUE))
+            .addComponent(checkboxRelativeSize)
+        );
+
+        jLabel1.setText("Session:");
+
+        jComboBox1.setModel(getComboBoxModelMain());
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 114, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -153,14 +191,16 @@ public class FrameOptions extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 90, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -209,7 +249,7 @@ public class FrameOptions extends javax.swing.JFrame {
             }
             
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrameOptions.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FrameOptionsOrig.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "File Not found: " + this.textfieldFilename.getText());
         } catch (IOException ex) {
@@ -228,8 +268,11 @@ public class FrameOptions extends javax.swing.JFrame {
     private javax.swing.JButton buttonSave;
     private javax.swing.JButton buttonSelectFile;
     private javax.swing.JCheckBox checkboxRelativeSize;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField textfieldFilename;
     // End of variables declaration//GEN-END:variables
 }

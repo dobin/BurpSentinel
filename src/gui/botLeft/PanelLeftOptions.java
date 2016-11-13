@@ -71,7 +71,6 @@ public class PanelLeftOptions implements ActionListener {
         optionEnableRedirect = SettingsManager.restorePanelLeftOptionRedirect();
         optionInsertPosition = SettingsManager.restorePanelLeftOptionPosition();
 
-
         menuMain = new JPopupMenu("Options");
 
         // Menu option

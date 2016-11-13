@@ -58,9 +58,9 @@ public class TableHeaderTooltip extends JTableHeader {
                 return "Response time in milliseconds";
 
             case 10:
-                return "Result of the test (if possible)";
+                return "Result of the test (short)";
             case 11:
-                return "Categorizer tags (error, sqlerr, and self-defined)";
+                return "Result of the test (extensive)";
         }
         
         return "";

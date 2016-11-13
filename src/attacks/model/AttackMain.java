@@ -26,14 +26,13 @@ import java.util.List;
 public class AttackMain {
  
     public enum AttackTypes  {
+        ORIGINAL,
         XSS,
-        SQL,
         SQLE,
         CMD,
-        AUTHORISATION,
-        ORIGINAL,
         LIST,
         XSSLESSTHAN,
+        TMPL,
     };
     
     static private AttackMain attackMain;
@@ -54,7 +53,6 @@ public class AttackMain {
             AttackMain.AttackTypes.XSSLESSTHAN,
             AttackMain.AttackTypes.SQLE,
             AttackMain.AttackTypes.CMD,
-            AttackMain.AttackTypes.SQL,
         };
     
     private AttackMain() {
@@ -64,6 +62,7 @@ public class AttackMain {
         attackList.add(new AttackDescription(AttackTypes.XSSLESSTHAN, "Different encodings for '>' to check for XSS"));
         attackList.add(new AttackDescription(AttackTypes.SQLE, "SQL injections with small and smart payloads"));
         attackList.add(new AttackDescription(AttackTypes.CMD, "Comamnd injection with delays"));
+        attackList.add(new AttackDescription(AttackTypes.TMPL, "Template injection"));
     }
     
 

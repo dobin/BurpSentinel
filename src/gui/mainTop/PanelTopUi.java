@@ -18,14 +18,8 @@ package gui.mainTop;
 
 import gui.SentinelMainUi;
 import gui.botLeft.PanelLeftComboBoxModel;
-import gui.categorizer.CategorizerManager;
-import gui.categorizer.CategorizerUi;
-import gui.lists.ListManagerUi;
-import gui.mainTop.options.FrameOptions;
+import gui.mainTop.options.PanelTopOptionsPopup;
 import gui.networking.NetworkerInfoUi;
-import gui.reporter.ReporterUi;
-import gui.session.SessionManager;
-import gui.session.SessionManagerUi;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.ComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
@@ -41,7 +36,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
 import model.SentinelHttpMessageOrig;
-import util.BurpCallbacks;
 import util.SettingsManager;
 
 /**
@@ -55,24 +49,19 @@ public class PanelTopUi extends javax.swing.JPanel {
     
     private int currentSelectedRow = -1;
     
-    private PanelTopPopup popup;
-    
+    private final PanelTopPopup popup;
     private NetworkerInfoUi networkerInfoUi;
-    private ReporterUi reporterUi;
-    private ListManagerUi listManagerUi;
-    private CategorizerUi categorizerUi;
-    private SessionManagerUi sessionUi;
-    private FrameOptions frameOptions;
+    private final PanelTopOptionsPopup panelTopOptionsPopup;
+    
 
-    private PanelLeftComboBoxModel sessionComboBoxModelMain;
     
     /**
      * Creates new form PanelTop
      */
     public PanelTopUi() {
-        sessionComboBoxModelMain = new PanelLeftComboBoxModel();
         tableTopModel = new PanelTopTableModel(this);
         popup = new PanelTopPopup(this);
+        panelTopOptionsPopup = new PanelTopOptionsPopup();
         initComponents();
         
         // TODO not necessary if in restoreTableDimensions default?
@@ -107,51 +96,9 @@ public class PanelTopUi extends javax.swing.JPanel {
         
     }
     
-    private ComboBoxModel getComboBoxModelMain() {
-        return sessionComboBoxModelMain;
-    }
-    
-    public String getSelectedSession() {
-        return (String) sessionComboBoxModelMain.getSelectedItem();
-    }
     
     public void init() {
         ((PanelTopNetworkBtn)btnNetworking).init();
-
-        // Options
-        frameOptions = new FrameOptions();
-        WindowListener optionsWindowListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                btnOptions.setSelected(false);
-                frameOptions.setVisible(false);
-            }
-        };
-        frameOptions.addWindowListener(optionsWindowListener);
-        
-        
-        // Categorizer
-        categorizerUi = CategorizerManager.getInstance().getCategorizerUi();
-        WindowListener categorizerWindowListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                btnCategorizer.setSelected(false);
-                categorizerUi.setVisible(false);
-                categorizerUi.save();
-            }
-        };
-        categorizerUi.addWindowListener(categorizerWindowListener);
-        
-        // SessionUi
-        sessionUi = SessionManager.getInstance().getSessionManagerUi();
-        WindowListener sessionUiWindowListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                btnSessions.setSelected(false);
-                sessionUi.setVisible(false);
-            }
-        };
-        sessionUi.addWindowListener(sessionUiWindowListener);
         
         // networker
         networkerInfoUi = new NetworkerInfoUi();
@@ -163,29 +110,6 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         };
         networkerInfoUi.addWindowListener(networkerInfoWindowListener);
-        
-        // Reporter
-        reporterUi = new ReporterUi();
-        WindowListener reporterUiWindowListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                btnReporter.setSelected(false);
-                reporterUi.setVisible(false);
-            }
-        };
-        reporterUi.addWindowListener(reporterUiWindowListener);
-        
-        // Listmanager
-        listManagerUi = new ListManagerUi();
-        WindowListener listUiWindowListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                listManagerUi.save();
-                btnLists.setSelected(false);
-                listManagerUi.setVisible(false);
-            }
-        };
-        listManagerUi.addWindowListener(listUiWindowListener);
         
         // Add row selection listener
         ListSelectionModel lsm = tableAllMessages.getSelectionModel();
@@ -266,7 +190,10 @@ public class PanelTopUi extends javax.swing.JPanel {
     public void setUpdateCurrentSelected() {
         tableAllMessages.getSelectionModel().setSelectionInterval(currentSelectedRow, currentSelectedRow);
     }    
-            
+
+    public PanelTopOptionsPopup getOptionsPopup() {
+        return panelTopOptionsPopup;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -281,16 +208,9 @@ public class PanelTopUi extends javax.swing.JPanel {
         tableAllMessages = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        btnCategorizer = new javax.swing.JToggleButton();
-        btnSessions = new javax.swing.JToggleButton();
         btnNetworking = new PanelTopNetworkBtn();
-        jPanel6 = new javax.swing.JPanel();
-        btnReporter = new javax.swing.JToggleButton();
-        btnOptions = new javax.swing.JToggleButton();
-        btnLists = new javax.swing.JToggleButton();
+        buttonOptions = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
 
         tableAllMessages.setModel(getMessageTableModel());
         tableAllMessages.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_NEXT_COLUMN);
@@ -302,20 +222,6 @@ public class PanelTopUi extends javax.swing.JPanel {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnCategorizer.setText("Categorize");
-        btnCategorizer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCategorizerActionPerformed(evt);
-            }
-        });
-
-        btnSessions.setText("Sessions");
-        btnSessions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSessionsActionPerformed(evt);
-            }
-        });
-
         btnNetworking.setText("Network");
         btnNetworking.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -323,105 +229,56 @@ public class PanelTopUi extends javax.swing.JPanel {
             }
         });
 
+        buttonOptions.setText("Options");
+        buttonOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonOptionsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnSessions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnNetworking, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnCategorizer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addComponent(buttonOptions)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnNetworking, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(btnSessions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNetworking)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCategorizer)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        btnReporter.setText("Reporter");
-        btnReporter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReporterActionPerformed(evt);
-            }
-        });
-
-        btnOptions.setText("Options");
-        btnOptions.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOptionsActionPerformed(evt);
-            }
-        });
-
-        btnLists.setText("Lists");
-        btnLists.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListsActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnReporter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnOptions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnLists, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(btnOptions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnReporter)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLists)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNetworking)
+                    .addComponent(buttonOptions))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel1.setText("Session:");
-
-        jComboBox1.setModel(getComboBoxModelMain());
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 204, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(jLabel1))
+            .addGap(0, 24, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -430,7 +287,7 @@ public class PanelTopUi extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 482, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -462,65 +319,18 @@ public class PanelTopUi extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnNetworkingActionPerformed
 
-    private void btnSessionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSessionsActionPerformed
-        if (btnSessions.isSelected()) {
-            setRelativePos(btnSessions, (JFrame) sessionUi);
-            sessionUi.setVisible(true);
-        } else {
-            sessionUi.setVisible(false);
-        }
-    }//GEN-LAST:event_btnSessionsActionPerformed
-
-    private void btnCategorizerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategorizerActionPerformed
-        if (btnCategorizer.isSelected()) {
-            setRelativePos(btnSessions, (JFrame) categorizerUi);
-            categorizerUi.setVisible(true);
-        } else {
-            categorizerUi.setVisible(false);
-        }
-    }//GEN-LAST:event_btnCategorizerActionPerformed
-
-    private void btnReporterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporterActionPerformed
-        if (btnReporter.isSelected()) {
-            setRelativePos(btnReporter, (JFrame) reporterUi);
-            reporterUi.setVisible(true);
-        } else {
-            reporterUi.setVisible(false);
-        }    
-    }//GEN-LAST:event_btnReporterActionPerformed
-
-    private void btnListsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListsActionPerformed
-        if (btnLists.isSelected()) {
-            setRelativePos(btnLists, (JFrame) listManagerUi);
-            listManagerUi.setVisible(true);
-        } else {
-            listManagerUi.setVisible(false);
-            listManagerUi.save();
-        }
-    }//GEN-LAST:event_btnListsActionPerformed
-
-    private void btnOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOptionsActionPerformed
-        if (btnOptions.isSelected()) {
-            setRelativePos(btnOptions, (JFrame) frameOptions);
-            frameOptions.setVisible(true);
-        } else {
-            frameOptions.setVisible(false);
-        }
-    }//GEN-LAST:event_btnOptionsActionPerformed
+    private void buttonOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonOptionsActionPerformed
+        JPopupMenu menu = panelTopOptionsPopup.getPopupMenu();
+        menu.show(buttonOptions, buttonOptions.getBounds().width, 0);
+        menu.setVisible(true);
+    }//GEN-LAST:event_buttonOptionsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnCategorizer;
-    private javax.swing.JToggleButton btnLists;
     private javax.swing.JToggleButton btnNetworking;
-    private javax.swing.JToggleButton btnOptions;
-    private javax.swing.JToggleButton btnReporter;
-    private javax.swing.JToggleButton btnSessions;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton buttonOptions;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableAllMessages;
     // End of variables declaration//GEN-END:variables
