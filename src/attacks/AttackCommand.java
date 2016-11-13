@@ -41,13 +41,13 @@ public class AttackCommand extends AttackI {
         super(work);
         
         attackData.add(new AttackData(0, "() { :;}; sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, ";sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, "\" ;sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, "';sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, "|sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, "& ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0, "\" & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
-        attackData.add(new AttackData(0,  "' & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(1, ";sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(2, "\";sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(3, "';sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(4, "|sleep 10", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(5, "& ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(6, "\" & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
+        attackData.add(new AttackData(7,  "' & ping -c 10 127.0.0.1", "", AttackData.AttackResultType.VULNUNSURE));
     }
     
     @Override
@@ -112,14 +112,7 @@ public class AttackCommand extends AttackI {
         AttackData atkData;
         SentinelHttpMessageAtk httpMessage;
         
-        // Hack - should be in payload definition
-        if (state == 0 || state == 1) {
-            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.LEFT;
-        } else if (state == 2) {
-            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.REPLACE;
-        } else {
-            attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
-        }
+        attackWorkEntry.insertPosition = PanelLeftInsertions.InsertPositions.RIGHT;
         
         atkData = getData(attackWorkEntry);
         
@@ -141,14 +134,16 @@ public class AttackCommand extends AttackI {
     
     private void analyzeResponse(SentinelHttpMessageAtk httpMessage) {
         
-        AttackResult res = new AttackResult(
-            AttackData.AttackResultType.NONE, 
-            "OTHER" + state, 
-            httpMessage.getReq().getChangeParam(), 
-            false,
-            null,
-            "");
-        httpMessage.addAttackResult(res);
+        if (httpMessage.getLoadTime() > 10000 && httpMessage.getLoadTime() < 13000) {
+            AttackResult res = new AttackResult(
+                AttackData.AttackResultType.VULNUNSURE, 
+                "CMD" + state, 
+                httpMessage.getReq().getChangeParam(), 
+                false,
+                "Possible command injection",
+                "Response took approximatly 10 seconds, as the sleep time.");
+            httpMessage.addAttackResult(res);
+        }
     }
 
 
