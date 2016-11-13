@@ -31,7 +31,7 @@ public class PanelViewComboboxModel extends AbstractListModel implements ComboBo
     private LinkedList<String> values = new LinkedList<String>();
     
     public PanelViewComboboxModel() {
-        values.add("Default");
+        values.add("Default View");
         values.add("Beautify");
         values.add("Unified Diff");
         values.add("Context Diff");

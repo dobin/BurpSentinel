@@ -88,7 +88,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     private String lastSearch = "";
     private SearchContext searchContext = null;
     
-    private String currentView = "Default";
+    private String currentView = "Default View";
 
     
     private LinkedList<SentinelHighlight> myHighlights;
@@ -311,7 +311,7 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
             }
             buttonShowRequest.setText("Response");
 
-            if (currentView.equals("Default")) {
+            if (currentView.equals("Default View")) {
                 showDefaultView();
             } else if (currentView.equals("Beautify")) {
                 showBeautifyView();
