@@ -207,29 +207,31 @@ public abstract class AttackI {
             }
         }
 
-        // OK messages are not identical
-        // But maybe very similar?
-        byte[][] a = new byte[2][];
-        a[0] = attackWorkEntry.origHttpMessage.getResponse();
-        a[1] = origAtkMessage.getResponse();
-               
-        IResponseVariations responseVariant = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponseVariations(a);
-        List<String> variantList = responseVariant.getVariantAttributes();
-        List<String> invariantList = responseVariant.getInvariantAttributes();
-        
-        if (invariantList.contains("tag_ids")) {
-            AttackResult res = new AttackResult(
-                AttackData.AttackResultType.STATUSGOOD,
-                "ORIG",
-                origAtkMessage.getReq().getChangeParam(),
-                true,
-                "Request is ok.",
-                "The request behaves similarly every time it is sent (it has not identical responses, but identical tags in the response). Good conditions.");
-            origAtkMessage.addAttackResult(res);
-            
-            return;
+        if (newResponseSize > 0) { 
+            // OK messages are not identical
+            // But maybe very similar?
+            byte[][] a = new byte[2][];
+            a[0] = attackWorkEntry.origHttpMessage.getResponse();
+            a[1] = origAtkMessage.getResponse();
+
+            IResponseVariations responseVariant = BurpCallbacks.getInstance().getBurp().getHelpers().analyzeResponseVariations(a);
+            List<String> variantList = responseVariant.getVariantAttributes();
+            List<String> invariantList = responseVariant.getInvariantAttributes();
+
+            if (invariantList.contains("tag_ids")) {
+                AttackResult res = new AttackResult(
+                    AttackData.AttackResultType.STATUSGOOD,
+                    "ORIG",
+                    origAtkMessage.getReq().getChangeParam(),
+                    true,
+                    "Request is ok.",
+                    "The request behaves similarly every time it is sent (it has not identical responses, but identical tags in the response). Good conditions.");
+                origAtkMessage.addAttackResult(res);
+
+                return;
+            }
         }
-        
+         
         // Very different
         AttackResult res = new AttackResult(
             AttackData.AttackResultType.STATUSBAD,
