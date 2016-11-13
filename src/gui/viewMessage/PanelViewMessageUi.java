@@ -95,6 +95,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
 
     private SentinelHttpMessage diffHttpMessage;
     
+       
+    private String theme;
+    
     
     /**
      * Creates new form PanelResponseUi
@@ -303,6 +306,9 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
         textareaMessage.getHighlighter().removeAllHighlights();
 
         if (showResponse) {
+            if (httpMessage.getRes() == null) {
+                return;
+            }
             buttonShowRequest.setText("Response");
 
             if (currentView.equals("Default")) {
@@ -315,8 +321,13 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
                 showContextDiffView();
             }
             
-            comboboxView.setVisible(true);
+            if ("right".equals((theme))) {
+                comboboxView.setVisible(true);
+            }
         } else {
+            if (httpMessage.getReq() == null) {
+                return;
+            }
             buttonShowRequest.setText("Request");
             setMessageText(httpMessage.getReq().getRequestStr());
             highlightRequest();
@@ -925,8 +936,11 @@ public class PanelViewMessageUi extends javax.swing.JPanel implements ExternalUp
     }
 
     public void setTheme(String theme) {
-        if (theme == "left") {
-        } else if (theme == "right") {
+        BurpCallbacks.getInstance().print("A: " + theme);
+        this.theme = theme;
+        if ("left".equals(theme)) {
+            comboboxView.setVisible(false);
+        } else if ("right".equals(theme)) {
             checkboxIsLink.setVisible(false);
             checkboxIsLink.setEnabled(false);
         }
