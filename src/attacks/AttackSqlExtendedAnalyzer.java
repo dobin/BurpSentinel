@@ -140,7 +140,7 @@ public class AttackSqlExtendedAnalyzer {
         if (emptyResponseOnBreak) {
             if (lastHttpMessage.getRes().getSize() > 0) {
                 AttackResult res = new AttackResult(
-                    AttackData.AttackResultType.VULNUNSURE,
+                    AttackData.AttackResultType.INFOUNSURE,
                     "SQLE",
                     lastHttpMessage.getReq().getChangeParam(),
                     true,
