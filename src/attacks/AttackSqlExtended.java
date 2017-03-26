@@ -21,7 +21,6 @@ import attacks.model.AttackI;
 import gui.botLeft.PanelLeftInsertions;
 import gui.networking.AttackWorkEntry;
 import java.util.LinkedList;
-import model.SentinelHttpMessage;
 import model.SentinelHttpMessageAtk;
 import org.apache.commons.lang3.StringUtils;
 import util.BurpCallbacks;
@@ -91,36 +90,40 @@ public class AttackSqlExtended extends AttackI {
         // SELECT ... WHERE name = 'aaa'
         switch(state) {
             case 0: // BREAK1'2\"3`4
+                ret = value.substring(0, 1) + "BREAK" + value.substring(1, value.length());
+                break;
+            case 1: // BREAK1'2\"3`4
                 ret = value.substring(0, 1) + "BREAK1'2\"3`4" + value.substring(1, value.length());
                 break;
-            case 1: // a'||'aa
+                
+            case 2: // a'||'aa
                 ret = value.substring(0, 1) + "' || '" + value.substring(1, value.length());
                 break;
-            case 2: // a' + 'aa
+            case 3: // a' + 'aa
                 ret = value.substring(0, 1) + "' + '" + value.substring(1, value.length());
                 break;
-            case 3: // a' 'aa
+            case 4: // a' 'aa
                 ret = value.substring(0, 1) + "' '" + value.substring(1, value.length());
                 break;
-            case 4: // a" || "aa
+            case 5: // a" || "aa
                 ret = value.substring(0, 1) + "\" || \"" + value.substring(1, value.length());
                 break;
-            case 5: // a" + "aa
+            case 6: // a" + "aa
                 ret = value.substring(0, 1) + "\" + \"" + value.substring(1, value.length());
                 break;
-            case 6: // a" "aa
+            case 7: // a" "aa
                 ret = value.substring(0, 1) + "\" \"" + value.substring(1, value.length());
                 break;
-            case 7: // a` || `aa
+            case 8: // a` || `aa
                 ret = value.substring(0, 1) + "` || `" + value.substring(1, value.length());
                 break;
-            case 8: // a` + `aa
+            case 9: // a` + `aa
                 ret = value.substring(0, 1) + "` + `" + value.substring(1, value.length());
                 break;
-            case 9: // a` `aa
+            case 10: // a` `aa
                 ret = value.substring(0, 1) + "` `" + value.substring(1, value.length());
                 break;
-            case 10: // /**/aaa
+            case 11: // /**/aaa
                 ret = "/**/" + value;
                 break;
         }
@@ -286,6 +289,8 @@ public class AttackSqlExtended extends AttackI {
             analyzeOriginalRequest(httpMessage);
             doContinue = true;
         } else if (state == 0) {
+            doContinue = analyzer.analyzeSimpleBreak(attackWorkEntry, httpMessage);
+        } else if (state == 1) {
             doContinue = analyzer.analyzeBreak(attackWorkEntry, httpMessage);
         } else {
             analyzer.analyzeAttackResponse(attackWorkEntry, httpMessage);

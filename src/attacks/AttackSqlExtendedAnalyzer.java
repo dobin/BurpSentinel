@@ -56,6 +56,9 @@ public class AttackSqlExtendedAnalyzer {
         }
     }
     
+    public boolean analyzeSimpleBreak(AttackWorkEntry attackWorkEntry, SentinelHttpMessageAtk lastHttpMessage) {
+        return true;
+    }
     
     public boolean analyzeBreak(AttackWorkEntry attackWorkEntry, SentinelHttpMessageAtk lastHttpMessage) {
         // First check if it already yielded a SQL error
@@ -63,6 +66,20 @@ public class AttackSqlExtendedAnalyzer {
             return false; // No need to continue
         }
 
+        // Same size is usually bad
+        if (attackWorkEntry.origHttpMessage.getRes().getSize() == lastHttpMessage.getRes().getSize()) {
+            AttackResult res = new AttackResult(
+                AttackData.AttackResultType.ABORT,
+                "SQLE",
+                lastHttpMessage.getReq().getChangeParam(),
+                true,
+                "Abort. break request identical to original.",
+                "Response is identical to original response, therefore its not possible to identify SQL injection.");
+            lastHttpMessage.addAttackResult(res);           
+            
+            return false;
+        }
+        
         // check for empty responses
         if (attackWorkEntry.origHttpMessage.getRes().getSize() > 0
                 && lastHttpMessage.getRes().getSize() == 0) 
@@ -81,16 +98,17 @@ public class AttackSqlExtendedAnalyzer {
         }
         
         if (areResponseTagsIdentical(attackWorkEntry, lastHttpMessage)) {
+            // Identical, but different size
             AttackResult res = new AttackResult(
-                AttackData.AttackResultType.ABORT,
+                AttackData.AttackResultType.STATUSGOOD,
                 "SQLE",
                 lastHttpMessage.getReq().getChangeParam(),
                 true,
-                "Abort. break request identical to original.",
-                "Response is identical to original response, therefore its not possible to identify SQL injection.");
-            lastHttpMessage.addAttackResult(res);           
+                "Good. break request resulted in difference.",
+                "Response is different size than the original response, therefore there is a chance to identify SQL injection");
+            lastHttpMessage.addAttackResult(res);
             
-            return false;
+            return true;
         } else {
             AttackResult res = new AttackResult(
                 AttackData.AttackResultType.STATUSGOOD,
